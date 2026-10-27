@@ -71,12 +71,13 @@ export function Features({
 
               <div className="mt-7 flex flex-col gap-1">
                 {flowSteps.map((step) => (
-                  <button
+                  <Button
                     key={step.n}
                     type="button"
+                    variant="ghost"
                     onClick={step.onSelect}
                     className={cn(
-                      'grid cursor-pointer grid-cols-[28px_1fr] items-center gap-3 py-2 text-left transition-colors',
+                      'grid h-auto grid-cols-[28px_1fr] items-center justify-normal gap-3 px-0 py-2 text-left whitespace-normal hover:bg-transparent',
                       step.active ? 'text-white' : 'text-white/62'
                     )}
                   >
@@ -106,7 +107,7 @@ export function Features({
                         )}
                       </span>
                     </span>
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>

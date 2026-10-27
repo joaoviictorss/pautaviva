@@ -162,19 +162,20 @@ export function Hero({
 
               <div className="mt-1 grid grid-cols-3 gap-1.5 rounded-[17px] bg-muted p-1">
                 {voteOptions.map((option) => (
-                  <button
+                  <Button
                     key={option.key}
                     type="button"
+                    variant="ghost"
                     onClick={option.onVote}
                     className={cn(
-                      'flex h-9 items-center justify-center rounded-[13px] text-[13px] font-semibold transition-colors',
+                      'h-9 rounded-[13px] text-[13px] font-semibold',
                       option.active
                         ? 'bg-primary text-primary-foreground shadow-[0_4px_12px_-4px_var(--primary)]'
                         : 'text-foreground hover:bg-background/60'
                     )}
                   >
                     {option.label}
-                  </button>
+                  </Button>
                 ))}
               </div>
               <p className="min-h-[18px] text-xs text-muted-foreground">{voteMessage}</p>

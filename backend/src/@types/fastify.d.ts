@@ -1,3 +1,4 @@
+import type { Role } from '@prisma/client'
 import 'fastify'
 
 import type { auth } from '../lib/auth.js'
@@ -10,5 +11,6 @@ declare module 'fastify' {
   export interface FastifyRequest {
     getCurrentUserId(): Promise<string>
     getCurrentUser(): Promise<AuthUser>
+    requireRole(...roles: Role[]): Promise<AuthUser>
   }
 }

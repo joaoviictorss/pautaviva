@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { LogOutIcon } from 'lucide-react'
+import { LayoutDashboardIcon, LogOutIcon } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -8,7 +8,7 @@ import { Spinner } from '@/components/ui/spinner'
 
 import type { PainelLayoutProps } from '../data'
 
-export function Painel({ name, firstName, initials, email, image, roleLabel, signingOut, onSignOut }: PainelLayoutProps) {
+export function Painel({ name, firstName, initials, email, image, roleLabel, isStaff, signingOut, onSignOut }: PainelLayoutProps) {
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="border-b">
@@ -55,6 +55,13 @@ export function Painel({ name, firstName, initials, email, image, roleLabel, sig
             {roleLabel}
           </Badge>
         </div>
+
+        {isStaff && (
+          <Button render={<Link to="/admin/pautas" />} variant="outline" className="w-fit">
+            <LayoutDashboardIcon />
+            Área administrativa
+          </Button>
+        )}
       </main>
     </div>
   )

@@ -15,12 +15,15 @@ model Users {
   image               String?
   createdAt           DateTime   @default(now())
   updatedAt           DateTime   @updatedAt
-  cpf                 String     @unique
-  role                String     @default("cidadao")
+  cpf                 String?    @unique
+  role                Role       @default(CITIZEN)
   failedLoginAttempts Int        @default(0)
   lockedUntil         DateTime?
   sessions            Sessions[]
   accounts            Accounts[]
+  polls               Polls[]
+  participations      Participations[]
+  auditLogs           AuditLogs[]
 
   @@unique([email])
   @@map("users")
@@ -72,4 +75,90 @@ model Verifications {
 
   @@index([identifier])
   @@map("verifications")
+}
+
+enum Role {
+  CITIZEN
+  MANAGER
+  MODERATOR
+  ADMIN
+}
+
+enum PollStatus {
+  SCHEDULED
+  OPEN
+  CLOSED
+}
+
+enum VoteOption {
+  FOR
+  AGAINST
+  ABSTAIN
+}
+
+model Categories {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  polls     Polls[]
+
+  @@map("categories")
+}
+
+model Polls {
+  id             String           @id @default(uuid())
+  title          String
+  description    String
+  startsAt       DateTime
+  endsAt         DateTime
+  status         PollStatus       @default(SCHEDULED)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  categoryId     String
+  category       Categories       @relation(fields: [categoryId], references: [id])
+  createdById    String
+  createdBy      Users            @relation(fields: [createdById], references: [id])
+  participations Participations[]
+  votes          Votes[]
+
+  @@index([status, endsAt])
+  @@index([categoryId])
+  @@map("polls")
+}
+
+model Participations {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  pollId    String
+  poll      Polls    @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  userId    String
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([pollId, userId])
+  @@index([userId])
+  @@map("participations")
+}
+
+model Votes {
+  id     String     @id @default(uuid())
+  option VoteOption
+  pollId String
+  poll   Polls      @relation(fields: [pollId], references: [id], onDelete: Cascade)
+
+  @@index([pollId])
+  @@map("votes")
+}
+
+model AuditLogs {
+  id        String   @id @default(uuid())
+  action    String
+  details   Json?
+  createdAt DateTime @default(now())
+  actorId   String
+  actor     Users    @relation(fields: [actorId], references: [id])
+  targetId  String?
+
+  @@index([actorId])
+  @@index([targetId])
+  @@map("audit_logs")
 }

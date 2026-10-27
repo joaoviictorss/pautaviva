@@ -66,13 +66,13 @@ export const auth = betterAuth({
     additionalFields: {
       cpf: {
         type: 'string',
-        required: true,
+        required: false,
         input: true,
       },
       role: {
         type: 'string',
         required: true,
-        defaultValue: 'cidadao',
+        defaultValue: 'CITIZEN',
         input: false,
       },
     },

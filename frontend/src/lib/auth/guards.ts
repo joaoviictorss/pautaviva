@@ -28,3 +28,17 @@ export async function redirectAfterVerification({ search }: { search: { error?: 
   if (search.error) return
   throw redirect({ to: (await getSession()) ? '/painel' : '/entrar' })
 }
+
+interface SessionContext {
+  context: { session: { user: { role?: string | null } } }
+}
+
+/** beforeLoad da área administrativa: gestores e administradores. */
+export function requireStaff({ context }: SessionContext) {
+  if (!['ADMIN', 'MANAGER'].includes(context.session.user.role ?? '')) throw redirect({ to: '/painel' })
+}
+
+/** beforeLoad das telas só de administrador. */
+export function requireAdmin({ context }: SessionContext) {
+  if (context.session.user.role !== 'ADMIN') throw redirect({ to: '/admin/pautas' })
+}

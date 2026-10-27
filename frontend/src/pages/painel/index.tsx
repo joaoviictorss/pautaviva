@@ -3,18 +3,13 @@ import { getRouteApi, useNavigate } from '@tanstack/react-router'
 
 import { toast } from '@/components/ui/toast'
 import { signOut } from '@/lib/auth/client'
+import { roleLabel } from '@/lib/auth/roles'
 import { getInitials } from '@/lib/utils/format'
 
 import { Painel as Layout } from './layout'
 import type { PainelLayoutProps, PainelProps } from './data'
 
 const route = getRouteApi('/_autenticado')
-
-const ROLE_LABELS: Record<string, string> = {
-  cidadao: 'Cidadão',
-  gestor: 'Gestor público',
-  moderador: 'Moderador',
-}
 
 export function Painel(_props: PainelProps) {
   const navigate = useNavigate()
@@ -40,7 +35,8 @@ export function Painel(_props: PainelProps) {
     initials: getInitials(user.name),
     email: user.email,
     image: user.image ?? undefined,
-    roleLabel: ROLE_LABELS[user.role ?? 'cidadao'] ?? ROLE_LABELS.cidadao,
+    roleLabel: roleLabel(user.role),
+    isStaff: user.role === 'ADMIN' || user.role === 'MANAGER',
     signingOut,
     onSignOut: handleSignOut,
   }

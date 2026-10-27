@@ -7,6 +7,7 @@ export interface PainelLayoutProps extends PainelProps {
   email: string
   image?: string
   roleLabel: string
+  isStaff: boolean
   signingOut: boolean
   onSignOut: () => void
 }

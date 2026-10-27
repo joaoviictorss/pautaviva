@@ -54,14 +54,15 @@ export function AuthMessage({
       )}
 
       {back && (
-        <button
+        <Button
           type="button"
+          variant="link"
           onClick={back.onClick}
-          className="inline-flex items-center gap-1.5 self-center text-sm font-medium text-muted-foreground hover:text-foreground"
+          className="self-center text-muted-foreground hover:text-foreground hover:no-underline"
         >
-          <ArrowLeftIcon className="size-4" />
+          <ArrowLeftIcon />
           {back.label}
-        </button>
+        </Button>
       )}
     </div>
   )

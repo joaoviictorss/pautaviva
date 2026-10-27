@@ -41,14 +41,15 @@ function EsqueciSenhaForm({ email, loading, onSubmit, onBack }: EsqueciSenhaForm
         Enviar link de redefinição
       </Button>
 
-      <button
+      <Button
         type="button"
+        variant="link"
         onClick={onBack}
-        className="inline-flex items-center gap-1.5 self-center text-sm font-medium text-muted-foreground hover:text-foreground"
+        className="self-center text-muted-foreground hover:text-foreground hover:no-underline"
       >
-        <ArrowLeftIcon className="size-4" />
+        <ArrowLeftIcon />
         Voltar para o login
-      </button>
+      </Button>
     </form>
   )
 }
