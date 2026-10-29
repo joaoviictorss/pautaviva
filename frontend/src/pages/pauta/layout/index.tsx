@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { cn } from '@/lib/utils'
 
 import { VotePanel } from '../components/vote-panel'
 import type { PautaLayoutProps } from '../data'
@@ -53,7 +52,7 @@ export function Pauta({
                     {CategoryIcon && <CategoryIcon />}
                     {poll.category.name}
                   </Badge>
-                  <Badge className={cn('h-6 px-2.5 font-semibold', statusClassName)}>{statusLabel}</Badge>
+                  <Badge className={`h-6 px-2.5 font-semibold ${statusClassName ?? ''}`}>{statusLabel}</Badge>
                 </div>
                 <h1 className="m-0 text-[clamp(26px,3.4vw,40px)] font-extrabold tracking-tighter text-pretty">
                   {poll.title}
@@ -63,7 +62,7 @@ export function Pauta({
                     <CalendarIcon className="size-4" />
                     {periodLabel}
                   </span>
-                  {bars && (
+                  {participationsLabel && (
                     <span className="inline-flex items-center gap-1.5">
                       <UsersIcon className="size-4" />
                       {participationsLabel}

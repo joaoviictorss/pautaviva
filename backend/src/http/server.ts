@@ -12,6 +12,7 @@ import { authPlugin } from './middlewares/auth.js'
 import { adminRoutes } from './routes/admin.js'
 import { authRoutes } from './routes/auth.js'
 import { pollRoutes } from './routes/polls.js'
+import { userRoutes } from './routes/users.js'
 import { setupSockets } from './sockets/index.js'
 
 const app = fastify({ trustProxy: env.TRUST_PROXY }).withTypeProvider<ZodTypeProvider>()
@@ -30,6 +31,7 @@ app.register(authPlugin)
 app.register(authRoutes)
 app.register(adminRoutes)
 app.register(pollRoutes)
+app.register(userRoutes)
 
 app.listen({ port: env.PORT, host: '0.0.0.0' }).then(() => {
   setupSockets(app.server)

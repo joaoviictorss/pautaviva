@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 
 import { api } from '@/lib/api/client'
+import type { PollPage } from '@/lib/poll/types'
 
 import { AdminPautas as Layout } from './layout'
 import type { AdminPautasLayoutProps, AdminPautasProps, Category, Poll, StatusFilter } from './data'
@@ -26,15 +27,20 @@ export function AdminPautas(_props: AdminPautasProps) {
 
   const load = useCallback(async () => {
     try {
-      const [pollList, categoryList] = await Promise.all([
-        api<Poll[]>('/polls'),
+      const [firstPage, categoryList] = await Promise.all([
+        api<PollPage>('/polls?page=1&pageSize=50'),
         api<Category[]>('/categories'),
       ])
-      setPolls(pollList)
+      const remainingPages = await Promise.all(
+        Array.from({ length: Math.max(0, Math.ceil(firstPage.total / firstPage.pageSize) - 1) }, (_, index) =>
+          api<PollPage>(`/polls?page=${index + 2}&pageSize=${firstPage.pageSize}`),
+        ),
+      )
+      setPolls([...firstPage.items, ...remainingPages.flatMap((page) => page.items)])
       setCategories(categoryList)
       setError(undefined)
     } catch (err) {
-      setError((err as Error).message)
+      setError(err instanceof Error ? err.message : 'Não foi possível carregar as pautas.')
     } finally {
       setLoading(false)
     }

@@ -36,8 +36,8 @@ export function PollCard({
         <CardTitle className="text-[17px] font-bold tracking-tight text-pretty">
           {linked ? (
             <Link
-              to="/pautas/$id"
-              params={{ id: poll.id }}
+              to="/pautas/$pollId"
+              params={{ pollId: poll.id }}
               className="text-inherit no-underline after:absolute after:inset-0 after:rounded-2xl hover:no-underline"
             >
               {poll.title}

@@ -8,7 +8,6 @@ export interface PautaLayoutProps extends PautaProps {
   poll?: PollDetail
   loading: boolean
   error?: string
-  /** Conectado ao socket: os resultados se atualizam sozinhos. */
   live: boolean
   categoryLook?: CategoryLook
   statusLabel?: string

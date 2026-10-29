@@ -7,6 +7,8 @@ import { prisma } from '../../lib/prisma.js'
 import { BadRequestError } from './_errors/bad-request-error.js'
 import { emitToPoll } from '../sockets/index.js'
 import { ConflictError } from './_errors/conflict-error.js'
+import { NotFoundError } from './_errors/not-found-error.js'
+import { UnauthorizedError } from './_errors/unauthorized-error.js'
 
 const DAY_MS = 24 * 60 * 60 * 1000
 
@@ -18,10 +20,26 @@ function statusOf(poll: Pick<Polls, 'startsAt' | 'endsAt' | 'status'>, now = new
 
 const pollBody = z.object({
   description: z.string().trim().min(10).max(2000),
-  categoryId: z.string(),
+  categoryId: z.uuid(),
   startsAt: z.coerce.date(),
   endsAt: z.coerce.date(),
 })
+
+const pollQuery = z.object({
+  categoryId: z.uuid().optional(),
+  search: z.string().trim().optional(),
+  status: z.enum(['SCHEDULED', 'OPEN', 'CLOSED']).optional(),
+  sort: z.enum(['recent', 'start', 'ending']).default('recent'),
+  page: z.coerce.number().int().positive().default(1),
+  pageSize: z.coerce.number().int().positive().max(50).default(9),
+})
+
+const participationQuery = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  pageSize: z.coerce.number().int().positive().max(50).default(9),
+})
+
+const pollParams = z.object({ id: z.uuid() })
 
 function validatePeriod({ startsAt, endsAt }: { startsAt: Date; endsAt: Date }) {
   const now = Date.now()
@@ -75,26 +93,181 @@ export async function pollRoutes(app: FastifyInstance) {
     return prisma.categories.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } })
   })
 
-  // shortcut: sem paginação; paginar quando passar de algumas centenas de pautas.
-  api.get('/polls', async () => {
-    const [polls, votes] = await Promise.all([
-      prisma.polls.findMany({ select: pollSelect, orderBy: { startsAt: 'desc' } }),
-      countVotes(),
+  api.get('/participations/me', { schema: { querystring: participationQuery } }, async (request) => {
+    const user = await request.requireRole('CITIZEN')
+    const now = new Date()
+    const { page, pageSize } = request.query
+    const where = { userId: user.id }
+    const [total, resultsAvailable, participations] = await Promise.all([
+      prisma.participations.count({ where }),
+      prisma.participations.count({
+        where: {
+          ...where,
+          poll: {
+            OR: [
+              { status: 'CLOSED' },
+              { endsAt: { lte: now } },
+              { startsAt: { lte: now }, endsAt: { gt: now } },
+            ],
+          },
+        },
+      }),
+      prisma.participations.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        select: { createdAt: true, poll: { select: pollSelect } },
+      }),
     ])
-    return polls.map((poll) => toPollView(poll, votes))
+    const votes = participations.length
+      ? await countVotes({ pollId: { in: participations.map(({ poll }) => poll.id) } })
+      : []
+
+    return {
+      total,
+      resultsAvailable,
+      page,
+      pageSize,
+      items: participations.map(({ createdAt, poll }) => ({
+        participatedAt: createdAt,
+        resultsAvailable: statusOf(poll, now) !== 'SCHEDULED',
+        poll: toPollView(poll, votes),
+      })),
+    }
   })
 
-  api.get('/polls/:id', { schema: { params: z.object({ id: z.string() }) } }, async (request) => {
-    const { id } = request.params
-    const [poll, votes, user] = await Promise.all([
-      prisma.polls.findUnique({ where: { id }, select: pollSelect }),
-      countVotes({ pollId: id }),
-      request.getCurrentUser().catch(() => null),
-    ])
-    if (!poll) throw new BadRequestError('Pauta não encontrada.')
+  api.get('/polls', { schema: { querystring: pollQuery } }, async (request) => {
+    const now = new Date()
+    const { categoryId, search, status, sort, page, pageSize } = request.query
+    const conditions = [
+      ...(categoryId ? [{ categoryId }] : []),
+      ...(search
+        ? [
+            {
+              OR: [
+                { title: { contains: search, mode: 'insensitive' as const } },
+                { category: { name: { contains: search, mode: 'insensitive' as const } } },
+              ],
+            },
+          ]
+        : []),
+      ...(status === 'SCHEDULED'
+        ? [{ status: { not: 'CLOSED' as const }, startsAt: { gt: now }, endsAt: { gt: now } }]
+        : []),
+      ...(status === 'OPEN'
+        ? [{ status: { not: 'CLOSED' as const }, startsAt: { lte: now }, endsAt: { gt: now } }]
+        : []),
+      ...(status === 'CLOSED' ? [{ OR: [{ status: 'CLOSED' as const }, { endsAt: { lte: now } }] }] : []),
+    ]
+    const where = conditions.length ? { AND: conditions } : undefined
 
-    const hasVoted = user
-      ? !!(await prisma.participations.findUnique({ where: { pollId_userId: { pollId: id, userId: user.id } } }))
+    const total = await prisma.polls.count({ where })
+    const totalPages = Math.max(1, Math.ceil(total / pageSize))
+    const currentPage = Math.min(page, totalPages)
+    const select = {
+      id: true,
+      title: true,
+      description: true,
+      startsAt: true,
+      endsAt: true,
+      status: true,
+      category: { select: { id: true, name: true } },
+      _count: { select: { participations: true } },
+    } as const
+    const offset = (currentPage - 1) * pageSize
+    let polls
+
+    if (sort === 'recent') {
+      polls = await prisma.polls.findMany({
+        where,
+        select,
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+        skip: offset,
+        take: pageSize,
+      })
+    } else {
+      const upcomingConditions = [
+        ...conditions,
+        { status: { not: 'CLOSED' as const } },
+        sort === 'start' ? { startsAt: { gt: now }, endsAt: { gt: now } } : { endsAt: { gt: now } },
+      ]
+      const completedConditions = [
+        ...conditions,
+        {
+          OR:
+            sort === 'start'
+              ? [{ status: 'CLOSED' as const }, { startsAt: { lte: now } }, { endsAt: { lte: now } }]
+              : [{ status: 'CLOSED' as const }, { endsAt: { lte: now } }],
+        },
+      ]
+      const upcomingWhere = { AND: upcomingConditions }
+      const completedWhere = { AND: completedConditions }
+      const upcomingTotal = await prisma.polls.count({ where: upcomingWhere })
+      const upcomingSkip = Math.min(offset, upcomingTotal)
+      const upcomingTake = Math.max(0, Math.min(pageSize, upcomingTotal - offset))
+      const completedSkip = Math.max(0, offset - upcomingTotal)
+      const completedTake = pageSize - upcomingTake
+      const orderBy =
+        sort === 'start'
+          ? [{ startsAt: 'asc' as const }, { id: 'asc' as const }]
+          : [{ endsAt: 'asc' as const }, { id: 'asc' as const }]
+      const completedOrderBy =
+        sort === 'start'
+          ? [{ startsAt: 'desc' as const }, { id: 'desc' as const }]
+          : [{ endsAt: 'desc' as const }, { id: 'desc' as const }]
+      const [upcoming, completed] = await Promise.all([
+        upcomingTake
+          ? prisma.polls.findMany({
+              where: upcomingWhere,
+              select,
+              orderBy,
+              skip: upcomingSkip,
+              take: upcomingTake,
+            })
+          : [],
+        completedTake
+          ? prisma.polls.findMany({
+              where: completedWhere,
+              select,
+              orderBy: completedOrderBy,
+              skip: completedSkip,
+              take: completedTake,
+            })
+          : [],
+      ])
+      polls = [...upcoming, ...completed]
+    }
+    const votes = polls.length
+      ? await countVotes({ pollId: { in: polls.map(({ id }) => id) } })
+      : []
+
+    return {
+      items: polls.map((poll) => toPollView(poll, votes)),
+      total,
+      page: currentPage,
+      pageSize,
+    }
+  })
+
+  api.get('/polls/:id', { schema: { params: pollParams } }, async (request) => {
+    const poll = await prisma.polls.findUnique({
+      where: { id: request.params.id },
+      select: pollSelect,
+    })
+    if (!poll) throw new NotFoundError('Pauta não encontrada.')
+
+    const [votes, currentUser] = await Promise.all([
+      countVotes({ pollId: poll.id }),
+      request.getCurrentUser().catch((error: unknown) => {
+        if (error instanceof UnauthorizedError) return null
+        throw error
+      }),
+    ])
+    const hasVoted = currentUser
+      ? !!(await prisma.participations.findUnique({
+          where: { pollId_userId: { pollId: poll.id, userId: currentUser.id } },
+        }))
       : false
 
     return { ...toPollView(poll, votes), hasVoted }
@@ -103,11 +276,11 @@ export async function pollRoutes(app: FastifyInstance) {
   // Participação e voto em tabelas separadas, na mesma transação: o voto não guarda quem votou (RNF05).
   api.post(
     '/polls/:id/votes',
-    { schema: { params: z.object({ id: z.string() }), body: z.object({ option: z.enum(['FOR', 'AGAINST', 'ABSTAIN']) }) } },
+    { schema: { params: pollParams, body: z.object({ option: z.enum(['FOR', 'AGAINST', 'ABSTAIN']) }) } },
     async (request, reply) => {
       const user = await request.requireRole('CITIZEN')
       const poll = await prisma.polls.findUnique({ where: { id: request.params.id } })
-      if (!poll) throw new BadRequestError('Pauta não encontrada.')
+      if (!poll) throw new NotFoundError('Pauta não encontrada.')
       if (statusOf(poll) !== 'OPEN') {
         throw new BadRequestError('Esta pauta não está disponível para votação no momento.')
       }
@@ -139,11 +312,18 @@ export async function pollRoutes(app: FastifyInstance) {
       const user = await request.requireRole('MANAGER', 'ADMIN')
       const data = request.body
       validatePeriod(data)
+      const category = await prisma.categories.findUnique({ where: { id: data.categoryId }, select: { id: true } })
+      if (!category) throw new BadRequestError('Categoria não encontrada.')
 
-      const poll = await prisma.polls.create({
-        data: { ...data, status: statusOf({ ...data, status: 'SCHEDULED' }), createdById: user.id },
+      const poll = await prisma.$transaction(async (transaction) => {
+        const createdPoll = await transaction.polls.create({
+          data: { ...data, status: statusOf({ ...data, status: 'SCHEDULED' }), createdById: user.id },
+        })
+        await transaction.auditLogs.create({
+          data: { action: 'POLL_CREATED', actorId: user.id, targetId: createdPoll.id },
+        })
+        return createdPoll
       })
-      await prisma.auditLogs.create({ data: { action: 'POLL_CREATED', actorId: user.id, targetId: poll.id } })
 
       return reply.status(201).send({ id: poll.id, status: poll.status })
     }
@@ -152,15 +332,17 @@ export async function pollRoutes(app: FastifyInstance) {
   // Só pautas agendadas podem ser editadas, e o título não muda depois de publicado.
   api.patch(
     '/polls/:id',
-    { schema: { params: z.object({ id: z.string() }), body: pollBody } },
+    { schema: { params: pollParams, body: pollBody } },
     async (request, reply) => {
       const user = await request.requireRole('MANAGER', 'ADMIN')
       const poll = await prisma.polls.findUnique({ where: { id: request.params.id } })
-      if (!poll) throw new BadRequestError('Pauta não encontrada.')
+      if (!poll) throw new NotFoundError('Pauta não encontrada.')
       if (statusOf(poll) !== 'SCHEDULED') throw new BadRequestError('Só pautas agendadas podem ser editadas.')
 
       const data = request.body
       validatePeriod(data)
+      const category = await prisma.categories.findUnique({ where: { id: data.categoryId }, select: { id: true } })
+      if (!category) throw new BadRequestError('Categoria não encontrada.')
 
       await prisma.$transaction([
         prisma.polls.update({

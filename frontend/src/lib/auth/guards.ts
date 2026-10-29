@@ -42,3 +42,7 @@ export function requireStaff({ context }: SessionContext) {
 export function requireAdmin({ context }: SessionContext) {
   if (context.session.user.role !== 'ADMIN') throw redirect({ to: '/admin/pautas' })
 }
+
+export function requireCitizen({ context }: SessionContext) {
+  if (context.session.user.role !== 'CITIZEN') throw redirect({ to: '/painel' })
+}

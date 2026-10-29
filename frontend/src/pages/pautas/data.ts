@@ -1,24 +1,27 @@
-import type { FilterChip } from '@/components/filter-chips/data'
+import type { Category, Poll } from '@/lib/poll/types'
 import type { PollStatus } from '@/lib/poll/status'
-import type { Poll } from '@/lib/poll/types'
 
-export type StatusFilter = 'ALL' | PollStatus
-
-export interface CategoryOption {
-  value: string
-  label: string
-}
+export type PollStatusFilter = 'ALL' | PollStatus
+export type PollSort = 'recent' | 'start' | 'ending'
 
 export interface PautasProps {}
 
 export interface PautasLayoutProps extends PautasProps {
-  filters: FilterChip<StatusFilter>[]
-  statusFilter: StatusFilter
-  onStatusFilterChange: (value: StatusFilter) => void
-  categoryOptions: CategoryOption[]
-  categoryFilter: string
-  onCategoryFilterChange: (value: string) => void
+  categories: Category[]
   polls: Poll[]
+  categoryId: string
+  status: PollStatusFilter
+  sort: PollSort
+  page: number
+  pageSize: number
+  total: number
+  search: string
   loading: boolean
   error?: string
+  onCategoryChange: (categoryId: string) => void
+  onStatusChange: (status: PollStatusFilter) => void
+  onSortChange: (sort: PollSort) => void
+  onPageChange: (page: number) => void
+  onSearchChange: (search: string) => void
+  onClearFilters: () => void
 }

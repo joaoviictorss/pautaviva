@@ -15,12 +15,11 @@ import { formatNumber } from '@/lib/utils/format'
 import { Pauta as Layout } from './layout'
 import type { PautaLayoutProps, PautaProps } from './data'
 
-const route = getRouteApi('/pautas/$id')
-
-const longDate = (iso: string) => format(new Date(iso), "dd 'de' MMM 'de' yyyy", { locale: ptBR })
+const route = getRouteApi('/pautas/$pollId')
+const longDate = (iso: string) => format(new Date(iso), "dd 'de' MMM 'de' yyyy, HH:mm", { locale: ptBR })
 
 export function Pauta(_props: PautaProps) {
-  const { id } = route.useParams()
+  const { pollId } = route.useParams()
   const [poll, setPoll] = useState<PollDetail>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>()
@@ -28,42 +27,41 @@ export function Pauta(_props: PautaProps) {
 
   const load = useCallback(async () => {
     try {
-      setPoll(await api<PollDetail>(`/polls/${id}`))
+      setPoll(await api<PollDetail>(`/polls/${encodeURIComponent(pollId)}`))
       setError(undefined)
-    } catch (err) {
-      setError((err as Error).message)
+    } catch (loadError) {
+      setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar a pauta.')
     } finally {
       setLoading(false)
     }
-  }, [id])
+  }, [pollId])
 
   useEffect(() => {
-    load()
+    void load()
   }, [load])
 
-  // Resultados em tempo real (UC09): a cada (re)conexão entra na sala e recarrega, para não perder votos do intervalo.
   useEffect(() => {
     const socket = io(env.VITE_API_URL, { withCredentials: true })
     socket.on('connect', () => {
-      socket.emit('join-poll', id)
+      socket.emit('join-poll', pollId)
       setLive(true)
-      load()
+      void load()
     })
     socket.on('disconnect', () => setLive(false))
-    socket.on('poll-results', (update: Pick<PollDetail, 'results' | 'participations'>) =>
-      setPoll((current) => current && { ...current, ...update })
-    )
+    socket.on('poll-results', (update: Pick<PollDetail, 'results' | 'participations'>) => {
+      setPoll((current) => (current ? { ...current, ...update } : current))
+    })
     return () => {
       socket.disconnect()
     }
-  }, [id, load])
+  }, [pollId, load])
 
   const layoutProps: PautaLayoutProps = {
     poll,
     loading,
     error,
     live,
-    onVoted: load,
+    onVoted: () => void load(),
     ...(poll && {
       categoryLook: getCategoryLook(poll.category.name),
       statusLabel: POLL_STATUS[poll.status].label,

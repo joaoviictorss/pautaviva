@@ -1,7 +1,6 @@
 import type { FormField } from '@/lib/form/field'
 import type { CategoryLook } from '@/lib/poll/categories'
-
-import type { Category, Poll } from '../../data'
+import type { Category, Poll } from '@/lib/poll/types'
 
 export interface PollDrawerProps {
   open: boolean

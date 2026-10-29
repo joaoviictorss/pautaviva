@@ -20,6 +20,13 @@ export interface Poll {
   results: Record<VoteOption, number>
 }
 
+export interface PollPage {
+  items: Poll[]
+  total: number
+  page: number
+  pageSize: number
+}
+
 export interface PollDetail extends Poll {
   hasVoted: boolean
 }

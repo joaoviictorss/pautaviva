@@ -9,6 +9,13 @@ export function SiteHeader(_props: SiteHeaderProps) {
   const layoutProps: SiteHeaderLayoutProps = {
     loading: isPending,
     signedIn: !!data,
+    user: data?.user
+      ? {
+          name: data.user.name,
+          email: data.user.email,
+          image: data.user.image ?? null,
+        }
+      : undefined,
   }
 
   return <Layout {...layoutProps} />
