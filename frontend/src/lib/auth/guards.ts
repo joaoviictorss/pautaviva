@@ -46,3 +46,7 @@ export function requireAdmin({ context }: SessionContext) {
 export function requireCitizen({ context }: SessionContext) {
   if (context.session.user.role !== 'CITIZEN') throw redirect({ to: '/painel' })
 }
+
+export function requireModerator({ context }: SessionContext) {
+  if (!['MODERATOR', 'ADMIN'].includes(context.session.user.role ?? '')) throw redirect({ to: '/painel' })
+}

@@ -14,6 +14,7 @@ export function SiteHeader(_props: SiteHeaderProps) {
           name: data.user.name,
           email: data.user.email,
           image: data.user.image ?? null,
+          role: data.user.role ?? 'CITIZEN',
         }
       : undefined,
   }

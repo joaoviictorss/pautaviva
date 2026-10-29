@@ -24,6 +24,8 @@ model Users {
   polls               Polls[]
   participations      Participations[]
   auditLogs           AuditLogs[]
+  comments            Comments[]  @relation("CommentAuthor")
+  moderatedComments   Comments[]  @relation("CommentModerator")
 
   @@unique([email])
   @@map("users")
@@ -96,6 +98,18 @@ enum VoteOption {
   ABSTAIN
 }
 
+enum CommentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum CommentClassification {
+  ADEQUATE
+  SUSPECT
+  INAPPROPRIATE
+}
+
 model Categories {
   id        String   @id @default(uuid())
   name      String   @unique
@@ -120,10 +134,31 @@ model Polls {
   createdBy      Users            @relation(fields: [createdById], references: [id])
   participations Participations[]
   votes          Votes[]
+  comments       Comments[]
 
   @@index([status, endsAt])
   @@index([categoryId])
   @@map("polls")
+}
+
+model Comments {
+  id                 String                 @id @default(uuid())
+  text               String
+  status             CommentStatus          @default(PENDING)
+  classification     CommentClassification?
+  moderationReason   String?
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  pollId             String
+  poll               Polls                  @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  authorId           String
+  author             Users                  @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  moderatedById      String?
+  moderatedBy        Users?                 @relation("CommentModerator", fields: [moderatedById], references: [id], onDelete: SetNull)
+
+  @@index([pollId, status, createdAt])
+  @@index([status, createdAt])
+  @@map("comments")
 }
 
 model Participations {

@@ -11,6 +11,7 @@ import { errorHandler } from './error-handler.js'
 import { authPlugin } from './middlewares/auth.js'
 import { adminRoutes } from './routes/admin.js'
 import { authRoutes } from './routes/auth.js'
+import { commentRoutes } from './routes/comments.js'
 import { pollRoutes } from './routes/polls.js'
 import { userRoutes } from './routes/users.js'
 import { setupSockets } from './sockets/index.js'
@@ -31,6 +32,7 @@ app.register(authPlugin)
 app.register(authRoutes)
 app.register(adminRoutes)
 app.register(pollRoutes)
+app.register(commentRoutes)
 app.register(userRoutes)
 
 app.listen({ port: env.PORT, host: '0.0.0.0' }).then(() => {

@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ChevronDownIcon, Settings2Icon } from 'lucide-react'
+import { ChevronDownIcon, Settings2Icon, ShieldCheckIcon } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -51,14 +51,20 @@ export function SiteHeader({ loading, signedIn, user }: SiteHeaderLayoutProps) {
                     <Settings2Icon />
                     Configurações
                   </DropdownMenuItem>
+                  {['MODERATOR', 'ADMIN'].includes(user?.role ?? '') && (
+                    <DropdownMenuItem render={<Link to="/moderacao" />}>
+                      <ShieldCheckIcon />
+                      Moderação
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
               <>
-                <Button render={<Link to="/entrar" />} variant="ghost" className="h-9 rounded-full px-3.5">
+                <Button nativeButton={false} render={<Link to="/entrar" />} variant="ghost" className="h-9 rounded-full px-3.5">
                   Entrar
                 </Button>
-                <Button render={<Link to="/cadastro" />} className="h-9 rounded-full px-4">
+                <Button nativeButton={false} render={<Link to="/cadastro" />} className="h-9 rounded-full px-4">
                   Criar conta
                 </Button>
               </>
