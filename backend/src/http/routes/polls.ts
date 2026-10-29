@@ -1,6 +1,7 @@
 import { Prisma, type PollStatus, type Polls } from '@prisma/client'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
+import PDFDocument from 'pdfkit'
 import { z } from 'zod'
 
 import { prisma } from '../../lib/prisma.js'
@@ -12,7 +13,6 @@ import { UnauthorizedError } from './_errors/unauthorized-error.js'
 
 const DAY_MS = 24 * 60 * 60 * 1000
 
-// shortcut: situação calculada pelas datas até existir o job de abertura/encerramento (HU10).
 function statusOf(poll: Pick<Polls, 'startsAt' | 'endsAt' | 'status'>, now = new Date()): PollStatus {
   if (poll.status === 'CLOSED' || poll.endsAt <= now) return 'CLOSED'
   return poll.startsAt > now ? 'SCHEDULED' : 'OPEN'
@@ -44,6 +44,7 @@ const agendaQuery = z.object({
   month: z.coerce.number().int().min(1).max(12),
 })
 
+const exportQuery = z.object({ format: z.enum(['csv', 'pdf']) })
 const pollParams = z.object({ id: z.uuid() })
 
 function validatePeriod({ startsAt, endsAt }: { startsAt: Date; endsAt: Date }) {
@@ -88,6 +89,66 @@ async function broadcastResults(pollId: string) {
   const results = { FOR: 0, AGAINST: 0, ABSTAIN: 0 }
   for (const row of votes) results[row.option] = row.count
   emitToPoll(pollId, 'poll-results', { results, participations })
+}
+
+function csvCell(value: string | number) {
+  const text = typeof value === 'string' && /^\s*[=+\-@]/.test(value) ? `'${value}` : String(value)
+  return `"${text.replaceAll('"', '""')}"`
+}
+
+function exportFilename(title: string, extension: string) {
+  const slug = title
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+  return `${slug || 'pauta'}-resultados.${extension}`
+}
+
+function createResultsPdf(
+  poll: Polls,
+  results: { FOR: number; AGAINST: number; ABSTAIN: number },
+  totalVotes: number,
+  participations: number,
+  comments: { text: string; createdAt: Date; author: { name: string } }[],
+) {
+  const document = new PDFDocument({ margin: 48 })
+  const chunks: Buffer[] = []
+  const buffer = new Promise<Buffer>((resolve, reject) => {
+    document.on('data', (chunk: Buffer) => chunks.push(chunk))
+    document.on('end', () => resolve(Buffer.concat(chunks)))
+    document.on('error', reject)
+  })
+
+  document.fontSize(20).font('Helvetica-Bold').text('Resultados finais')
+  document.moveDown(0.5).fontSize(15).font('Helvetica').text(poll.title)
+  document.moveDown(0.5).fontSize(10).text(`Encerrada em: ${poll.endsAt.toLocaleString('pt-BR')}`)
+  document.moveDown().fontSize(13).font('Helvetica-Bold').text('Votos por opção')
+  document.moveDown(0.4).fontSize(11).font('Helvetica')
+
+  const voteRows: [string, number][] = [
+    ['A favor', results.FOR],
+    ['Contra', results.AGAINST],
+    ['Abstenção', results.ABSTAIN],
+  ]
+  for (const [label, count] of voteRows) {
+    const percent = totalVotes ? ((count / totalVotes) * 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 }) : '0'
+    document.text(`${label}: ${count} voto(s) · ${percent}%`)
+  }
+
+  document.moveDown(0.5).font('Helvetica-Bold').text(`Total de participantes: ${participations}`)
+  document.moveDown().fontSize(13).text(`Comentários publicados (${comments.length})`)
+  document.moveDown(0.4).fontSize(10).font('Helvetica')
+
+  if (comments.length === 0) document.text('Não há comentários publicados.')
+  for (const comment of comments) {
+    document.font('Helvetica-Bold').text(`${comment.author.name} · ${comment.createdAt.toLocaleString('pt-BR')}`)
+    document.font('Helvetica').text(comment.text).moveDown(0.6)
+  }
+
+  document.end()
+  return buffer
 }
 
 export async function pollRoutes(app: FastifyInstance) {
@@ -293,6 +354,63 @@ export async function pollRoutes(app: FastifyInstance) {
     return { ...toPollView(poll, votes), hasVoted }
   })
 
+  api.get(
+    '/polls/:id/export',
+    { schema: { params: pollParams, querystring: exportQuery } },
+    async (request, reply) => {
+      await request.requireRole('MANAGER', 'ADMIN')
+      const poll = await prisma.polls.findUnique({ where: { id: request.params.id } })
+      if (!poll) throw new NotFoundError('Pauta não encontrada.')
+      if (statusOf(poll) !== 'CLOSED') {
+        throw new BadRequestError('A exportação só está disponível após o encerramento da votação.')
+      }
+
+      const [votes, participations, comments] = await Promise.all([
+        countVotes({ pollId: poll.id }),
+        prisma.participations.count({ where: { pollId: poll.id } }),
+        prisma.comments.findMany({
+          where: { pollId: poll.id, status: 'APPROVED' },
+          select: { text: true, createdAt: true, author: { select: { name: true } } },
+          orderBy: { createdAt: 'asc' },
+        }),
+      ])
+      const results = { FOR: 0, AGAINST: 0, ABSTAIN: 0 }
+      for (const vote of votes) results[vote.option] = vote.count
+      const totalVotes = results.FOR + results.AGAINST + results.ABSTAIN
+      const filename = exportFilename(poll.title, request.query.format)
+
+      if (request.query.format === 'csv') {
+        const percentage = (count: number) =>
+          totalVotes ? `${((count / totalVotes) * 100).toLocaleString('pt-BR', { maximumFractionDigits: 2 })}%` : '0%'
+        const rows: (string | number)[][] = [
+          ['Resultados finais', poll.title],
+          ['Encerrada em', poll.endsAt.toISOString()],
+          [],
+          ['Opção', 'Votos', 'Percentual'],
+          ['A favor', results.FOR, percentage(results.FOR)],
+          ['Contra', results.AGAINST, percentage(results.AGAINST)],
+          ['Abstenção', results.ABSTAIN, percentage(results.ABSTAIN)],
+          ['Total de participantes', participations],
+          [],
+          ['Comentários publicados'],
+          ['Autor', 'Data', 'Comentário'],
+          ...comments.map((comment) => [comment.author.name, comment.createdAt.toISOString(), comment.text]),
+        ]
+        const csv = `\uFEFF${rows.map((row) => row.map(csvCell).join(',')).join('\r\n')}`
+        return reply
+          .type('text/csv; charset=utf-8')
+          .header('Content-Disposition', `attachment; filename="${filename}"`)
+          .send(csv)
+      }
+
+      const pdf = await createResultsPdf(poll, results, totalVotes, participations, comments)
+      return reply
+        .type('application/pdf')
+        .header('Content-Disposition', `attachment; filename="${filename}"`)
+        .send(pdf)
+    },
+  )
+
   // Participação e voto em tabelas separadas, na mesma transação: o voto não guarda quem votou (RNF05).
   api.post(
     '/polls/:id/votes',
@@ -348,11 +466,14 @@ export async function pollRoutes(app: FastifyInstance) {
       return reply.status(201).send({ id: poll.id, status: poll.status })
     }
   )
-
-  // Só pautas agendadas podem ser editadas, e o título não muda depois de publicado.
   api.patch(
     '/polls/:id',
-    { schema: { params: pollParams, body: pollBody } },
+    {
+      schema: {
+        params: pollParams,
+        body: pollBody.extend({ title: z.string().trim().min(5).max(90) }),
+      },
+    },
     async (request, reply) => {
       const user = await request.requireRole('MANAGER', 'ADMIN')
       const poll = await prisma.polls.findUnique({ where: { id: request.params.id } })

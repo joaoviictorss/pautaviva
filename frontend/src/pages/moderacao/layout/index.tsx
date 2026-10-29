@@ -19,6 +19,13 @@ const classificationLabels = {
   INAPPROPRIATE: 'Impróprio',
 }
 
+const reportReasonLabels = {
+  OFFENSIVE_CONTENT: 'Conteúdo ofensivo',
+  SPAM: 'Spam',
+  HATE_SPEECH: 'Discurso de ódio',
+  OTHER: 'Outro',
+}
+
 export function Moderacao({ comments, loading, error, processingId, onDecision }: ModeracaoLayoutProps) {
   return (
     <div className="flex min-h-dvh flex-col bg-background">
@@ -30,7 +37,7 @@ export function Moderacao({ comments, loading, error, processingId, onDecision }
         </Button>
         <header className="flex flex-col gap-2">
           <h1 className="m-0 text-3xl font-bold tracking-tight">Fila de moderação</h1>
-          <p className="m-0 text-muted-foreground">Revise comentários antes de publicá-los nas discussões.</p>
+          <p className="m-0 text-muted-foreground">Revise comentários pendentes e denúncias feitas pela comunidade.</p>
         </header>
 
         {error && <Alert variant="destructive"><CircleAlertIcon /><AlertDescription>{error}</AlertDescription></Alert>}
@@ -45,9 +52,15 @@ export function Moderacao({ comments, loading, error, processingId, onDecision }
                 <CardHeader>
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <CardTitle className="text-base">{comment.poll.title}</CardTitle>
-                    <Badge variant={comment.classification === 'SUSPECT' ? 'destructive' : 'outline'}>
-                      {comment.classification ? classificationLabels[comment.classification] : 'Triagem indisponível'}
-                    </Badge>
+                    <div className="flex flex-wrap gap-2">
+                      {comment.status === 'PENDING' ? (
+                        <Badge variant={comment.classification === 'SUSPECT' ? 'destructive' : 'outline'}>
+                          {comment.classification ? classificationLabels[comment.classification] : 'Triagem indisponível'}
+                        </Badge>
+                      ) : (
+                        <Badge variant="destructive">Denunciado · {comment.reports.length}</Badge>
+                      )}
+                    </div>
                   </div>
                   <CardDescription>
                     {comment.author.name} · {format(new Date(comment.createdAt), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
@@ -58,21 +71,54 @@ export function Moderacao({ comments, loading, error, processingId, onDecision }
                   {comment.moderationReason && (
                     <p className="m-0 text-sm text-muted-foreground">Triagem automática: {comment.moderationReason}</p>
                   )}
+                  {comment.reports.length > 0 && (
+                    <div className="rounded-lg border bg-muted/40 p-3">
+                      <p className="m-0 mb-2 text-sm font-semibold">Motivos das denúncias</p>
+                      <ul className="m-0 list-inside list-disc space-y-1 text-sm text-muted-foreground">
+                        {comment.reports.map((report) => (
+                          <li key={`${report.reason}-${report.createdAt}`}>
+                            {reportReasonLabels[report.reason]} · {format(new Date(report.createdAt), 'dd/MM/yyyy', { locale: ptBR })}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                   <div className="flex flex-wrap justify-end gap-2">
-                    <Button
-                      variant="outline"
-                      disabled={processingId === comment.id}
-                      onClick={() => onDecision(comment.id, 'REJECTED')}
-                    >
-                      Rejeitar
-                    </Button>
-                    <Button
-                      disabled={processingId === comment.id}
-                      onClick={() => onDecision(comment.id, 'APPROVED')}
-                    >
-                      <ShieldCheckIcon />
-                      Aprovar e publicar
-                    </Button>
+                    {comment.status === 'PENDING' ? (
+                      <>
+                        <Button
+                          variant="outline"
+                          disabled={processingId === comment.id}
+                          onClick={() => onDecision(comment.id, 'REJECT')}
+                        >
+                          Rejeitar
+                        </Button>
+                        <Button
+                          disabled={processingId === comment.id}
+                          onClick={() => onDecision(comment.id, 'APPROVE')}
+                        >
+                          <ShieldCheckIcon />
+                          Aprovar e publicar
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button
+                          variant="outline"
+                          disabled={processingId === comment.id}
+                          onClick={() => onDecision(comment.id, 'DISMISS_REPORT')}
+                        >
+                          Manter comentário
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          disabled={processingId === comment.id}
+                          onClick={() => onDecision(comment.id, 'REMOVE')}
+                        >
+                          Remover comentário
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </CardContent>
               </Card>

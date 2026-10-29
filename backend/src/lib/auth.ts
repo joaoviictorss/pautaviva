@@ -3,7 +3,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { APIError, createAuthMiddleware, isAPIError } from 'better-auth/api'
 
 import { env } from '../env.js'
-import { isValidCpf, normalizeCpf } from '../utils/cpf.js'
+import { hashCpf, isValidCpf } from '../utils/cpf.js'
 import { sendResetPasswordMail, sendVerificationMail } from './mail.js'
 import { prisma } from './prisma.js'
 
@@ -68,6 +68,7 @@ export const auth = betterAuth({
         type: 'string',
         required: false,
         input: true,
+        returned: false,
       },
       role: {
         type: 'string',
@@ -109,7 +110,7 @@ export const auth = betterAuth({
         throw new APIError('BAD_REQUEST', { code: 'INVALID_CPF', message: 'CPF inválido.' })
       }
 
-      const cpf = normalizeCpf(rawCpf)
+      const cpf = hashCpf(rawCpf, env.BETTER_AUTH_SECRET)
       const existingCpf = await prisma.users.findUnique({ where: { cpf } })
       if (existingCpf) {
         throw new APIError('BAD_REQUEST', {

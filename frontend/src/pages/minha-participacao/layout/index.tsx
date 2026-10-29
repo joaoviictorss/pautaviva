@@ -132,7 +132,7 @@ export function MinhaParticipacao({
                   Quando votar em uma pauta aberta, sua participação aparecerá aqui sem identificar sua escolha.
                 </EmptyDescription>
               </EmptyHeader>
-              <Button render={<Link to="/pautas" search={{ status: 'OPEN' }} />}>
+              <Button nativeButton={false} render={<Link to="/pautas" search={{ status: 'OPEN' }} />}>
                 Ver pautas abertas
                 <ArrowRightIcon />
               </Button>

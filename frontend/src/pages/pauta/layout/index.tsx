@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowLeftIcon, CalendarIcon, CircleAlertIcon, UsersIcon } from 'lucide-react'
+import { ArrowDownToLineIcon, ArrowLeftIcon, CalendarIcon, CircleAlertIcon, UsersIcon } from 'lucide-react'
 
 import { SiteHeader } from '@/components/site-header'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -16,7 +16,10 @@ export function Pauta({
   poll,
   loading,
   error,
+  exportError,
   live,
+  canExport,
+  exportingFormat,
   categoryLook,
   statusLabel,
   statusClassName,
@@ -24,6 +27,7 @@ export function Pauta({
   participationsLabel,
   bars,
   onVoted,
+  onExport,
 }: PautaLayoutProps) {
   const CategoryIcon = categoryLook?.icon
 
@@ -74,6 +78,36 @@ export function Pauta({
               </div>
 
               <p className="m-0 leading-relaxed whitespace-pre-line">{poll.description}</p>
+
+              {poll.status === 'CLOSED' && canExport && (
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="mr-1 text-sm font-semibold">Exportar resultados:</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={!!exportingFormat}
+                    onClick={() => onExport('csv')}
+                  >
+                    <ArrowDownToLineIcon />
+                    {exportingFormat === 'csv' ? 'Gerando CSV...' : 'CSV'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={!!exportingFormat}
+                    onClick={() => onExport('pdf')}
+                  >
+                    <ArrowDownToLineIcon />
+                    {exportingFormat === 'pdf' ? 'Gerando PDF...' : 'PDF'}
+                  </Button>
+                  {exportError && (
+                    <Alert variant="destructive" className="basis-full">
+                      <CircleAlertIcon />
+                      <AlertDescription>{exportError}</AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+              )}
 
               {bars && (
                 <Card className="gap-4 rounded-2xl">

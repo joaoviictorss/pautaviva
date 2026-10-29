@@ -4,6 +4,7 @@ build/
 
 .env
 .env.local
+backups/
 
 # Prisma
 backend/src/generated/

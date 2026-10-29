@@ -8,7 +8,10 @@ export interface PautaLayoutProps extends PautaProps {
   poll?: PollDetail
   loading: boolean
   error?: string
+  exportError?: string
   live: boolean
+  canExport: boolean
+  exportingFormat?: 'csv' | 'pdf'
   categoryLook?: CategoryLook
   statusLabel?: string
   statusClassName?: string
@@ -16,4 +19,5 @@ export interface PautaLayoutProps extends PautaProps {
   participationsLabel?: string
   bars?: VoteBar[]
   onVoted: () => void
+  onExport: (format: 'csv' | 'pdf') => void
 }

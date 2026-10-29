@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { api } from '@/lib/api/client'
 
 import { Moderacao as Layout } from './layout'
-import type { ModeracaoLayoutProps, ModeracaoProps, ModerationComment } from './data'
+import type { ModeracaoLayoutProps, ModeracaoProps, ModerationAction, ModerationComment } from './data'
 
 export function Moderacao(_props: ModeracaoProps) {
   const [comments, setComments] = useState<ModerationComment[]>([])
@@ -26,11 +26,11 @@ export function Moderacao(_props: ModeracaoProps) {
     void load()
   }, [load])
 
-  const decide = useCallback(async (id: string, status: 'APPROVED' | 'REJECTED') => {
+  const decide = useCallback(async (id: string, action: ModerationAction) => {
     setProcessingId(id)
     setError(undefined)
     try {
-      await api(`/moderation/comments/${encodeURIComponent(id)}`, { method: 'PATCH', json: { status } })
+      await api(`/moderation/comments/${encodeURIComponent(id)}`, { method: 'PATCH', json: { action } })
       setComments((current) => current.filter((comment) => comment.id !== id))
     } catch (decisionError) {
       setError(decisionError instanceof Error ? decisionError.message : 'Não foi possível moderar o comentário.')

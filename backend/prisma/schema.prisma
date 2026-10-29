@@ -8,24 +8,26 @@ datasource db {
 }
 
 model Users {
-  id                  String     @id
+  id                  String           @id
   name                String
   email               String
-  emailVerified       Boolean    @default(false)
+  emailVerified       Boolean          @default(false)
   image               String?
-  createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt
-  cpf                 String?    @unique
-  role                Role       @default(CITIZEN)
-  failedLoginAttempts Int        @default(0)
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  cpf                 String?          @unique
+  role                Role             @default(CITIZEN)
+  failedLoginAttempts Int              @default(0)
   lockedUntil         DateTime?
   sessions            Sessions[]
   accounts            Accounts[]
   polls               Polls[]
   participations      Participations[]
   auditLogs           AuditLogs[]
-  comments            Comments[]  @relation("CommentAuthor")
-  moderatedComments   Comments[]  @relation("CommentModerator")
+  comments            Comments[]       @relation("CommentAuthor")
+  moderatedComments   Comments[]       @relation("CommentModerator")
+  commentReports      CommentReports[] @relation("CommentReporter")
+  reviewedReports     CommentReports[] @relation("ReportReviewer")
 
   @@unique([email])
   @@map("users")
@@ -102,12 +104,26 @@ enum CommentStatus {
   PENDING
   APPROVED
   REJECTED
+  REMOVED
 }
 
 enum CommentClassification {
   ADEQUATE
   SUSPECT
   INAPPROPRIATE
+}
+
+enum CommentReportReason {
+  OFFENSIVE_CONTENT
+  SPAM
+  HATE_SPEECH
+  OTHER
+}
+
+enum CommentReportStatus {
+  PENDING
+  DISMISSED
+  ACTIONED
 }
 
 model Categories {
@@ -142,23 +158,43 @@ model Polls {
 }
 
 model Comments {
-  id                 String                 @id @default(uuid())
-  text               String
-  status             CommentStatus          @default(PENDING)
-  classification     CommentClassification?
-  moderationReason   String?
-  createdAt          DateTime               @default(now())
-  updatedAt          DateTime               @updatedAt
-  pollId             String
-  poll               Polls                  @relation(fields: [pollId], references: [id], onDelete: Cascade)
-  authorId           String
-  author             Users                  @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
-  moderatedById      String?
-  moderatedBy        Users?                 @relation("CommentModerator", fields: [moderatedById], references: [id], onDelete: SetNull)
+  id               String                 @id @default(uuid())
+  text             String
+  status           CommentStatus          @default(PENDING)
+  classification   CommentClassification?
+  moderationReason String?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  pollId           String
+  poll             Polls                  @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  authorId         String
+  author           Users                  @relation("CommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  moderatedById    String?
+  moderatedBy      Users?                 @relation("CommentModerator", fields: [moderatedById], references: [id], onDelete: SetNull)
+  reports          CommentReports[]
 
   @@index([pollId, status, createdAt])
   @@index([status, createdAt])
   @@map("comments")
+}
+
+model CommentReports {
+  id           String              @id @default(uuid())
+  reason       CommentReportReason
+  status       CommentReportStatus @default(PENDING)
+  createdAt    DateTime            @default(now())
+  reviewedAt   DateTime?
+  commentId    String
+  comment      Comments            @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  reporterId   String
+  reporter     Users               @relation("CommentReporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  reviewedById String?
+  reviewedBy   Users?              @relation("ReportReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@unique([commentId, reporterId])
+  @@index([status, createdAt])
+  @@index([commentId, status])
+  @@map("comment_reports")
 }
 
 model Participations {
@@ -189,8 +225,8 @@ model AuditLogs {
   action    String
   details   Json?
   createdAt DateTime @default(now())
-  actorId   String
-  actor     Users    @relation(fields: [actorId], references: [id])
+  actorId   String?
+  actor     Users?   @relation(fields: [actorId], references: [id], onDelete: SetNull)
   targetId  String?
 
   @@index([actorId])
