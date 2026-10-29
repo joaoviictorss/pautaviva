@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { LayoutDashboardIcon, LogOutIcon } from 'lucide-react'
+import { ArrowRightIcon, LayoutDashboardIcon, LogOutIcon, SearchIcon } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -39,8 +39,18 @@ export function Painel({ name, firstName, initials, email, image, roleLabel, isS
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-10 sm:px-6">
         <div className="flex flex-col gap-2">
           <h1 className="m-0 text-3xl font-bold tracking-tight">Olá, {firstName}</h1>
-          <p className="m-0 text-muted-foreground">As pautas da sua comunidade vão aparecer aqui.</p>
+          <p className="m-0 text-muted-foreground">Consulte as pautas e acompanhe as decisões da sua comunidade.</p>
         </div>
+
+        <Button
+          nativeButton={false}
+          render={<Link to="/pautas" />}
+          className="group h-12 w-fit gap-3 rounded-xl px-6 text-base shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+        >
+          <SearchIcon className="size-5" />
+          Explorar pautas
+          <ArrowRightIcon className="size-5 transition-transform group-hover:translate-x-0.5" />
+        </Button>
 
         <div className="flex max-w-md items-center gap-3.5 rounded-xl border bg-card p-4">
           <Avatar className="size-12">

@@ -10,7 +10,9 @@ import { VOTE_OPTIONS } from '@/lib/poll/votes'
 import { formatNumber } from '@/lib/utils/format'
 
 import { AdminPautas as Layout } from './layout'
-import type { AdminPautasLayoutProps, AdminPautasProps, Category, Poll, PollCardView, StatusFilter } from './data'
+import type { Category, Poll } from '@/lib/poll/types'
+
+import type { AdminPautasLayoutProps, AdminPautasProps, PollCardView, StatusFilter } from './data'
 
 const route = getRouteApi('/_autenticado/admin/pautas')
 

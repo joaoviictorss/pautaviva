@@ -1,23 +1,7 @@
 import type { FilterChip } from '@/components/filter-chips/data'
 import type { CategoryLook } from '@/lib/poll/categories'
 import type { PollStatus } from '@/lib/poll/status'
-
-export interface Category {
-  id: string
-  name: string
-}
-
-export interface Poll {
-  id: string
-  title: string
-  description: string
-  startsAt: string
-  endsAt: string
-  status: PollStatus
-  category: Category
-  participations: number
-  results: { FOR: number; AGAINST: number; ABSTAIN: number }
-}
+import type { Category, Poll } from '@/lib/poll/types'
 
 export type StatusFilter = 'ALL' | PollStatus
 
