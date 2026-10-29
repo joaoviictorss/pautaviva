@@ -6,17 +6,7 @@ export type PollSort = 'recent' | 'start' | 'ending'
 
 export interface PautasProps {}
 
-export interface PautasUser {
-  name: string
-  email: string
-  image?: string
-  initials: string
-  roleLabel: string
-}
-
 export interface PautasLayoutProps extends PautasProps {
-  user?: PautasUser
-  userLoading: boolean
   categories: Category[]
   polls: Poll[]
   categoryId: string

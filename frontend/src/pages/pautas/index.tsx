@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react'
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
 
 import { api } from '@/lib/api/client'
-import { useSession } from '@/lib/auth/client'
-import { roleLabel } from '@/lib/auth/roles'
-import { getInitials } from '@/lib/utils/format'
 import type { Category, Poll, PollPage } from '@/lib/poll/types'
 
 import { Pautas as Layout } from './layout'
@@ -14,7 +11,6 @@ const route = getRouteApi('/pautas/')
 
 export function Pautas(_props: PautasProps) {
   const navigate = useNavigate()
-  const { data: session, isPending: userLoading } = useSession()
   const { categoryId, search, status = 'ALL', sort = 'recent', page = 1 } = route.useSearch()
   const [polls, setPolls] = useState<Poll[]>([])
   const [categories, setCategories] = useState<Category[]>([])
@@ -86,16 +82,6 @@ export function Pautas(_props: PautasProps) {
     })
 
   const layoutProps: PautasLayoutProps = {
-    user: session?.user
-      ? {
-          name: session.user.name,
-          email: session.user.email,
-          image: session.user.image ?? undefined,
-          initials: getInitials(session.user.name),
-          roleLabel: roleLabel(session.user.role),
-        }
-      : undefined,
-    userLoading,
     categories,
     polls,
     categoryId: categoryId ?? '',

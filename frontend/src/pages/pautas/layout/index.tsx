@@ -13,25 +13,16 @@ import {
   MessageCircleIcon,
   SearchIcon,
   Settings2Icon,
-  UserRoundIcon,
   UsersRoundIcon,
   XIcon,
 } from 'lucide-react'
 
+import { SiteHeader } from '@/components/site-header'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Command, CommandEmpty, CommandItem, CommandList } from '@/components/ui/command'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -212,8 +203,6 @@ function PollCard({ poll }: { poll: PautasLayoutProps['polls'][number] }) {
 }
 
 export function Pautas({
-  user,
-  userLoading,
   categories,
   polls,
   categoryId,
@@ -250,49 +239,7 @@ export function Pautas({
 
   return (
     <div className="min-h-dvh bg-background">
-      <header className="border-b bg-card">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-          <Link to="/" className="flex items-center gap-2.5 text-inherit no-underline">
-            <img src="/logo-mark.svg" alt="" className="size-8" />
-            <span className="text-lg font-bold tracking-tight text-primary">PautaViva</span>
-          </Link>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              aria-label="Abrir menu do usuário"
-              className="flex items-center gap-2 rounded-full p-1 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <Avatar>
-                {user?.image && <AvatarImage src={user.image} alt="" />}
-                <AvatarFallback>
-                  {user ? user.initials : <UserRoundIcon className="size-4" />}
-                </AvatarFallback>
-              </Avatar>
-              <ChevronDownIcon className="mr-1 size-4 text-muted-foreground" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-64">
-              <DropdownMenuLabel className="flex flex-col gap-1">
-                <span className="truncate text-sm font-semibold">{user?.name ?? (userLoading ? 'Carregando...' : 'Usuário')}</span>
-                {user ? (
-                  <>
-                    <span className="truncate text-xs font-normal text-muted-foreground">{user.email}</span>
-                    <span className="text-xs font-normal text-muted-foreground">{user.roleLabel}</span>
-                  </>
-                ) : !userLoading ? (
-                  <span className="text-xs font-normal text-muted-foreground">Você não está conectado.</span>
-                ) : null}
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {user ? (
-                <DropdownMenuItem render={<Link to="/painel" />}>
-                  Meu painel
-                </DropdownMenuItem>
-              ) : (
-                !userLoading && <DropdownMenuItem render={<Link to="/entrar" />}>Entrar</DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </header>
+      <SiteHeader />
 
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col md:flex-row">
         <aside className="border-b bg-background md:w-52 md:shrink-0 md:border-r md:border-b-0">
@@ -332,10 +279,13 @@ export function Pautas({
               <MapPinIcon className="size-4" />
               Distritos
             </span>
-            <span aria-disabled="true" title="Seção ainda não disponível" className="flex shrink-0 cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground/60">
+            <Link
+              to="/configuracoes"
+              className="flex shrink-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground no-underline transition-colors hover:bg-muted hover:text-foreground"
+            >
               <Settings2Icon className="size-4" />
               Configurações
-            </span>
+            </Link>
           </nav>
         </aside>
 
