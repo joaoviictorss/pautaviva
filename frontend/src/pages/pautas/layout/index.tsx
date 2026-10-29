@@ -13,15 +13,25 @@ import {
   MessageCircleIcon,
   SearchIcon,
   Settings2Icon,
+  UserRoundIcon,
   UsersRoundIcon,
   XIcon,
 } from 'lucide-react'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Command, CommandEmpty, CommandItem, CommandList } from '@/components/ui/command'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -202,6 +212,8 @@ function PollCard({ poll }: { poll: PautasLayoutProps['polls'][number] }) {
 }
 
 export function Pautas({
+  user,
+  userLoading,
   categories,
   polls,
   categoryId,
@@ -244,9 +256,41 @@ export function Pautas({
             <img src="/logo-mark.svg" alt="" className="size-8" />
             <span className="text-lg font-bold tracking-tight text-primary">PautaViva</span>
           </Link>
-          <Button nativeButton={false} render={<Link to="/entrar" />} variant="outline" className="rounded-full">
-            Entrar
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              aria-label="Abrir menu do usuário"
+              className="flex items-center gap-2 rounded-full p-1 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <Avatar>
+                {user?.image && <AvatarImage src={user.image} alt="" />}
+                <AvatarFallback>
+                  {user ? user.initials : <UserRoundIcon className="size-4" />}
+                </AvatarFallback>
+              </Avatar>
+              <ChevronDownIcon className="mr-1 size-4 text-muted-foreground" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-64">
+              <DropdownMenuLabel className="flex flex-col gap-1">
+                <span className="truncate text-sm font-semibold">{user?.name ?? (userLoading ? 'Carregando...' : 'Usuário')}</span>
+                {user ? (
+                  <>
+                    <span className="truncate text-xs font-normal text-muted-foreground">{user.email}</span>
+                    <span className="text-xs font-normal text-muted-foreground">{user.roleLabel}</span>
+                  </>
+                ) : !userLoading ? (
+                  <span className="text-xs font-normal text-muted-foreground">Você não está conectado.</span>
+                ) : null}
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {user ? (
+                <DropdownMenuItem render={<Link to="/painel" />}>
+                  Meu painel
+                </DropdownMenuItem>
+              ) : (
+                !userLoading && <DropdownMenuItem render={<Link to="/entrar" />}>Entrar</DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
