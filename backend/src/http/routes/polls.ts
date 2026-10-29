@@ -1,11 +1,14 @@
-import type { PollStatus, Polls } from '@prisma/client'
+import { Prisma, type PollStatus, type Polls } from '@prisma/client'
 import type { FastifyInstance } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
 import { prisma } from '../../lib/prisma.js'
 import { BadRequestError } from './_errors/bad-request-error.js'
+import { emitToPoll } from '../sockets/index.js'
+import { ConflictError } from './_errors/conflict-error.js'
 import { NotFoundError } from './_errors/not-found-error.js'
+import { UnauthorizedError } from './_errors/unauthorized-error.js'
 
 const DAY_MS = 24 * 60 * 60 * 1000
 
@@ -42,15 +45,45 @@ function validatePeriod({ startsAt, endsAt }: { startsAt: Date; endsAt: Date }) 
   }
 }
 
-function resultCounts(votes: { option: 'FOR' | 'AGAINST' | 'ABSTAIN'; _count: number }[]) {
+const pollSelect = {
+  id: true,
+  title: true,
+  description: true,
+  startsAt: true,
+  endsAt: true,
+  status: true,
+  category: { select: { id: true, name: true } },
+  _count: { select: { participations: true } },
+} satisfies Prisma.PollsSelect
+
+
+function toPollView({ _count, ...poll }: Prisma.PollsGetPayload<{ select: typeof pollSelect }>, votes: VoteCount[]) {
   const results = { FOR: 0, AGAINST: 0, ABSTAIN: 0 }
-  for (const vote of votes) results[vote.option] = vote._count
-  return results
+  for (const row of votes) if (row.pollId === poll.id) results[row.option] = row.count
+  return { ...poll, status: statusOf(poll), participations: _count.participations, results }
+}
+
+async function countVotes(where: Prisma.VotesWhereInput = {}) {
+  const rows = await prisma.votes.groupBy({ by: ['pollId', 'option'], where, _count: { _all: true } })
+  return rows.map((row) => ({ pollId: row.pollId, option: row.option, count: row._count._all }))
+}
+
+type VoteCount = Awaited<ReturnType<typeof countVotes>>[number]
+
+async function broadcastResults(pollId: string) {
+  const [votes, participations] = await Promise.all([
+    countVotes({ pollId }),
+    prisma.participations.count({ where: { pollId } }),
+  ])
+  const results = { FOR: 0, AGAINST: 0, ABSTAIN: 0 }
+  for (const row of votes) results[row.option] = row.count
+  emitToPoll(pollId, 'poll-results', { results, participations })
 }
 
 export async function pollRoutes(app: FastifyInstance) {
   const api = app.withTypeProvider<ZodTypeProvider>()
 
+  // Consulta pública (UC04): categorias, lista e detalhe não exigem login.
   api.get('/categories', async () => {
     return prisma.categories.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } })
   })
@@ -157,29 +190,11 @@ export async function pollRoutes(app: FastifyInstance) {
       polls = [...upcoming, ...completed]
     }
     const votes = polls.length
-      ? await prisma.votes.groupBy({
-          by: ['pollId', 'option'],
-          where: { pollId: { in: polls.map(({ id }) => id) } },
-          _count: true,
-        })
+      ? await countVotes({ pollId: { in: polls.map(({ id }) => id) } })
       : []
 
-    const votesByPoll = new Map<string, { option: 'FOR' | 'AGAINST' | 'ABSTAIN'; _count: number }[]>()
-    for (const vote of votes) {
-      const current = votesByPoll.get(vote.pollId) ?? []
-      current.push({ option: vote.option, _count: vote._count })
-      votesByPoll.set(vote.pollId, current)
-    }
-
     return {
-      items: polls.map(({ _count, ...poll }) => {
-        return {
-          ...poll,
-          status: statusOf(poll, now),
-          participations: _count.participations,
-          results: resultCounts(votesByPoll.get(poll.id) ?? []),
-        }
-      }),
+      items: polls.map((poll) => toPollView(poll, votes)),
       total,
       page: currentPage,
       pageSize,
@@ -189,33 +204,57 @@ export async function pollRoutes(app: FastifyInstance) {
   api.get('/polls/:id', { schema: { params: pollParams } }, async (request) => {
     const poll = await prisma.polls.findUnique({
       where: { id: request.params.id },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        startsAt: true,
-        endsAt: true,
-        status: true,
-        category: { select: { id: true, name: true } },
-        _count: { select: { participations: true } },
-      },
+      select: pollSelect,
     })
     if (!poll) throw new NotFoundError('Pauta não encontrada.')
 
-    const votes = await prisma.votes.groupBy({
-      by: ['option'],
-      where: { pollId: poll.id },
-      _count: true,
-    })
+    const [votes, currentUser] = await Promise.all([
+      countVotes({ pollId: poll.id }),
+      request.getCurrentUser().catch((error: unknown) => {
+        if (error instanceof UnauthorizedError) return null
+        throw error
+      }),
+    ])
+    const hasVoted = currentUser
+      ? !!(await prisma.participations.findUnique({
+          where: { pollId_userId: { pollId: poll.id, userId: currentUser.id } },
+        }))
+      : false
 
-    const { _count, ...details } = poll
-    return {
-      ...details,
-      status: statusOf(poll),
-      participations: _count.participations,
-      results: resultCounts(votes),
-    }
+    return { ...toPollView(poll, votes), hasVoted }
   })
+
+  // Participação e voto em tabelas separadas, na mesma transação: o voto não guarda quem votou (RNF05).
+  api.post(
+    '/polls/:id/votes',
+    { schema: { params: pollParams, body: z.object({ option: z.enum(['FOR', 'AGAINST', 'ABSTAIN']) }) } },
+    async (request, reply) => {
+      const user = await request.requireRole('CITIZEN')
+      const poll = await prisma.polls.findUnique({ where: { id: request.params.id } })
+      if (!poll) throw new NotFoundError('Pauta não encontrada.')
+      if (statusOf(poll) !== 'OPEN') {
+        throw new BadRequestError('Esta pauta não está disponível para votação no momento.')
+      }
+
+      try {
+        await prisma.$transaction([
+          prisma.participations.create({ data: { pollId: poll.id, userId: user.id } }),
+          prisma.votes.create({ data: { pollId: poll.id, option: request.body.option } }),
+        ])
+      } catch (err) {
+        // o unique (pollId, userId) barra o voto duplicado, inclusive em requisições simultâneas
+        if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+          throw new ConflictError('Você já votou nesta pauta.')
+        }
+        throw err
+      }
+
+      // falha na propagação não afeta a confirmação do voto; o cliente ressincroniza ao reconectar (UC05, E03)
+      broadcastResults(poll.id).catch((err) => request.log.error(err, 'falha ao propagar resultados'))
+
+      return reply.status(201).send()
+    }
+  )
 
   api.post(
     '/polls',

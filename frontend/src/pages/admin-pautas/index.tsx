@@ -1,18 +1,11 @@
 import { useCallback, useEffect, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
-import { differenceInCalendarDays, format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 
 import { api } from '@/lib/api/client'
-import { getCategoryLook } from '@/lib/poll/categories'
-import { POLL_STATUS } from '@/lib/poll/status'
-import { VOTE_OPTIONS } from '@/lib/poll/votes'
-import { formatNumber } from '@/lib/utils/format'
+import type { PollPage } from '@/lib/poll/types'
 
 import { AdminPautas as Layout } from './layout'
-import type { Category, Poll } from '@/lib/poll/types'
-
-import type { AdminPautasLayoutProps, AdminPautasProps, PollCardView, StatusFilter } from './data'
+import type { AdminPautasLayoutProps, AdminPautasProps, Category, Poll, StatusFilter } from './data'
 
 const route = getRouteApi('/_autenticado/admin/pautas')
 
@@ -22,48 +15,6 @@ const FILTERS: [StatusFilter, string][] = [
   ['SCHEDULED', 'Agendadas'],
   ['CLOSED', 'Encerradas'],
 ]
-
-const shortDate = (iso: string) => format(new Date(iso), 'dd MMM', { locale: ptBR }).replace('.', '')
-
-function toCard(poll: Poll, onEdit: (poll: Poll) => void): PollCardView {
-  const { FOR, AGAINST, ABSTAIN } = poll.results
-  const totalVotes = FOR + AGAINST + ABSTAIN
-  const percents = [FOR, AGAINST, ABSTAIN].map((votes) => (totalVotes ? Math.round((votes / totalVotes) * 100) : 0))
-  const daysLeft = differenceInCalendarDays(new Date(poll.endsAt), new Date())
-  const daysUntil = differenceInCalendarDays(new Date(poll.startsAt), new Date())
-
-  return {
-    id: poll.id,
-    title: poll.title,
-    description: poll.description,
-    categoryName: poll.category.name,
-    categoryLook: getCategoryLook(poll.category.name),
-    statusLabel: POLL_STATUS[poll.status].label,
-    statusClassName: POLL_STATUS[poll.status].className,
-    bar: totalVotes
-      ? {
-          segments: VOTE_OPTIONS.map(({ key, color }, i) => ({ key, color, percent: percents[i] })),
-          label: `${percents[0]}% a favor, ${percents[1]}% contra, ${percents[2]}% abstenção`,
-          forLabel: `${percents[0]}% a favor`,
-        }
-      : undefined,
-    participationsLabel:
-      poll.status === 'SCHEDULED' ? undefined : `${formatNumber(poll.participations)} participações`,
-    scheduleLabel:
-      poll.status === 'SCHEDULED'
-        ? `${daysUntil <= 1 ? 'Abre amanhã' : `Abre em ${shortDate(poll.startsAt)}`} · até ${shortDate(poll.endsAt)}`
-        : undefined,
-    timeLabel:
-      poll.status === 'OPEN'
-        ? daysLeft <= 0
-          ? 'Encerra hoje'
-          : daysLeft === 1
-            ? '1 dia restante'
-            : `${daysLeft} dias restantes`
-        : undefined,
-    onEdit: poll.status === 'SCHEDULED' ? () => onEdit(poll) : undefined,
-  }
-}
 
 export function AdminPautas(_props: AdminPautasProps) {
   const { q = '' } = route.useSearch()
@@ -76,15 +27,20 @@ export function AdminPautas(_props: AdminPautasProps) {
 
   const load = useCallback(async () => {
     try {
-      const [pollList, categoryList] = await Promise.all([
-        api<Poll[]>('/polls'),
+      const [firstPage, categoryList] = await Promise.all([
+        api<PollPage>('/polls?page=1&pageSize=50'),
         api<Category[]>('/categories'),
       ])
-      setPolls(pollList)
+      const remainingPages = await Promise.all(
+        Array.from({ length: Math.max(0, Math.ceil(firstPage.total / firstPage.pageSize) - 1) }, (_, index) =>
+          api<PollPage>(`/polls?page=${index + 2}&pageSize=${firstPage.pageSize}`),
+        ),
+      )
+      setPolls([...firstPage.items, ...remainingPages.flatMap((page) => page.items)])
       setCategories(categoryList)
       setError(undefined)
     } catch (err) {
-      setError((err as Error).message)
+      setError(err instanceof Error ? err.message : 'Não foi possível carregar as pautas.')
     } finally {
       setLoading(false)
     }
@@ -98,7 +54,6 @@ export function AdminPautas(_props: AdminPautasProps) {
   const matching = polls.filter(
     (poll) => !term || poll.title.toLowerCase().includes(term) || poll.category.name.toLowerCase().includes(term)
   )
-  const openEdit = (poll: Poll) => setDrawer({ open: true, poll })
 
   const layoutProps: AdminPautasLayoutProps = {
     filters: FILTERS.map(([value, label]) => ({
@@ -108,9 +63,8 @@ export function AdminPautas(_props: AdminPautasProps) {
     })),
     statusFilter,
     onStatusFilterChange: setStatusFilter,
-    cards: matching
-      .filter((poll) => statusFilter === 'ALL' || poll.status === statusFilter)
-      .map((poll) => toCard(poll, openEdit)),
+    polls: matching.filter((poll) => statusFilter === 'ALL' || poll.status === statusFilter),
+    onEdit: (poll) => setDrawer({ open: true, poll }),
     loading,
     error,
     onNew: () => setDrawer({ open: true }),

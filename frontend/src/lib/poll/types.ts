@@ -1,5 +1,8 @@
 import type { PollStatus } from './status'
 
+/** Espelha o enum VoteOption do backend (backend/prisma/schema.prisma). */
+export type VoteOption = 'FOR' | 'AGAINST' | 'ABSTAIN'
+
 export interface Category {
   id: string
   name: string
@@ -14,7 +17,7 @@ export interface Poll {
   status: PollStatus
   category: Category
   participations: number
-  results: { FOR: number; AGAINST: number; ABSTAIN: number }
+  results: Record<VoteOption, number>
 }
 
 export interface PollPage {
@@ -22,4 +25,8 @@ export interface PollPage {
   total: number
   page: number
   pageSize: number
+}
+
+export interface PollDetail extends Poll {
+  hasVoted: boolean
 }

@@ -1,24 +1,10 @@
 import type { FilterChip } from '@/components/filter-chips/data'
-import type { CategoryLook } from '@/lib/poll/categories'
 import type { PollStatus } from '@/lib/poll/status'
 import type { Category, Poll } from '@/lib/poll/types'
 
-export type StatusFilter = 'ALL' | PollStatus
+export type { Category, Poll }
 
-export interface PollCardView {
-  id: string
-  title: string
-  description: string
-  categoryName: string
-  categoryLook: CategoryLook
-  statusLabel: string
-  statusClassName: string
-  bar?: { segments: { key: string; color: string; percent: number }[]; label: string; forLabel: string }
-  participationsLabel?: string
-  scheduleLabel?: string
-  timeLabel?: string
-  onEdit?: () => void
-}
+export type StatusFilter = 'ALL' | PollStatus
 
 export interface AdminPautasProps {}
 
@@ -26,7 +12,8 @@ export interface AdminPautasLayoutProps extends AdminPautasProps {
   filters: FilterChip<StatusFilter>[]
   statusFilter: StatusFilter
   onStatusFilterChange: (value: StatusFilter) => void
-  cards: PollCardView[]
+  polls: Poll[]
+  onEdit: (poll: Poll) => void
   loading: boolean
   error?: string
   onNew: () => void

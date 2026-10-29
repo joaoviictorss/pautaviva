@@ -1,9 +1,19 @@
-import type { Poll } from '@/lib/poll/types'
+import type { CategoryLook } from '@/lib/poll/categories'
+import type { PollDetail } from '@/lib/poll/types'
+import type { VoteBar } from '@/lib/poll/votes'
 
 export interface PautaProps {}
 
 export interface PautaLayoutProps extends PautaProps {
-  poll?: Poll
+  poll?: PollDetail
   loading: boolean
   error?: string
+  live: boolean
+  categoryLook?: CategoryLook
+  statusLabel?: string
+  statusClassName?: string
+  periodLabel?: string
+  participationsLabel?: string
+  bars?: VoteBar[]
+  onVoted: () => void
 }
