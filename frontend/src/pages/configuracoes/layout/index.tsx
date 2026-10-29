@@ -38,7 +38,7 @@ export function Configuracoes({
     <div className="flex min-h-dvh flex-col bg-background">
       <SiteHeader />
       <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-4 py-8 sm:px-6 sm:py-10">
-        <Button render={<Link to="/painel" />} variant="link" className="w-fit px-0">
+        <Button nativeButton={false} render={<Link to="/painel" />} variant="link" className="w-fit px-0">
           <ArrowLeftIcon />
           Voltar ao painel
         </Button>

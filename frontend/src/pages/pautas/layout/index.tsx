@@ -5,18 +5,13 @@ import { ptBR } from 'date-fns/locale'
 import {
   AlertCircleIcon,
   ArrowRightIcon,
-  CalendarDaysIcon,
   ChevronDownIcon,
-  HouseIcon,
   ListChecksIcon,
-  MapPinIcon,
-  MessageCircleIcon,
   SearchIcon,
-  Settings2Icon,
-  UsersRoundIcon,
   XIcon,
 } from 'lucide-react'
 
+import { CommunityNavigation } from '@/components/community-navigation'
 import { SiteHeader } from '@/components/site-header'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -241,55 +236,7 @@ export function Pautas({
     <div className="min-h-dvh bg-background">
       <SiteHeader />
 
-      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col md:flex-row">
-        <aside className="border-b bg-background md:w-52 md:shrink-0 md:border-r md:border-b-0">
-          <nav aria-label="Menu principal" className="flex gap-1 overflow-x-auto p-3 md:sticky md:top-0 md:flex-col md:overflow-visible md:px-3 md:py-6">
-            <Link
-              to="/painel"
-              className="flex shrink-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground no-underline transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <HouseIcon className="size-4" />
-              Início
-            </Link>
-            <Link
-              to="/pautas"
-              aria-current="page"
-              className="flex shrink-0 items-center gap-3 rounded-lg bg-primary px-3 py-2.5 text-sm font-medium text-primary-foreground no-underline transition-colors"
-            >
-              <ListChecksIcon className="size-4" />
-              Pautas
-            </Link>
-            <span aria-disabled="true" title="Seção ainda não disponível" className="flex shrink-0 cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground/60">
-              <MessageCircleIcon className="size-4" />
-              Discussões
-            </span>
-            <span aria-disabled="true" title="Seção ainda não disponível" className="flex shrink-0 cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground/60">
-              <CalendarDaysIcon className="size-4" />
-              Agenda
-            </span>
-            <Link
-              to="/minha-participacao"
-              search={{ from: 'pautas' }}
-              className="flex shrink-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground no-underline transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <UsersRoundIcon className="size-4" />
-              Minha participação
-            </Link>
-            <span aria-disabled="true" title="Seção ainda não disponível" className="flex shrink-0 cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground/60">
-              <MapPinIcon className="size-4" />
-              Distritos
-            </span>
-            <Link
-              to="/configuracoes"
-              className="flex shrink-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground no-underline transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <Settings2Icon className="size-4" />
-              Configurações
-            </Link>
-          </nav>
-        </aside>
-
-        <main className="mx-auto flex w-full min-w-0 max-w-6xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-12">
+      <CommunityNavigation active="pautas">
         <div className="flex flex-col gap-2">
           <h1 className="m-0 text-[clamp(28px,3.2vw,38px)] font-extrabold tracking-tighter">Pautas</h1>
           <p className="m-0 text-[15px] text-muted-foreground">
@@ -395,8 +342,7 @@ export function Pautas({
             </EmptyHeader>
           </Empty>
         )}
-        </main>
-      </div>
+      </CommunityNavigation>
     </div>
   )
 }

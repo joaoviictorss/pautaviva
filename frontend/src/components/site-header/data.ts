@@ -7,5 +7,6 @@ export interface SiteHeaderLayoutProps extends SiteHeaderProps {
     name: string
     email: string
     image: string | null
+    role: string
   }
 }

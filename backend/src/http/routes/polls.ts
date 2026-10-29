@@ -39,6 +39,11 @@ const participationQuery = z.object({
   pageSize: z.coerce.number().int().positive().max(50).default(9),
 })
 
+const agendaQuery = z.object({
+  year: z.coerce.number().int().min(2020).max(2100),
+  month: z.coerce.number().int().min(1).max(12),
+})
+
 const pollParams = z.object({ id: z.uuid() })
 
 function validatePeriod({ startsAt, endsAt }: { startsAt: Date; endsAt: Date }) {
@@ -91,6 +96,21 @@ export async function pollRoutes(app: FastifyInstance) {
   // Consulta pública (UC04): categorias, lista e detalhe não exigem login.
   api.get('/categories', async () => {
     return prisma.categories.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } })
+  })
+
+  api.get('/agenda', { schema: { querystring: agendaQuery } }, async (request) => {
+    const { year, month } = request.query
+    const saoPauloOffsetMs = 3 * 60 * 60 * 1000
+    const start = new Date(Date.UTC(year, month - 1, 1) + saoPauloOffsetMs)
+    const end = new Date(Date.UTC(year, month, 1) + saoPauloOffsetMs)
+    const polls = await prisma.polls.findMany({
+      where: { startsAt: { gte: start, lt: end } },
+      select: pollSelect,
+      orderBy: [{ startsAt: 'asc' }, { id: 'asc' }],
+    })
+    const votes = polls.length ? await countVotes({ pollId: { in: polls.map(({ id }) => id) } }) : []
+
+    return polls.map((poll) => toPollView(poll, votes))
   })
 
   api.get('/participations/me', { schema: { querystring: participationQuery } }, async (request) => {

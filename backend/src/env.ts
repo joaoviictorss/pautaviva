@@ -16,6 +16,7 @@ const envSchema = z.object({
   SMTP_PASS: z.string().optional(),
   // Padrão: o próprio SMTP_USER como remetente.
   MAIL_FROM: z.string().optional(),
+  GEMINI_API_KEY: z.string().optional(),
 })
 
 const parsed = envSchema.safeParse(process.env)

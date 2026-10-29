@@ -51,6 +51,7 @@ export function VotePanel({ poll, state, opensLabel, options, option, onOptionCh
           <div className="flex flex-col gap-3">
             <p className="m-0 text-sm text-muted-foreground">Entre com a sua conta de cidadão para votar nesta pauta.</p>
             <Button
+              nativeButton={false}
               render={<Link to="/entrar" search={{ redirect: `/pautas/${poll.id}` }} />}
               className="h-11 rounded-full font-semibold"
             >
