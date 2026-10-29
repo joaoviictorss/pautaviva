@@ -26,6 +26,11 @@ export async function userRoutes(app: FastifyInstance) {
 
     if (!profile) throw new NotFoundError('Usuário não encontrado.')
 
-    return { ...profile, pollsCreated, pollsVoted }
+    return {
+      ...profile,
+      cpf: profile.cpf ? '***.***.***-**' : null,
+      pollsCreated,
+      pollsVoted,
+    }
   })
 }

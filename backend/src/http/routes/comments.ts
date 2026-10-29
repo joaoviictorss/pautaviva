@@ -12,6 +12,9 @@ import { NotFoundError } from './_errors/not-found-error.js'
 const pollParams = z.object({ id: z.uuid() })
 const commentParams = z.object({ id: z.uuid() })
 const commentBody = z.object({ text: z.string().trim().min(5).max(1000) })
+const reportBody = z.object({
+  reason: z.enum(['OFFENSIVE_CONTENT', 'SPAM', 'HATE_SPEECH', 'OTHER']),
+})
 
 export async function commentRoutes(app: FastifyInstance) {
   const api = app.withTypeProvider<ZodTypeProvider>()
@@ -89,19 +92,69 @@ export async function commentRoutes(app: FastifyInstance) {
     },
   )
 
+  api.post(
+    '/comments/:id/reports',
+    { schema: { params: commentParams, body: reportBody } },
+    async (request, reply) => {
+      const user = await request.requireRole('CITIZEN')
+      const comment = await prisma.comments.findUnique({
+        where: { id: request.params.id },
+        select: { id: true, authorId: true, status: true },
+      })
+      if (!comment) throw new NotFoundError('Comentário não encontrado.')
+      if (comment.status !== 'APPROVED') {
+        throw new BadRequestError('Só é possível denunciar comentários publicados.')
+      }
+      if (comment.authorId === user.id) {
+        throw new BadRequestError('Você não pode denunciar o próprio comentário.')
+      }
+
+      try {
+        await prisma.$transaction(async (transaction) => {
+          await transaction.commentReports.create({
+            data: { commentId: comment.id, reporterId: user.id, reason: request.body.reason },
+          })
+          await transaction.auditLogs.create({
+            data: {
+              action: 'COMMENT_REPORTED',
+              actorId: user.id,
+              targetId: comment.id,
+              details: { reason: request.body.reason },
+            },
+          })
+        })
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+          throw new ConflictError('Você já denunciou este comentário.')
+        }
+        throw error
+      }
+
+      return reply.status(201).send()
+    },
+  )
+
   api.get('/moderation/comments', async (request) => {
     await request.requireRole('MODERATOR', 'ADMIN')
     return prisma.comments.findMany({
-      where: { status: 'PENDING' },
+      where: {
+        OR: [{ status: 'PENDING' }, { reports: { some: { status: 'PENDING' } } }],
+      },
       orderBy: [{ classification: 'desc' }, { createdAt: 'asc' }],
       select: {
         id: true,
         text: true,
         createdAt: true,
+        status: true,
         classification: true,
         moderationReason: true,
         author: { select: { name: true } },
         poll: { select: { id: true, title: true } },
+        reports: {
+          where: { status: 'PENDING' },
+          orderBy: { createdAt: 'asc' },
+          select: { reason: true, createdAt: true },
+        },
       },
     })
   })
@@ -111,33 +164,58 @@ export async function commentRoutes(app: FastifyInstance) {
     {
       schema: {
         params: commentParams,
-        body: z.object({ status: z.enum(['APPROVED', 'REJECTED']) }),
+        body: z.object({ action: z.enum(['APPROVE', 'REJECT', 'REMOVE', 'DISMISS_REPORT']) }),
       },
     },
     async (request, reply) => {
       const moderator = await request.requireRole('MODERATOR', 'ADMIN')
-      try {
-        await prisma.$transaction(async (transaction) => {
+      const { action } = request.body
+
+      await prisma.$transaction(async (transaction) => {
+        const comment = await transaction.comments.findUnique({
+          where: { id: request.params.id },
+          select: { status: true },
+        })
+        if (!comment) throw new ConflictError('Este comentário já foi tratado ou não existe.')
+
+        if (action === 'APPROVE' || action === 'REJECT') {
           const result = await transaction.comments.updateMany({
             where: { id: request.params.id, status: 'PENDING' },
-            data: { status: request.body.status, moderatedById: moderator.id },
+            data: { status: action === 'APPROVE' ? 'APPROVED' : 'REJECTED', moderatedById: moderator.id },
           })
           if (result.count !== 1) throw new ConflictError('Este comentário já foi tratado ou não existe.')
-          await transaction.auditLogs.create({
+        } else {
+          if (comment.status !== 'APPROVED') {
+            throw new ConflictError('Este comentário não possui denúncia pendente.')
+          }
+          const reports = await transaction.commentReports.updateMany({
+            where: { commentId: request.params.id, status: 'PENDING' },
             data: {
-              action: 'COMMENT_MODERATED',
-              actorId: moderator.id,
-              targetId: request.params.id,
-              details: { status: request.body.status },
+              status: action === 'REMOVE' ? 'ACTIONED' : 'DISMISSED',
+              reviewedAt: new Date(),
+              reviewedById: moderator.id,
             },
           })
-        })
-      } catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
-          throw new ConflictError('Este comentário já foi tratado ou não existe.')
+          if (reports.count === 0) throw new ConflictError('Este comentário não possui denúncia pendente.')
+
+          if (action === 'REMOVE') {
+            const result = await transaction.comments.updateMany({
+              where: { id: request.params.id, status: 'APPROVED' },
+              data: { status: 'REMOVED', moderatedById: moderator.id },
+            })
+            if (result.count !== 1) throw new ConflictError('Este comentário já foi tratado ou não existe.')
+          }
         }
-        throw error
-      }
+
+        await transaction.auditLogs.create({
+          data: {
+            action: 'COMMENT_MODERATED',
+            actorId: moderator.id,
+            targetId: request.params.id,
+            details: { action },
+          },
+        })
+      })
 
       return reply.status(204).send()
     },

@@ -26,10 +26,10 @@ export function Header({ navLinks }: HeaderLayoutProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button render={<Link to="/entrar" />} variant="ghost" className="h-9 rounded-full px-3.5">
+          <Button nativeButton={false} render={<Link to="/entrar" />} variant="ghost" className="h-9 rounded-full px-3.5">
             Entrar
           </Button>
-          <Button render={<Link to="/cadastro" />} className="h-9 rounded-full px-4">
+          <Button nativeButton={false} render={<Link to="/cadastro" />} className="h-9 rounded-full px-4">
             Criar conta
           </Button>
         </div>

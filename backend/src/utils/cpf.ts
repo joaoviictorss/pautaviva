@@ -1,6 +1,12 @@
+import { createHmac } from 'node:crypto'
+
 /** Mantém só os dígitos do CPF ("529.982.247-25" → "52998224725"). */
 export function normalizeCpf(cpf: string) {
   return cpf.replace(/\D/g, '')
+}
+
+export function hashCpf(cpf: string, secret: string) {
+  return createHmac('sha256', secret).update(normalizeCpf(cpf)).digest('hex')
 }
 
 /**

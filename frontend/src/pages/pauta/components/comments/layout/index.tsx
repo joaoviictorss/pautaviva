@@ -1,18 +1,34 @@
 import { Link } from '@tanstack/react-router'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { MessageCircleIcon, SendIcon } from 'lucide-react'
+import { FlagIcon, MessageCircleIcon, SendIcon } from 'lucide-react'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
 import { getInitials } from '@/lib/utils/format'
 
-import type { CommentsLayoutProps } from '../data'
+import type { CommentReportReason, CommentsLayoutProps } from '../data'
+
+const reportReasons: { value: CommentReportReason; label: string }[] = [
+  { value: 'OFFENSIVE_CONTENT', label: 'Conteúdo ofensivo' },
+  { value: 'SPAM', label: 'Spam' },
+  { value: 'HATE_SPEECH', label: 'Discurso de ódio' },
+  { value: 'OTHER', label: 'Outro' },
+]
 
 export function Comments({
   commentable,
@@ -22,10 +38,17 @@ export function Comments({
   submitting,
   signedIn,
   canComment,
+  reportOpen,
+  reportReason,
+  reporting,
   error,
   notice,
   onTextChange,
   onSubmit,
+  onReportOpenChange,
+  onReportReasonChange,
+  onOpenReport,
+  onReport,
 }: CommentsLayoutProps) {
   return (
     <Card className="rounded-2xl">
@@ -89,6 +112,17 @@ export function Comments({
                     </time>
                   </div>
                   <p className="m-0 mt-1 whitespace-pre-wrap text-sm leading-relaxed">{comment.text}</p>
+                  {canComment && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="mt-2 h-8 px-2 text-muted-foreground"
+                      onClick={() => onOpenReport(comment.id)}
+                    >
+                      <FlagIcon />
+                      Denunciar
+                    </Button>
+                  )}
                 </div>
               </article>
             ))}
@@ -105,6 +139,42 @@ export function Comments({
           </Empty>
         )}
       </CardContent>
+      <Dialog open={reportOpen} onOpenChange={onReportOpenChange}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Denunciar comentário</DialogTitle>
+            <DialogDescription>
+              Selecione o motivo. A denúncia será analisada pela equipe de moderação.
+            </DialogDescription>
+          </DialogHeader>
+          <Select
+            value={reportReason}
+            onValueChange={(value) => {
+              const reason = reportReasons.find((item) => item.value === value)
+              if (reason) onReportReasonChange(reason.value)
+            }}
+          >
+            <SelectTrigger aria-label="Motivo da denúncia" className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {reportReasons.map((reason) => (
+                <SelectItem key={reason.value} value={reason.value}>
+                  {reason.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <DialogFooter>
+            <Button variant="outline" disabled={reporting} onClick={() => onReportOpenChange(false)}>
+              Cancelar
+            </Button>
+            <Button disabled={reporting} onClick={onReport}>
+              {reporting ? 'Enviando...' : 'Enviar denúncia'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   )
 }

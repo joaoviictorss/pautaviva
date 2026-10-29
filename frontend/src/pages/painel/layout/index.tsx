@@ -143,7 +143,7 @@ export function Painel({
             <ArrowRightIcon className="size-5 transition-transform group-hover:translate-x-0.5" />
           </Button>
           {isStaff && (
-            <Button render={<Link to="/admin/pautas" />} variant="outline" className="h-11 rounded-xl">
+            <Button nativeButton={false} render={<Link to="/admin/pautas" />} variant="outline" className="h-11 rounded-xl">
               <LayoutDashboardIcon />
               Área administrativa
             </Button>
@@ -200,7 +200,7 @@ export function Painel({
                 </CardTitle>
                 <CardDescription>Pautas abertas para participação agora.</CardDescription>
               </div>
-              <Button render={<Link to="/pautas" search={{ status: 'OPEN' }} />} variant="ghost" size="sm" className="shrink-0">
+              <Button nativeButton={false} render={<Link to="/pautas" search={{ status: 'OPEN' }} />} variant="ghost" size="sm" className="shrink-0">
                 Ver todas
                 <ArrowRightIcon />
               </Button>
@@ -214,7 +214,7 @@ export function Painel({
                 <div className="flex flex-col items-start gap-2 rounded-xl border border-dashed p-4">
                   <p className="m-0 font-medium">Nenhuma pauta aberta para votação no momento.</p>
                   <p className="m-0 text-sm text-muted-foreground">Confira as próximas pautas ou explore a comunidade.</p>
-                  <Button render={<Link to="/pautas" />} variant="outline" size="sm" className="mt-1">
+                  <Button nativeButton={false} render={<Link to="/pautas" />} variant="outline" size="sm" className="mt-1">
                     Explorar pautas
                   </Button>
                 </div>
@@ -231,7 +231,7 @@ export function Painel({
                 </CardTitle>
                 <CardDescription>Votações agendadas para começar em breve.</CardDescription>
               </div>
-              <Button render={<Link to="/pautas" search={{ status: 'SCHEDULED' }} />} variant="ghost" size="sm" className="shrink-0">
+              <Button nativeButton={false} render={<Link to="/pautas" search={{ status: 'SCHEDULED' }} />} variant="ghost" size="sm" className="shrink-0">
                 Ver todas
                 <ArrowRightIcon />
               </Button>
@@ -245,7 +245,7 @@ export function Painel({
                 <div className="flex flex-col items-start gap-2 rounded-xl border border-dashed p-4">
                   <p className="m-0 font-medium">Nenhuma votação agendada no momento.</p>
                   <p className="m-0 text-sm text-muted-foreground">As novas pautas aparecerão aqui assim que forem publicadas.</p>
-                  <Button render={<Link to="/pautas" />} variant="outline" size="sm" className="mt-1">
+                  <Button nativeButton={false} render={<Link to="/pautas" />} variant="outline" size="sm" className="mt-1">
                     Explorar pautas
                   </Button>
                 </div>
@@ -266,7 +266,7 @@ export function Painel({
                     </CardTitle>
                     <CardDescription>Seu histórico registra participação, sem revelar em qual opção você votou.</CardDescription>
                   </div>
-                  <Button render={<Link to="/minha-participacao" />} variant="ghost" size="sm">
+                  <Button nativeButton={false} render={<Link to="/minha-participacao" />} variant="ghost" size="sm">
                     Histórico completo
                     <ArrowRightIcon />
                   </Button>
@@ -324,7 +324,7 @@ export function Painel({
                       <div className="flex flex-col items-start gap-2 rounded-xl border border-dashed p-4">
                         <p className="m-0 font-medium">Você ainda não participou de nenhuma votação.</p>
                         <p className="m-0 text-sm text-muted-foreground">Encontre uma pauta aberta e registre sua participação.</p>
-                        <Button render={<Link to="/pautas" search={{ status: 'OPEN' }} />} size="sm" className="mt-1">
+                        <Button nativeButton={false} render={<Link to="/pautas" search={{ status: 'OPEN' }} />} size="sm" className="mt-1">
                           Ver pautas abertas
                           <ArrowRightIcon />
                         </Button>

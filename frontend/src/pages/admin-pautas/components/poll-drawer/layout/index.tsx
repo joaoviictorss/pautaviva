@@ -47,12 +47,11 @@ export function PollDrawer({
                 id="p-title"
                 placeholder="Ex.: Mais áreas verdes no centro"
                 maxLength={90}
-                disabled={editing}
                 aria-invalid={!!title.error}
                 className="h-11"
                 {...title.register}
               />
-              {editing && <FieldDescription>O título não pode ser alterado depois da publicação.</FieldDescription>}
+              {editing && <FieldDescription>Todos os dados podem ser alterados enquanto a pauta estiver agendada.</FieldDescription>}
               <FieldError>{title.error}</FieldError>
             </Field>
 
