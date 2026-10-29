@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { LayoutDashboardIcon, LogOutIcon } from 'lucide-react'
+import { LayoutDashboardIcon, ListChecksIcon, LogOutIcon } from 'lucide-react'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -39,7 +39,7 @@ export function Painel({ name, firstName, initials, email, image, roleLabel, isS
       <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-10 sm:px-6">
         <div className="flex flex-col gap-2">
           <h1 className="m-0 text-3xl font-bold tracking-tight">Olá, {firstName}</h1>
-          <p className="m-0 text-muted-foreground">As pautas da sua comunidade vão aparecer aqui.</p>
+          <p className="m-0 text-muted-foreground">Veja o que está em votação na sua comunidade.</p>
         </div>
 
         <div className="flex max-w-md items-center gap-3.5 rounded-xl border bg-card p-4">
@@ -56,12 +56,18 @@ export function Painel({ name, firstName, initials, email, image, roleLabel, isS
           </Badge>
         </div>
 
-        {isStaff && (
-          <Button render={<Link to="/admin/pautas" />} variant="outline" className="w-fit">
-            <LayoutDashboardIcon />
-            Área administrativa
+        <div className="flex flex-wrap gap-3">
+          <Button render={<Link to="/pautas" />} className="w-fit">
+            <ListChecksIcon />
+            Ver pautas
           </Button>
-        )}
+          {isStaff && (
+            <Button render={<Link to="/admin/pautas" />} variant="outline" className="w-fit">
+              <LayoutDashboardIcon />
+              Área administrativa
+            </Button>
+          )}
+        </div>
       </main>
     </div>
   )

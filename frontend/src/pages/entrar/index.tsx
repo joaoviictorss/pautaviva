@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from '@tanstack/react-router'
+import { getRouteApi, useNavigate, useRouter } from '@tanstack/react-router'
 import { useForm, useWatch } from 'react-hook-form'
 
 import { toast } from '@/components/ui/toast'
@@ -13,8 +13,12 @@ import { formField } from '@/lib/form/field'
 import { Entrar as Layout } from './layout'
 import type { EntrarLayoutProps, EntrarProps } from './data'
 
+const route = getRouteApi('/_visitante/entrar')
+
 export function Entrar(_props: EntrarProps) {
   const navigate = useNavigate()
+  const router = useRouter()
+  const { redirect } = route.useSearch()
   const [view, setView] = useState<'form' | 'sent'>('form')
   const [attemptsLeft, setAttemptsLeft] = useState<number | null>(null)
   const verification = useEmailSender(sendVerificationLink)
@@ -32,7 +36,8 @@ export function Entrar(_props: EntrarProps) {
     const { error } = await signIn.email({ email, password })
 
     if (!error) {
-      navigate({ to: '/painel' })
+      if (redirect) router.history.push(redirect)
+      else navigate({ to: '/painel' })
       return
     }
 

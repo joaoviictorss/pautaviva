@@ -6,40 +6,40 @@ import { Server } from 'socket.io'
 import { env } from '../../env.js'
 import { auth } from '../../lib/auth.js'
 
+// shortcut: salas em memória, só funciona com uma instância do backend; usar @socket.io/redis-adapter ao escalar.
+let io: Server | undefined
+
 export function setupSockets(httpServer: HttpServer) {
-  const io = new Server(httpServer, {
+  io = new Server(httpServer, {
     cors: {
       origin: env.CORS_ORIGIN,
       credentials: true,
     },
   })
 
+  // Acompanhar resultados é público (UC09): a sessão é opcional.
   io.use(async (socket, next) => {
     const session = await auth.api.getSession({
       headers: fromNodeHeaders(socket.request.headers),
     })
 
-    if (!session) {
-      next(new Error('unauthorized'))
-      return
-    }
-
-    socket.data.userId = session.user.id as string
+    socket.data.userId = session?.user.id
     next()
   })
 
   io.on('connection', (socket) => {
-    socket.on('join-pauta', (pautaId: string) => {
-      socket.join(pautaId)
+    socket.on('join-poll', (pollId: string) => {
+      socket.join(`poll:${pollId}`)
     })
 
-    socket.on('leave-pauta', (pautaId: string) => {
-      socket.leave(pautaId)
+    socket.on('leave-poll', (pollId: string) => {
+      socket.leave(`poll:${pollId}`)
     })
   })
 
-  // Quando as rotas de pauta/comentário/voto existirem, emitir aqui via
-  // io.to(pautaId).emit("novo-comentario", ...) / "voto-atualizado" / etc.
-
   return io
+}
+
+export function emitToPoll(pollId: string, event: string, payload: unknown) {
+  io?.to(`poll:${pollId}`).emit(event, payload)
 }

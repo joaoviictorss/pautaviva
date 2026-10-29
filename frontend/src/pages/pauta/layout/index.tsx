@@ -1,0 +1,121 @@
+import { Link } from '@tanstack/react-router'
+import { ArrowLeftIcon, CalendarIcon, CircleAlertIcon, UsersIcon } from 'lucide-react'
+
+import { SiteHeader } from '@/components/site-header'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Skeleton } from '@/components/ui/skeleton'
+import { cn } from '@/lib/utils'
+
+import { VotePanel } from '../components/vote-panel'
+import type { PautaLayoutProps } from '../data'
+
+export function Pauta({
+  poll,
+  loading,
+  error,
+  live,
+  categoryLook,
+  statusLabel,
+  statusClassName,
+  periodLabel,
+  participationsLabel,
+  bars,
+  onVoted,
+}: PautaLayoutProps) {
+  const CategoryIcon = categoryLook?.icon
+
+  return (
+    <div className="flex min-h-dvh flex-col bg-background">
+      <SiteHeader />
+
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 py-8 sm:px-6">
+        <Button render={<Link to="/pautas" />} variant="link" className="w-fit px-0">
+          <ArrowLeftIcon />
+          Todas as pautas
+        </Button>
+
+        {error ? (
+          <Alert variant="destructive">
+            <CircleAlertIcon />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        ) : loading || !poll ? (
+          <Skeleton className="h-80 rounded-2xl" />
+        ) : (
+          <div className="grid items-start gap-6 lg:grid-cols-[1fr_340px]">
+            <article className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge className="h-7 gap-1.5 pr-2.5 pl-2 font-semibold" style={categoryLook?.style}>
+                    {CategoryIcon && <CategoryIcon />}
+                    {poll.category.name}
+                  </Badge>
+                  <Badge className={cn('h-6 px-2.5 font-semibold', statusClassName)}>{statusLabel}</Badge>
+                </div>
+                <h1 className="m-0 text-[clamp(26px,3.4vw,40px)] font-extrabold tracking-tighter text-pretty">
+                  {poll.title}
+                </h1>
+                <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-muted-foreground">
+                  <span className="inline-flex items-center gap-1.5">
+                    <CalendarIcon className="size-4" />
+                    {periodLabel}
+                  </span>
+                  {bars && (
+                    <span className="inline-flex items-center gap-1.5">
+                      <UsersIcon className="size-4" />
+                      {participationsLabel}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <p className="m-0 leading-relaxed whitespace-pre-line">{poll.description}</p>
+
+              {bars && (
+                <Card className="gap-4 rounded-2xl">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2.5 text-lg font-bold tracking-tight">
+                      {poll.status === 'OPEN' ? 'Resultado parcial' : 'Resultado final'}
+                      {poll.status === 'OPEN' && live && (
+                        <Badge variant="outline" className="gap-1.5 font-semibold">
+                          <span className="size-2 animate-pulse rounded-full bg-emerald-500" />
+                          Ao vivo
+                        </Badge>
+                      )}
+                    </CardTitle>
+                    <CardDescription>Resultados agregados — votos individuais não são exibidos.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex flex-col gap-4">
+                    {bars.map((bar) => (
+                      <div key={bar.key} className="flex flex-col gap-1.5">
+                        <div className="flex items-baseline justify-between gap-3 text-sm">
+                          <span className="font-semibold">{bar.label}</span>
+                          <span className="text-muted-foreground">
+                            <span className="font-semibold text-foreground">{bar.percentLabel}</span> · {bar.countLabel}
+                          </span>
+                        </div>
+                        <div className="h-2.5 overflow-hidden rounded-full bg-muted">
+                          <div
+                            className="h-full rounded-full transition-[width] duration-500"
+                            style={{ width: `${bar.percent}%`, background: bar.color }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              )}
+            </article>
+
+            <aside className="lg:sticky lg:top-24">
+              <VotePanel poll={poll} onVoted={onVoted} />
+            </aside>
+          </div>
+        )}
+      </main>
+    </div>
+  )
+}
