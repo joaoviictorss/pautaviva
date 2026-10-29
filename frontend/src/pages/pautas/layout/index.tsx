@@ -320,10 +320,14 @@ export function Pautas({
               <CalendarDaysIcon className="size-4" />
               Agenda
             </span>
-            <span aria-disabled="true" title="Seção ainda não disponível" className="flex shrink-0 cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground/60">
+            <Link
+              to="/minha-participacao"
+              search={{ from: 'pautas' }}
+              className="flex shrink-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground no-underline transition-colors hover:bg-muted hover:text-foreground"
+            >
               <UsersRoundIcon className="size-4" />
               Minha participação
-            </span>
+            </Link>
             <span aria-disabled="true" title="Seção ainda não disponível" className="flex shrink-0 cursor-not-allowed items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground/60">
               <MapPinIcon className="size-4" />
               Distritos

@@ -34,6 +34,11 @@ const pollQuery = z.object({
   pageSize: z.coerce.number().int().positive().max(50).default(9),
 })
 
+const participationQuery = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  pageSize: z.coerce.number().int().positive().max(50).default(9),
+})
+
 const pollParams = z.object({ id: z.uuid() })
 
 function validatePeriod({ startsAt, endsAt }: { startsAt: Date; endsAt: Date }) {
@@ -86,6 +91,50 @@ export async function pollRoutes(app: FastifyInstance) {
   // Consulta pública (UC04): categorias, lista e detalhe não exigem login.
   api.get('/categories', async () => {
     return prisma.categories.findMany({ select: { id: true, name: true }, orderBy: { name: 'asc' } })
+  })
+
+  api.get('/participations/me', { schema: { querystring: participationQuery } }, async (request) => {
+    const user = await request.requireRole('CITIZEN')
+    const now = new Date()
+    const { page, pageSize } = request.query
+    const where = { userId: user.id }
+    const [total, resultsAvailable, participations] = await Promise.all([
+      prisma.participations.count({ where }),
+      prisma.participations.count({
+        where: {
+          ...where,
+          poll: {
+            OR: [
+              { status: 'CLOSED' },
+              { endsAt: { lte: now } },
+              { startsAt: { lte: now }, endsAt: { gt: now } },
+            ],
+          },
+        },
+      }),
+      prisma.participations.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        select: { createdAt: true, poll: { select: pollSelect } },
+      }),
+    ])
+    const votes = participations.length
+      ? await countVotes({ pollId: { in: participations.map(({ poll }) => poll.id) } })
+      : []
+
+    return {
+      total,
+      resultsAvailable,
+      page,
+      pageSize,
+      items: participations.map(({ createdAt, poll }) => ({
+        participatedAt: createdAt,
+        resultsAvailable: statusOf(poll, now) !== 'SCHEDULED',
+        poll: toPollView(poll, votes),
+      })),
+    }
   })
 
   api.get('/polls', { schema: { querystring: pollQuery } }, async (request) => {
