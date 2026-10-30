@@ -9,41 +9,36 @@ import { formatNumber } from '@/lib/utils/format'
 import { PollCard as Layout } from './layout'
 import type { PollCardLayoutProps, PollCardProps } from './data'
 
-const shortDate = (iso: string) => format(new Date(iso), 'dd MMM', { locale: ptBR }).replace('.', '')
+const dateLabel = (iso: string) => format(new Date(iso), 'dd MMM yyyy', { locale: ptBR }).replace('.', '')
 
 export function PollCard(props: PollCardProps) {
   const { poll, onEdit } = props
   const { FOR, AGAINST, ABSTAIN } = poll.results
   const totalVotes = FOR + AGAINST + ABSTAIN
-  const percents = [FOR, AGAINST, ABSTAIN].map((votes) => (totalVotes ? Math.round((votes / totalVotes) * 100) : 0))
+  const votes = [FOR, AGAINST, ABSTAIN]
+  const percents = votes.map((count) => (totalVotes ? (count / totalVotes) * 100 : 0))
   const daysLeft = differenceInCalendarDays(new Date(poll.endsAt), new Date())
-  const daysUntil = differenceInCalendarDays(new Date(poll.startsAt), new Date())
 
   const layoutProps: PollCardLayoutProps = {
     ...props,
     categoryLook: getCategoryLook(poll.category.name),
     statusLabel: POLL_STATUS[poll.status].label,
     statusClassName: POLL_STATUS[poll.status].className,
-    bar: totalVotes
+    bar: poll.status !== 'SCHEDULED' || totalVotes > 0
       ? {
           segments: VOTE_OPTIONS.map(({ key, color }, i) => ({ key, color, percent: percents[i] })),
-          label: `${percents[0]}% a favor, ${percents[1]}% contra, ${percents[2]}% abstenção`,
-          forLabel: `${percents[0]}% a favor`,
+          label: `${totalVotes} votos registrados`,
         }
       : undefined,
-    participationsLabel:
-      poll.status === 'SCHEDULED' ? undefined : `${formatNumber(poll.participations)} participações`,
-    scheduleLabel:
-      poll.status === 'SCHEDULED'
-        ? `${daysUntil <= 1 ? 'Abre amanhã' : `Abre em ${shortDate(poll.startsAt)}`} · até ${shortDate(poll.endsAt)}`
-        : undefined,
+    participationsLabel: `${formatNumber(poll.participations)} ${poll.participations === 1 ? 'participação' : 'participações'}`,
+    scheduleLabel: `${poll.status === 'SCHEDULED' ? 'Votação' : 'Período'}: ${dateLabel(poll.startsAt)} – ${dateLabel(poll.endsAt)}`,
     timeLabel:
       poll.status === 'OPEN'
         ? daysLeft <= 0
           ? 'Encerra hoje'
           : daysLeft === 1
-            ? '1 dia restante'
-            : `${daysLeft} dias restantes`
+            ? 'Encerra amanhã'
+            : `Encerra em ${daysLeft} dias`
         : undefined,
     onEditClick: onEdit && poll.status === 'SCHEDULED' ? () => onEdit(poll) : undefined,
   }
