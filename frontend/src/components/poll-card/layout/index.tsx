@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ClockIcon, PencilIcon } from 'lucide-react'
+import { ArrowRightIcon, PencilIcon } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -10,7 +10,7 @@ import type { PollCardLayoutProps } from '../data'
 
 export function PollCard({
   poll,
-  linked,
+  showDetails,
   categoryLook,
   statusLabel,
   statusClassName,
@@ -23,55 +23,52 @@ export function PollCard({
   const CategoryIcon = categoryLook.icon
 
   return (
-    <Card className="relative gap-3.5 rounded-2xl px-4.5 py-4.5 transition hover:-translate-y-0.5 hover:shadow-lg">
+    <Card className="gap-3.5 rounded-2xl px-4.5 py-4.5 transition hover:-translate-y-0.5 hover:shadow-lg">
       <CardHeader className="flex items-center justify-between gap-2 px-0">
         <Badge className="h-7 gap-1.5 pr-2.5 pl-2 font-semibold" style={categoryLook.style}>
-          <CategoryIcon />
+          <CategoryIcon className="size-3.5" />
           {poll.category.name}
         </Badge>
-        <Badge className={cn('h-6 px-2.5 font-semibold', statusClassName)}>{statusLabel}</Badge>
+        <Badge className={cn(statusClassName)}>{statusLabel}</Badge>
       </CardHeader>
 
       <CardContent className="flex flex-1 flex-col gap-1.5 px-0">
-        <CardTitle className="text-[17px] font-bold tracking-tight text-pretty">
-          {linked ? (
-            <Link
-              to="/pautas/$pollId"
-              params={{ pollId: poll.id }}
-              className="text-inherit no-underline after:absolute after:inset-0 after:rounded-2xl hover:no-underline"
-            >
-              {poll.title}
-            </Link>
-          ) : (
-            poll.title
-          )}
-        </CardTitle>
-        <CardDescription className="line-clamp-2 leading-relaxed">{poll.description}</CardDescription>
+        <CardTitle className="text-[17px] font-bold tracking-tight text-pretty">{poll.title}</CardTitle>
+        <CardDescription className="line-clamp-3 leading-relaxed">{poll.description}</CardDescription>
+        {timeLabel && (
+          <p className="m-0 mt-1 text-xs font-semibold text-amber-700 dark:text-amber-400">{timeLabel}</p>
+        )}
       </CardContent>
 
       {bar && (
-        <CardContent className="flex items-center gap-2.5 px-0">
-          <div role="img" aria-label={bar.label} className="flex h-2 flex-1 gap-0.5 overflow-hidden rounded-full bg-muted">
+        <CardContent className="flex flex-col gap-2 px-0">
+          <div role="img" aria-label={bar.label} className="flex h-2 gap-0.5 overflow-hidden rounded-full bg-muted">
             {bar.segments.map((segment) => (
               <span key={segment.key} style={{ width: `${segment.percent}%`, background: segment.color }} />
             ))}
           </div>
-          <span className="text-[13px] font-semibold whitespace-nowrap">{bar.forLabel}</span>
+          <span className="text-xs text-muted-foreground">{participationsLabel}</span>
         </CardContent>
       )}
 
-      <CardFooter className="min-h-9 gap-3 border-t px-0 pt-3.5 text-[13px] text-muted-foreground">
-        <span className="flex-1">{participationsLabel ?? scheduleLabel}</span>
-        {timeLabel && (
-          <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
-            <ClockIcon className="size-3.5" />
-            {timeLabel}
-          </span>
-        )}
+      <CardFooter className="-mx-4.5 flex items-center justify-between gap-3 border-t px-4.5 pt-3.5 text-xs text-muted-foreground">
+        <span>{scheduleLabel}</span>
         {onEditClick && (
-          <Button variant="outline" size="sm" onClick={onEditClick}>
+          <Button variant="outline" size="sm" onClick={onEditClick} className="shrink-0">
             <PencilIcon />
             Editar
+          </Button>
+        )}
+        {showDetails && (
+          <Button
+            nativeButton={false}
+            variant="outline"
+            size="sm"
+            render={<Link to="/pautas/$pollId" params={{ pollId: poll.id }} />}
+            className="shrink-0"
+          >
+            Detalhes
+            <ArrowRightIcon />
           </Button>
         )}
       </CardFooter>

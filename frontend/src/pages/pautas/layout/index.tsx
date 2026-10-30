@@ -1,10 +1,6 @@
 import { useState } from 'react'
-import { Link } from '@tanstack/react-router'
-import { differenceInCalendarDays, format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
 import {
   AlertCircleIcon,
-  ArrowRightIcon,
   ChevronDownIcon,
   ListChecksIcon,
   SearchIcon,
@@ -12,20 +8,15 @@ import {
 } from 'lucide-react'
 
 import { CommunityNavigation } from '@/components/community-navigation'
+import { PollCard } from '@/components/poll-card'
 import { SiteHeader } from '@/components/site-header'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Command, CommandEmpty, CommandItem, CommandList } from '@/components/ui/command'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Skeleton } from '@/components/ui/skeleton'
-import { getCategoryLook } from '@/lib/poll/categories'
-import { POLL_STATUS } from '@/lib/poll/status'
-import { VOTE_OPTIONS } from '@/lib/poll/votes'
-import { formatNumber } from '@/lib/utils/format'
 
 import type { PautasLayoutProps, PollSort, PollStatusFilter } from '../data'
 
@@ -132,71 +123,6 @@ function FilterSelect({ label, searchTerm, options, value, onValueChange }: Filt
   )
 }
 
-function PollCard({ poll }: { poll: PautasLayoutProps['polls'][number] }) {
-  const look = getCategoryLook(poll.category.name)
-  const CategoryIcon = look.icon
-  const votes = VOTE_OPTIONS.map((_, index) => [poll.results.FOR, poll.results.AGAINST, poll.results.ABSTAIN][index])
-  const totalVotes = votes.reduce((sum, count) => sum + count, 0)
-  const start = format(new Date(poll.startsAt), 'dd MMM yyyy', { locale: ptBR }).replace('.', '')
-  const end = format(new Date(poll.endsAt), 'dd MMM yyyy', { locale: ptBR }).replace('.', '')
-  const daysUntilEnd = differenceInCalendarDays(new Date(poll.endsAt), new Date())
-  const deadlineLabel =
-    daysUntilEnd <= 0 ? 'Encerra hoje' : daysUntilEnd === 1 ? 'Encerra amanhã' : `Encerra em ${daysUntilEnd} dias`
-
-  return (
-    <Card className="gap-3.5 rounded-2xl px-4.5 py-4.5 transition hover:-translate-y-0.5 hover:shadow-lg">
-      <CardHeader className="flex items-center justify-between gap-2 px-0">
-        <Badge className="h-7 gap-1.5 pr-2.5 pl-2 font-semibold" style={look.style}>
-          <CategoryIcon className="size-3.5" />
-          {poll.category.name}
-        </Badge>
-        <Badge className={POLL_STATUS[poll.status].className}>{POLL_STATUS[poll.status].label}</Badge>
-      </CardHeader>
-      <CardContent className="flex flex-1 flex-col gap-1.5 px-0">
-        <CardTitle className="text-[17px] font-bold tracking-tight text-pretty">{poll.title}</CardTitle>
-        <CardDescription className="line-clamp-3 leading-relaxed">{poll.description}</CardDescription>
-        {poll.status === 'OPEN' && (
-          <p className="m-0 mt-1 text-xs font-semibold text-amber-700 dark:text-amber-400">{deadlineLabel}</p>
-        )}
-      </CardContent>
-      {(poll.status !== 'SCHEDULED' || totalVotes > 0) && (
-        <CardContent className="flex flex-col gap-2 px-0">
-          <div
-            role="img"
-            aria-label={`${totalVotes} votos registrados`}
-            className="flex h-2 gap-0.5 overflow-hidden rounded-full bg-muted"
-          >
-            {VOTE_OPTIONS.map(({ color }, index) => (
-              <span
-                key={color}
-                style={{ width: `${totalVotes ? (votes[index] / totalVotes) * 100 : 0}%`, background: color }}
-              />
-            ))}
-          </div>
-          <span className="text-xs text-muted-foreground">
-            {formatNumber(poll.participations)} {poll.participations === 1 ? 'participação' : 'participações'}
-          </span>
-        </CardContent>
-      )}
-      <CardFooter className="-mx-4.5 flex items-center justify-between gap-3 border-t px-4.5 pt-3.5 text-xs text-muted-foreground">
-        <span>
-          {poll.status === 'SCHEDULED' ? `Votação: ${start} – ${end}` : `Período: ${start} – ${end}`}
-        </span>
-        <Button
-          nativeButton={false}
-          variant="outline"
-          size="sm"
-          render={<Link to="/pautas/$pollId" params={{ pollId: poll.id }} />}
-          className="shrink-0"
-        >
-          Detalhes
-          <ArrowRightIcon />
-        </Button>
-      </CardFooter>
-    </Card>
-  )
-}
-
 export function Pautas({
   categories,
   polls,
@@ -299,7 +225,7 @@ export function Pautas({
           <div className="flex flex-col gap-5">
             <div className={GRID}>
               {polls.map((poll) => (
-                <PollCard key={poll.id} poll={poll} />
+                <PollCard key={poll.id} poll={poll} showDetails />
               ))}
             </div>
             <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
