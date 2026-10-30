@@ -19,10 +19,15 @@ model Users {
   role                Role             @default(CITIZEN)
   failedLoginAttempts Int              @default(0)
   lockedUntil         DateTime?
+  notifyPollOpened    Boolean          @default(false)
+  notifyPollClosing   Boolean          @default(false)
+  notifyPollResult    Boolean          @default(false)
+  notifyComments      Boolean          @default(false)
   sessions            Sessions[]
   accounts            Accounts[]
   polls               Polls[]
   participations      Participations[]
+  pollReminders PollReminders[]
   auditLogs           AuditLogs[]
   comments            Comments[]       @relation("CommentAuthor")
   moderatedComments   Comments[]       @relation("CommentModerator")
@@ -151,6 +156,9 @@ model Polls {
   participations Participations[]
   votes          Votes[]
   comments       Comments[]
+  reminders      PollReminders[]
+  openNoticeSentAt    DateTime?
+  closingNoticeSentAt DateTime?
 
   @@index([status, endsAt])
   @@index([categoryId])
@@ -208,6 +216,21 @@ model Participations {
   @@unique([pollId, userId])
   @@index([userId])
   @@map("participations")
+}
+
+model PollReminders {
+  id         String    @id @default(uuid())
+  createdAt  DateTime  @default(now())
+  notifiedAt DateTime?
+  pollId     String
+  poll       Polls     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  userId     String
+  user       Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([pollId, userId])
+  @@index([notifiedAt])
+  @@index([userId])
+  @@map("poll_reminders")
 }
 
 model Votes {

@@ -1,7 +1,7 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+
+import { AdminInicio } from '@/pages/admin-inicio'
 
 export const Route = createFileRoute('/_autenticado/admin/')({
-  beforeLoad: () => {
-    throw redirect({ to: '/admin/pautas' })
-  },
+  component: AdminInicio,
 })

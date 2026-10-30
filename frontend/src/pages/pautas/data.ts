@@ -1,27 +1,35 @@
-import type { Category, Poll } from '@/lib/poll/types'
+import type { FilterChip } from '@/components/filter-chips/data'
 import type { PollStatus } from '@/lib/poll/status'
+import type { Poll } from '@/lib/poll/types'
 
-export type PollStatusFilter = 'ALL' | PollStatus
-export type PollSort = 'recent' | 'start' | 'ending'
+/** Decide a ação de cada card: quem vota, quem precisa entrar e quem só consulta. */
+export type PautasViewer = 'citizen' | 'visitor' | 'staff'
 
 export interface PautasProps {}
 
 export interface PautasLayoutProps extends PautasProps {
-  categories: Category[]
+  viewer: PautasViewer
   polls: Poll[]
+  statusFilters: FilterChip<PollStatus>[]
+  status: PollStatus
+  categoryFilters: FilterChip[]
   categoryId: string
-  status: PollStatusFilter
-  sort: PollSort
+  missing: boolean
+  showMissing: boolean
   page: number
   pageSize: number
   total: number
-  search: string
+  hasActiveFilters: boolean
+  voting?: Poll
   loading: boolean
   error?: string
   onCategoryChange: (categoryId: string) => void
-  onStatusChange: (status: PollStatusFilter) => void
-  onSortChange: (sort: PollSort) => void
+  onStatusChange: (status: PollStatus) => void
+  onMissingChange: (missing: boolean) => void
   onPageChange: (page: number) => void
-  onSearchChange: (search: string) => void
   onClearFilters: () => void
+  onVote: (poll: Poll) => void
+  onCloseVote: () => void
+  onVoted: () => void
+  onToggleReminder: (poll: Poll) => void
 }

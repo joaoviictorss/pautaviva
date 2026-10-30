@@ -1,49 +1,38 @@
-import type { CategoryLook } from '@/lib/poll/categories'
-import type { Poll } from '@/lib/poll/types'
+import type { Kpi } from '@/components/kpi-card'
+import type { CategoryBar, CategoryLook } from '@/lib/poll/categories'
+import type { Poll, VoteOption } from '@/lib/poll/types'
 
 export interface PainelProps {}
 
-export interface PainelPoll {
+export interface PendingPoll {
   poll: Poll
-  statusLabel: string
-  statusClassName: string
   categoryLook: CategoryLook
-  dateLabel: string
+  timeLabel: string
 }
 
-export interface ParticipationItem extends PainelPoll {
-  participatedAtLabel: string
-  resultsAvailable: boolean
+export interface CommentRow {
+  id: string
+  pollId: string
+  pollTitle: string
+  text: string
+  statusLabel: string
+  statusClassName: string
 }
 
 export interface PainelLayoutProps extends PainelProps {
-  name: string
   firstName: string
-  initials: string
-  email: string
-  image?: string
-  roleLabel: string
-  isStaff: boolean
-  isAdmin: boolean
-  signingOut: boolean
-  onSignOut: () => void
-  openPolls: PainelPoll[]
-  scheduledPolls: PainelPoll[]
-  participationCount: number
-  resultsAvailableCount: number
-  recentParticipations: ParticipationItem[]
-  loadingDashboard: boolean
-  dashboardError?: string
+  kpis: Kpi[]
+  pendingTotal: number
+  pending: PendingPoll[]
+  comments: CommentRow[]
+  months: { label: string; count: number }[]
+  categories: CategoryBar[]
+  results: Poll[]
+  voting?: { poll: Poll; option: VoteOption }
+  loading: boolean
+  error?: string
   onRetry: () => void
-  isCitizen: boolean
-}
-
-export interface ParticipationSummary {
-  total: number
-  resultsAvailable: number
-  items: {
-    participatedAt: string
-    resultsAvailable: boolean
-    poll: Poll
-  }[]
+  onVote: (poll: Poll, option: VoteOption) => void
+  onCloseVote: () => void
+  onVoted: () => void
 }

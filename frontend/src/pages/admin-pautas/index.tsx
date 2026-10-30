@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
-import { getRouteApi } from '@tanstack/react-router'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 
 import { api } from '@/lib/api/client'
+import { POLL_STATUS_FILTERS } from '@/lib/poll/status'
 import type { PollPage } from '@/lib/poll/types'
 
 import { AdminPautas as Layout } from './layout'
@@ -9,20 +10,14 @@ import type { AdminPautasLayoutProps, AdminPautasProps, Category, Poll, StatusFi
 
 const route = getRouteApi('/_autenticado/admin/pautas')
 
-const FILTERS: [StatusFilter, string][] = [
-  ['ALL', 'Todas'],
-  ['OPEN', 'Abertas'],
-  ['SCHEDULED', 'Agendadas'],
-  ['CLOSED', 'Encerradas'],
-]
-
 export function AdminPautas(_props: AdminPautasProps) {
-  const { q = '' } = route.useSearch()
+  const { q = '', status = 'ALL', nova, editar } = route.useSearch()
+  const navigate = useNavigate()
   const [polls, setPolls] = useState<Poll[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>()
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('ALL')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>(status)
   const [drawer, setDrawer] = useState<{ open: boolean; poll?: Poll }>({ open: false })
 
   const load = useCallback(async () => {
@@ -50,13 +45,21 @@ export function AdminPautas(_props: AdminPautasProps) {
     load()
   }, [load])
 
+  // Atalhos do Início: abrem o painel uma vez e saem da URL para não reabrir ao salvar ou recarregar.
+  useEffect(() => {
+    const poll = polls.find(({ id }) => id === editar)
+    if (loading || (!nova && !poll)) return
+    setDrawer({ open: true, poll })
+    navigate({ to: '/admin/pautas', search: { q: q || undefined }, replace: true })
+  }, [loading, polls, nova, editar, q, navigate])
+
   const term = q.trim().toLowerCase()
   const matching = polls.filter(
     (poll) => !term || poll.title.toLowerCase().includes(term) || poll.category.name.toLowerCase().includes(term)
   )
 
   const layoutProps: AdminPautasLayoutProps = {
-    filters: FILTERS.map(([value, label]) => ({
+    filters: POLL_STATUS_FILTERS.map(({ value, label }) => ({
       value,
       label,
       count: matching.filter((poll) => value === 'ALL' || poll.status === value).length,

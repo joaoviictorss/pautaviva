@@ -6,6 +6,8 @@ export interface PollComment {
     name: string
     image: string | null
   }
+  /** Comentário do próprio leitor, ainda em moderação. */
+  pending?: boolean
 }
 
 export type CommentReportReason = 'OFFENSIVE_CONTENT' | 'SPAM' | 'HATE_SPEECH' | 'OTHER'
@@ -17,6 +19,8 @@ export interface CommentsProps {
 
 export interface CommentsLayoutProps extends CommentsProps {
   comments: PollComment[]
+  publishedCount: number
+  viewer?: { name: string; image?: string | null }
   text: string
   loading: boolean
   submitting: boolean

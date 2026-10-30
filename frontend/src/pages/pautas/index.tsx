@@ -1,50 +1,72 @@
 import { useEffect, useState } from 'react'
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import { LayoutGridIcon } from 'lucide-react'
 
 import { api } from '@/lib/api/client'
+import { useSession } from '@/lib/auth/client'
+import { getCategoryChipStyle, getCategoryLook } from '@/lib/poll/categories'
+import { setPollReminder } from '@/lib/poll/reminders'
+import type { PollStatus } from '@/lib/poll/status'
 import type { Category, Poll, PollPage } from '@/lib/poll/types'
 
 import { Pautas as Layout } from './layout'
-import type { PautasLayoutProps, PautasProps, PollSort, PollStatusFilter } from './data'
+import type { PautasLayoutProps, PautasProps } from './data'
 
-const route = getRouteApi('/pautas/')
+const route = getRouteApi('/_comunidade/pautas/')
+
+const ALL_CATEGORIES = 'ALL'
+
+const STATUS_SORT: Record<PollStatus, string> = { OPEN: 'ending', SCHEDULED: 'start', CLOSED: 'ending' }
+
+interface PautasSearch {
+  categoryId?: string
+  q?: string
+  status: PollStatus
+  missing?: boolean
+  page?: number
+}
 
 export function Pautas(_props: PautasProps) {
   const navigate = useNavigate()
-  const { categoryId, search, status = 'ALL', sort = 'recent', page = 1 } = route.useSearch()
+  const { data: session } = useSession()
+  const { categoryId, q, status = 'OPEN', missing, page = 1 } = route.useSearch()
   const [polls, setPolls] = useState<Poll[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [total, setTotal] = useState(0)
+  const [counts, setCounts] = useState<PollPage['counts']>()
+  const [voting, setVoting] = useState<Poll>()
+  const [reloads, setReloads] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>()
+  const role = session?.user.role
+  const viewer = !session ? 'visitor' : role === 'CITIZEN' ? 'citizen' : 'staff'
+  const onlyMissing = !!missing && status === 'OPEN'
 
   useEffect(() => {
     let active = true
     const load = async () => {
       setLoading(true)
       try {
-        const query = new URLSearchParams()
+        const query = new URLSearchParams({
+          status,
+          sort: STATUS_SORT[status],
+          page: String(page),
+        })
         if (categoryId) query.set('categoryId', categoryId)
-        if (search?.trim()) query.set('search', search.trim())
-        if (status !== 'ALL') query.set('status', status)
-        query.set('sort', sort)
-        query.set('page', String(page))
-        const suffix = query.size ? `?${query}` : ''
+        if (q?.trim()) query.set('search', q.trim())
+        if (onlyMissing) query.set('missing', 'true')
         const [pollList, categoryList] = await Promise.all([
-          api<PollPage>(`/polls${suffix}`),
+          api<PollPage>(`/polls?${query}`),
           api<Category[]>('/categories'),
         ])
         if (active) {
           setPolls(pollList.items)
           setTotal(pollList.total)
+          setCounts(pollList.counts)
           setCategories(categoryList)
           setError(undefined)
           if (pollList.page !== page) {
-            navigate({
-              to: '/pautas',
-              search: { categoryId, search, status, sort, page: pollList.page },
-              replace: true,
-            })
+            navigate({ to: '/pautas', search: { categoryId, q, status, missing, page: pollList.page }, replace: true })
           }
         }
       } catch (loadError) {
@@ -58,47 +80,63 @@ export function Pautas(_props: PautasProps) {
     return () => {
       active = false
     }
-  }, [categoryId, search, status, sort, page, navigate])
+  }, [categoryId, q, status, missing, onlyMissing, page, reloads, navigate])
 
-  const updateSearch = (values: Partial<{
-    categoryId: string
-    search: string
-    status: PollStatusFilter
-    sort: PollSort
-    page: number
-  }>) =>
+  const updateSearch = (values: Partial<PautasSearch>) =>
     navigate({
       to: '/pautas',
-      search: {
-        categoryId: 'categoryId' in values ? values.categoryId : categoryId,
-        search: 'search' in values ? values.search : search,
-        status: values.status ?? status,
-        sort: values.sort ?? sort,
-        page: values.page ?? (
-          'categoryId' in values || 'search' in values || 'status' in values || 'sort' in values ? 1 : page
-        ),
-      },
+      search: { categoryId, q, status, missing, page: undefined, ...values },
       replace: true,
     })
 
+  async function toggleReminder(poll: Poll) {
+    const active = !poll.hasReminder
+    if (!(await setPollReminder(poll.id, active))) return
+    setPolls((current) => current.map((item) => (item.id === poll.id ? { ...item, hasReminder: active } : item)))
+  }
+
   const layoutProps: PautasLayoutProps = {
-    categories,
+    viewer,
     polls,
-    categoryId: categoryId ?? '',
+    statusFilters: [
+      { value: 'OPEN', label: 'Abertas', count: counts?.OPEN },
+      { value: 'CLOSED', label: 'Encerradas', count: counts?.CLOSED },
+      { value: 'SCHEDULED', label: 'Em breve', count: counts?.SCHEDULED },
+    ],
     status,
-    sort,
+    categoryFilters: [
+      {
+        value: ALL_CATEGORIES,
+        label: 'Todas',
+        icon: LayoutGridIcon,
+        activeStyle: { backgroundColor: 'var(--foreground)', color: 'var(--background)', borderColor: 'var(--foreground)' },
+      },
+      ...categories.map(({ id, name }) => ({
+        value: id,
+        label: name,
+        icon: getCategoryLook(name).icon,
+        activeStyle: getCategoryChipStyle(name),
+      })),
+    ],
+    categoryId: categoryId ?? ALL_CATEGORIES,
+    missing: onlyMissing,
+    showMissing: viewer === 'citizen' && status === 'OPEN',
     page,
     pageSize: 9,
     total,
-    search: search ?? '',
+    hasActiveFilters: Boolean(q?.trim() || categoryId || onlyMissing),
+    voting,
     loading,
     error,
-    onCategoryChange: (value) => updateSearch({ categoryId: value || undefined }),
-    onStatusChange: (value: PollStatusFilter) => updateSearch({ status: value }),
-    onSortChange: (value: PollSort) => updateSearch({ sort: value }),
-    onPageChange: (value: number) => updateSearch({ page: value }),
-    onSearchChange: (value) => updateSearch({ search: value || undefined }),
-    onClearFilters: () => updateSearch({ categoryId: undefined, search: undefined, status: 'ALL' }),
+    onCategoryChange: (value) => updateSearch({ categoryId: value === ALL_CATEGORIES ? undefined : value }),
+    onStatusChange: (value) => updateSearch({ status: value, missing: undefined }),
+    onMissingChange: (value) => updateSearch({ missing: value || undefined }),
+    onPageChange: (value) => updateSearch({ page: value }),
+    onClearFilters: () => updateSearch({ categoryId: undefined, q: undefined, missing: undefined }),
+    onVote: setVoting,
+    onCloseVote: () => setVoting(undefined),
+    onVoted: () => setReloads((current) => current + 1),
+    onToggleReminder: (poll) => void toggleReminder(poll),
   }
 
   return <Layout {...layoutProps} />

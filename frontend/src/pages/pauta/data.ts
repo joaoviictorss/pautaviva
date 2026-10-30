@@ -15,9 +15,13 @@ export interface PautaLayoutProps extends PautaProps {
   categoryLook?: CategoryLook
   statusLabel?: string
   statusClassName?: string
-  periodLabel?: string
+  startLabel?: string
+  endLabel?: string
+  /** Quanto do período de votação já passou, de 0 a 100. */
+  elapsed?: number
   participationsLabel?: string
   bars?: VoteBar[]
   onVoted: () => void
   onExport: (format: 'csv' | 'pdf') => void
+  onShare: () => void
 }

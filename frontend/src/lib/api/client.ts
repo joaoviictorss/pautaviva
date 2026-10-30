@@ -24,5 +24,7 @@ export async function api<T = void>(path: string, { json, ...init }: RequestInit
     throw new ApiError(response.status, body?.message ?? 'Não foi possível concluir a ação.')
   }
 
-  return response.status === 204 ? (undefined as T) : response.json()
+  // 201 sem corpo também é sucesso: response.json() quebraria aqui e a tela acusaria falha numa ação já gravada
+  const body = await response.text()
+  return (body ? JSON.parse(body) : undefined) as T
 }

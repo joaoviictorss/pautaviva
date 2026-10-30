@@ -10,9 +10,11 @@ export type VotePanelState = 'loading' | 'vote' | 'sign-in' | 'voted' | 'not-cit
 export interface VotePanelLayoutProps extends VotePanelProps {
   state: VotePanelState
   opensLabel: string
-  options: { value: VoteOption; label: string; color: string }[]
+  /** Só cidadãos ativam lembrete; visitante vai para o login e a equipe não vê o botão. */
+  reminder?: 'toggle' | 'sign-in'
   option?: VoteOption
   onOptionChange: (option: VoteOption) => void
   submitting: boolean
   onSubmit: (event: React.FormEvent) => void
+  onToggleReminder: () => void
 }

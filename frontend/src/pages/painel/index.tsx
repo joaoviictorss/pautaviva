@@ -1,117 +1,127 @@
 import { useCallback, useEffect, useState } from 'react'
-import { getRouteApi, useNavigate } from '@tanstack/react-router'
-import { differenceInCalendarDays, format } from 'date-fns'
+import { getRouteApi } from '@tanstack/react-router'
+import { format, isSameMonth, subMonths } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { CheckCheckIcon, CircleCheckIcon, HourglassIcon, MessageCircleIcon } from 'lucide-react'
 
-import { toast } from '@/components/ui/toast'
 import { api } from '@/lib/api/client'
-import { signOut } from '@/lib/auth/client'
-import { roleLabel } from '@/lib/auth/roles'
-import { getCategoryLook } from '@/lib/poll/categories'
-import { POLL_STATUS, type PollStatus } from '@/lib/poll/status'
-import type { PollPage } from '@/lib/poll/types'
-import { getInitials } from '@/lib/utils/format'
+import { getCategoryLook, toCategoryBars } from '@/lib/poll/categories'
+import { COMMENT_STATUS, getPollTimeLabel } from '@/lib/poll/status'
+import type { CitizenSummary, MyComment, Poll, VoteOption } from '@/lib/poll/types'
+import { formatNumber } from '@/lib/utils/format'
 
 import { Painel as Layout } from './layout'
-import type { PainelLayoutProps, PainelProps, ParticipationSummary, ParticipationItem, PainelPoll } from './data'
+import type { PainelLayoutProps, PainelProps } from './data'
 
-const route = getRouteApi('/_autenticado')
+const route = getRouteApi('/_comunidade/_autenticado')
 
-function getDateLabel(status: PollStatus, date: string) {
-  if (status === 'CLOSED') return 'Votação encerrada'
-  const days = differenceInCalendarDays(new Date(date), new Date())
-  if (status === 'OPEN') {
-    if (days <= 0) return 'Encerra hoje'
-    if (days === 1) return 'Encerra amanhã'
-    return `Encerra em ${days} dias`
-  }
-  if (days <= 0) return 'Abre hoje'
-  if (days === 1) return 'Abre amanhã'
-  return `Abre em ${days} dias`
-}
+const RECENT_COMMENTS = 3
+const CHART_MONTHS = 6
+const TOP_CATEGORIES = 5
 
-function toDashboardPoll(poll: PollPage['items'][number]): PainelPoll {
-  return {
-    poll,
-    statusLabel: POLL_STATUS[poll.status].label,
-    statusClassName: POLL_STATUS[poll.status].className,
-    categoryLook: getCategoryLook(poll.category.name),
-    dateLabel: getDateLabel(poll.status, poll.status === 'OPEN' ? poll.endsAt : poll.startsAt),
-  }
+interface Dashboard {
+  summary: CitizenSummary
+  comments: MyComment[]
 }
 
 export function Painel(_props: PainelProps) {
-  const navigate = useNavigate()
   const { session } = route.useRouteContext()
-  const [signingOut, setSigningOut] = useState(false)
-  const [openPolls, setOpenPolls] = useState<PainelPoll[]>([])
-  const [scheduledPolls, setScheduledPolls] = useState<PainelPoll[]>([])
-  const [summary, setSummary] = useState<ParticipationSummary>({ total: 0, resultsAvailable: 0, items: [] })
-  const [loadingDashboard, setLoadingDashboard] = useState(true)
-  const [dashboardError, setDashboardError] = useState<string>()
-  const { user } = session
-  const isCitizen = user.role === 'CITIZEN'
+  const [dashboard, setDashboard] = useState<Dashboard>()
+  const [voting, setVoting] = useState<{ poll: Poll; option: VoteOption }>()
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string>()
 
-  const loadDashboard = useCallback(async () => {
+  const load = useCallback(async () => {
     try {
-      const [openPage, scheduledPage, participationSummary] = await Promise.all([
-        api<PollPage>('/polls?status=OPEN&sort=ending&page=1&pageSize=3'),
-        api<PollPage>('/polls?status=SCHEDULED&sort=start&page=1&pageSize=3'),
-        isCitizen
-          ? api<ParticipationSummary>('/participations/me')
-          : Promise.resolve({ total: 0, resultsAvailable: 0, items: [] }),
+      const [summary, comments] = await Promise.all([
+        api<CitizenSummary>('/participations/me/summary'),
+        api<MyComment[]>('/comments/me'),
       ])
-      setOpenPolls(openPage.items.map(toDashboardPoll))
-      setScheduledPolls(scheduledPage.items.map(toDashboardPoll))
-      setSummary(participationSummary)
-      setDashboardError(undefined)
-    } catch (error) {
-      setDashboardError(error instanceof Error ? error.message : 'Não foi possível carregar o resumo do painel.')
+      setDashboard({ summary, comments })
+      setError(undefined)
+    } catch (loadError) {
+      setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar o resumo do painel.')
     } finally {
-      setLoadingDashboard(false)
+      setLoading(false)
     }
-  }, [isCitizen])
+  }, [])
 
   useEffect(() => {
-    void loadDashboard()
-  }, [loadDashboard])
+    void load()
+  }, [load])
 
-  async function handleSignOut() {
-    setSigningOut(true)
-    const { error } = await signOut()
-    setSigningOut(false)
-
-    if (error) {
-      toast.add({ type: 'error', title: 'Não foi possível sair', description: 'Tente novamente em instantes.' })
-      return
-    }
-    navigate({ to: '/entrar' })
-  }
+  const summary = dashboard?.summary
+  const activity = summary?.activity ?? []
+  const now = new Date()
+  const categoryCounts = new Map<string, number>()
+  for (const { category } of activity) categoryCounts.set(category, (categoryCounts.get(category) ?? 0) + 1)
 
   const layoutProps: PainelLayoutProps = {
-    name: user.name,
-    firstName: user.name.split(' ')[0],
-    initials: getInitials(user.name),
-    email: user.email,
-    image: user.image ?? undefined,
-    roleLabel: roleLabel(user.role),
-    isStaff: user.role === 'ADMIN' || user.role === 'MANAGER',
-    isAdmin: user.role === 'ADMIN',
-    isCitizen,
-    signingOut,
-    onSignOut: handleSignOut,
-    openPolls,
-    scheduledPolls,
-    participationCount: summary.total,
-    resultsAvailableCount: summary.resultsAvailable,
-    recentParticipations: summary.items.map((item): ParticipationItem => ({
-      ...toDashboardPoll(item.poll),
-      participatedAtLabel: format(new Date(item.participatedAt), "dd 'de' MMMM 'de' yyyy", { locale: ptBR }),
-      resultsAvailable: item.resultsAvailable,
+    firstName: session.user.name.split(' ')[0],
+    kpis: dashboard && summary
+      ? [
+          {
+            label: 'Votos registrados',
+            value: formatNumber(summary.total),
+            icon: CheckCheckIcon,
+            note: 'pautas em que participou',
+            to: '/minha-participacao',
+          },
+          {
+            label: 'Aguardando seu voto',
+            value: formatNumber(summary.pendingTotal),
+            icon: HourglassIcon,
+            note: 'pautas abertas',
+          },
+          {
+            label: 'Comentários',
+            value: formatNumber(dashboard.comments.length),
+            icon: MessageCircleIcon,
+            note: 'enviados por você',
+          },
+          {
+            label: 'Pautas aprovadas',
+            value: formatNumber(summary.approved),
+            icon: CircleCheckIcon,
+            note: 'entre as que você votou',
+          },
+        ]
+      : [],
+    pendingTotal: summary?.pendingTotal ?? 0,
+    pending: (summary?.pending ?? []).map((poll) => ({
+      poll,
+      categoryLook: getCategoryLook(poll.category.name),
+      timeLabel: getPollTimeLabel(poll),
     })),
-    loadingDashboard,
-    dashboardError,
-    onRetry: () => void loadDashboard(),
+    comments: (dashboard?.comments ?? []).slice(0, RECENT_COMMENTS).map(({ id, poll, text, status }) => ({
+      id,
+      pollId: poll.id,
+      pollTitle: poll.title,
+      text,
+      statusLabel: COMMENT_STATUS[status].label,
+      statusClassName: COMMENT_STATUS[status].className,
+    })),
+    months: Array.from({ length: CHART_MONTHS }, (_, index) => {
+      const month = subMonths(now, CHART_MONTHS - 1 - index)
+      return {
+        label: format(month, 'MMM', { locale: ptBR }).replace('.', ''),
+        count: activity.filter(({ participatedAt }) => isSameMonth(new Date(participatedAt), month)).length,
+      }
+    }),
+    categories: toCategoryBars(
+      [...categoryCounts]
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, TOP_CATEGORIES),
+    ),
+    results: summary?.results ?? [],
+    voting,
+    loading,
+    error,
+    onRetry: () => void load(),
+    onVote: (poll, option) => setVoting({ poll, option }),
+    onCloseVote: () => setVoting(undefined),
+    onVoted: () => void load(),
   }
 
   return <Layout {...layoutProps} />

@@ -4,6 +4,7 @@ import { getRouteApi } from '@tanstack/react-router'
 import { toast } from '@/components/ui/toast'
 import { api } from '@/lib/api/client'
 import { ROLE_LABELS, type Role } from '@/lib/auth/roles'
+import { getDefaultAvatar } from '@/lib/utils/avatar'
 import { getInitials } from '@/lib/utils/format'
 
 import { AdminUsuarios as Layout } from './layout'
@@ -92,6 +93,7 @@ export function AdminUsuarios(_props: AdminUsuariosProps) {
   const allCount = Object.values(counts).reduce((sum, count) => sum + (count ?? 0), 0)
 
   const layoutProps: AdminUsuariosLayoutProps = {
+    canManage: session.user.role === 'ADMIN',
     filters: ROLE_FILTERS.map(([value, label]) => ({
       value,
       label,
@@ -106,7 +108,7 @@ export function AdminUsuarios(_props: AdminUsuariosProps) {
       id: user.id,
       name: user.name,
       email: user.email,
-      image: user.image ?? undefined,
+      image: user.image ?? getDefaultAvatar(user.name),
       initials: getInitials(user.name),
       role: user.role,
       isSelf: user.id === session.user.id,

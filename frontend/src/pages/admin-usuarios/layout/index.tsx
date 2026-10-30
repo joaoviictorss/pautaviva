@@ -1,6 +1,7 @@
 import { CircleAlertIcon, UsersIcon } from 'lucide-react'
 
 import { FilterChips } from '@/components/filter-chips'
+import { PageHeader } from '@/components/page-header'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
@@ -16,6 +17,7 @@ import { CreateUserDialog } from '../components/create-user-dialog'
 import type { AdminUsuariosLayoutProps } from '../data'
 
 export function AdminUsuarios({
+  canManage,
   filters,
   roleFilter,
   onRoleFilterChange,
@@ -32,13 +34,12 @@ export function AdminUsuarios({
 }: AdminUsuariosLayoutProps) {
   return (
     <section className="flex animate-[word-in_.35s_cubic-bezier(.16,1,.3,1)] flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex flex-col gap-1.5">
-          <h1 className="m-0 text-[clamp(28px,3.2vw,38px)] font-extrabold tracking-tighter">Usuários</h1>
-          <p className="m-0 text-[15px] text-muted-foreground">Cadastre gestores e moderadores e altere perfis de acesso.</p>
-        </div>
-        <CreateUserDialog onCreated={onUserCreated} />
-      </div>
+      <PageHeader
+        title="Usuários"
+        description={canManage ? 'Cadastre gestores e moderadores e altere perfis de acesso.' : 'Consulte as contas e os perfis de acesso.'}
+      >
+        {canManage && <CreateUserDialog onCreated={onUserCreated} />}
+      </PageHeader>
 
       <FilterChips label="Perfil" chips={filters} value={roleFilter} onChange={onRoleFilterChange} />
 
@@ -86,7 +87,7 @@ export function AdminUsuarios({
                       <Select
                         items={roleOptions}
                         value={row.role}
-                        disabled={row.isSelf || row.updating}
+                        disabled={!canManage || row.isSelf || row.updating}
                         onValueChange={(value) => value && onRoleChange(row.id, value as Role)}
                       >
                         <SelectTrigger aria-label={`Perfil de ${row.name}`} className="w-40">

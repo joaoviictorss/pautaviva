@@ -1,354 +1,179 @@
 import { Link } from '@tanstack/react-router'
-import {
-  ArrowRightIcon,
-  CalendarClockIcon,
-  CheckCheckIcon,
-  Clock3Icon,
-  LayoutDashboardIcon,
-  ListChecksIcon,
-  LogOutIcon,
-  SearchIcon,
-  UsersIcon,
-  type LucideIcon,
-} from 'lucide-react'
+import { CircleAlertIcon, LockIcon, PartyPopperIcon } from 'lucide-react'
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { CategoryBars } from '@/components/category-bars'
+import { KpiCard } from '@/components/kpi-card'
+import { PageHeader } from '@/components/page-header'
+import { ParticipationsChart } from '@/components/participations-chart'
+import { PollCard } from '@/components/poll-card'
+import { PollOutcome } from '@/components/poll-outcome'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Spinner } from '@/components/ui/spinner'
-import { cn } from '@/lib/utils'
+import { VoteDialog } from '@/components/vote-dialog'
+import { VoteLegend } from '@/components/vote-legend'
+import { VOTE_OPTIONS } from '@/lib/poll/votes'
 
-import type { PainelLayoutProps, PainelPoll } from '../data'
+import type { PainelLayoutProps, PendingPoll } from '../data'
 
-function ShortcutCard({
-  to,
-  icon: Icon,
-  title,
-  description,
-}: {
-  to: '/minha-participacao' | '/admin/pautas' | '/admin/usuarios'
-  icon: LucideIcon
-  title: string
-  description: string
-}) {
-  return (
-    <Link
-      to={to}
-      className="group flex items-start gap-3 rounded-xl border bg-card p-4 text-inherit no-underline transition-colors hover:border-primary/40 hover:bg-muted/40 hover:no-underline"
-    >
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-        <Icon className="size-5" />
-      </span>
-      <span className="flex min-w-0 flex-1 flex-col gap-1">
-        <span className="font-semibold">{title}</span>
-        <span className="text-sm text-muted-foreground">{description}</span>
-      </span>
-      <ArrowRightIcon className="mt-1 size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
-    </Link>
-  )
-}
+const CARD_TITLE = 'm-0 text-[17px] font-bold tracking-tight'
+const SECTION_LINK = 'text-[13px] font-semibold text-primary no-underline hover:underline'
+const SPLIT_GRID = 'grid items-start gap-4 min-[1180px]:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]'
 
-function PollRow({ item }: { item: PainelPoll }) {
-  const CategoryIcon = item.categoryLook.icon
+function PendingVote({ item, onVote }: { item: PendingPoll; onVote: PainelLayoutProps['onVote'] }) {
+  const { poll, categoryLook, timeLabel } = item
 
   return (
-    <Link
-      to="/pautas/$pollId"
-      params={{ pollId: item.poll.id }}
-      className="flex items-start gap-3 rounded-xl border p-3.5 text-inherit no-underline transition-colors hover:bg-muted/50 hover:no-underline"
-    >
-      <span className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-lg" style={item.categoryLook.style}>
-        <CategoryIcon className="size-4" />
-      </span>
-      <span className="flex min-w-0 flex-1 flex-col gap-1.5">
-        <span className="line-clamp-2 font-semibold leading-snug">{item.poll.title}</span>
-        <span className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-          <Badge className={cn('h-5 px-2 text-[11px]', item.statusClassName)}>{item.statusLabel}</Badge>
-          <span>{item.poll.category.name}</span>
-          <span aria-hidden="true">·</span>
-          <span className="inline-flex items-center gap-1">
-            {item.poll.status === 'OPEN' ? <Clock3Icon className="size-3.5" /> : <CalendarClockIcon className="size-3.5" />}
-            {item.dateLabel}
-          </span>
-        </span>
-      </span>
-      <ArrowRightIcon className="mt-1 size-4 shrink-0 text-muted-foreground" />
-    </Link>
+    <article className="flex flex-col gap-2.5 border-t pt-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Badge className="h-7 gap-1.5 pr-2.5 pl-2 font-semibold" style={categoryLook.style}>
+          <categoryLook.icon />
+          {poll.category.name}
+        </Badge>
+        <span className="text-[13px] text-muted-foreground">{timeLabel}</span>
+      </div>
+      <Link to="/pautas/$pollId" params={{ pollId: poll.id }} className="font-bold tracking-tight text-foreground no-underline hover:underline">
+        {poll.title}
+      </Link>
+      <p className="m-0 line-clamp-2 text-sm leading-relaxed text-muted-foreground">{poll.description}</p>
+      <div className="grid gap-2 sm:grid-cols-3">
+        {VOTE_OPTIONS.map((option) => (
+          <Button key={option.value} variant="outline" className="h-10 rounded-full font-semibold" onClick={() => onVote(poll, option.value)}>
+            <option.icon style={{ color: option.color }} />
+            {option.label}
+          </Button>
+        ))}
+      </div>
+    </article>
   )
 }
 
 export function Painel({
-  name,
   firstName,
-  initials,
-  email,
-  image,
-  roleLabel,
-  isStaff,
-  isAdmin,
-  isCitizen,
-  signingOut,
-  onSignOut,
-  openPolls,
-  scheduledPolls,
-  participationCount,
-  resultsAvailableCount,
-  recentParticipations,
-  loadingDashboard,
-  dashboardError,
+  kpis,
+  pendingTotal,
+  pending,
+  comments,
+  months,
+  categories,
+  results,
+  voting,
+  loading,
+  error,
   onRetry,
+  onVote,
+  onCloseVote,
+  onVoted,
 }: PainelLayoutProps) {
   return (
-    <div className="flex min-h-dvh flex-col bg-background">
-      <header className="border-b bg-card">
-        <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 px-4 sm:px-6">
-          <Link to="/" className="flex items-center gap-2.5 text-inherit no-underline">
-            <img src="/logo-mark.svg" alt="" className="block size-8" />
-            <span className="text-lg font-bold tracking-tight text-primary">PautaViva</span>
-          </Link>
+    <section className="flex animate-[word-in_.35s_cubic-bezier(.16,1,.3,1)] flex-col gap-6">
+      <PageHeader title={`Olá, ${firstName}`} description="Vote nas pautas abertas e acompanhe o que você já decidiu." />
 
-          <div className="flex items-center gap-3">
-            <div className="hidden items-center gap-2.5 sm:flex">
-              <Avatar>
-                {image && <AvatarImage src={image} alt="" />}
-                <AvatarFallback className="bg-accent text-xs font-semibold text-accent-foreground">{initials}</AvatarFallback>
-              </Avatar>
-              <span className="text-sm font-medium">{name}</span>
-            </div>
-            <Button variant="outline" onClick={onSignOut} disabled={signingOut}>
-              {signingOut ? <Spinner /> : <LogOutIcon />}
-              Sair
-            </Button>
+      {error ? (
+        <Alert variant="destructive">
+          <CircleAlertIcon />
+          <AlertDescription className="flex flex-wrap items-center justify-between gap-3">
+            <span>{error}</span>
+            <Button variant="outline" size="sm" onClick={onRetry}>Tentar novamente</Button>
+          </AlertDescription>
+        </Alert>
+      ) : loading ? (
+        <Skeleton className="h-96 rounded-2xl" />
+      ) : (
+        <>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,210px),1fr))] gap-4">
+            {kpis.map((kpi) => (
+              <KpiCard key={kpi.label} kpi={kpi} />
+            ))}
           </div>
-        </div>
-      </header>
 
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 py-8 sm:px-6 sm:py-10">
-        <div className="flex flex-col gap-2">
-          <h1 className="m-0 text-3xl font-bold tracking-tight">Olá, {firstName}</h1>
-          <p className="m-0 text-muted-foreground">Consulte as pautas e acompanhe as decisões da sua comunidade.</p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          <Button
-            nativeButton={false}
-            render={<Link to="/pautas" />}
-            className="group h-12 w-fit gap-3 rounded-xl px-6 text-base shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
-          >
-            <SearchIcon className="size-5" />
-            Explorar pautas
-            <ArrowRightIcon className="size-5 transition-transform group-hover:translate-x-0.5" />
-          </Button>
-          {isStaff && (
-            <Button nativeButton={false} render={<Link to="/admin/pautas" />} variant="outline" className="h-11 rounded-xl">
-              <LayoutDashboardIcon />
-              Área administrativa
-            </Button>
-          )}
-        </div>
-
-        <section className="flex flex-col gap-3" aria-label="Acessos rápidos">
-          <h2 className="m-0 text-lg font-bold tracking-tight">Acessos rápidos</h2>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {isCitizen && (
-              <ShortcutCard
-                to="/minha-participacao"
-                icon={CheckCheckIcon}
-                title="Minha participação"
-                description="Consulte seu histórico e acompanhe resultados."
-              />
-            )}
-            {isStaff && (
-              <ShortcutCard
-                to="/admin/pautas"
-                icon={LayoutDashboardIcon}
-                title="Gestão de pautas"
-                description="Cadastre e acompanhe as votações."
-              />
-            )}
-            {isAdmin && (
-              <ShortcutCard
-                to="/admin/usuarios"
-                icon={UsersIcon}
-                title="Gestão de usuários"
-                description="Administre contas e permissões."
-              />
-            )}
-          </div>
-        </section>
-
-        {dashboardError && (
-          <Alert variant="destructive">
-            <AlertTitle>Não foi possível carregar o resumo</AlertTitle>
-            <AlertDescription className="flex flex-wrap items-center justify-between gap-3">
-              <span>{dashboardError}</span>
-              <Button variant="outline" size="sm" onClick={onRetry}>Tentar novamente</Button>
-            </AlertDescription>
-          </Alert>
-        )}
-
-        <section className="grid gap-4 lg:grid-cols-2" aria-label="Pautas para acompanhar">
-          <Card className="gap-4 rounded-2xl">
-            <CardHeader className="flex flex-row items-start justify-between gap-3">
-              <div className="flex flex-col gap-1">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <ListChecksIcon className="size-5 text-primary" />
-                  Em votação
-                </CardTitle>
-                <CardDescription>Pautas abertas para participação agora.</CardDescription>
+          <div className={SPLIT_GRID}>
+            <Card className="min-w-0 gap-4 rounded-2xl p-5">
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <h2 className={`${CARD_TITLE} flex items-center gap-2`}>
+                  Aguardando seu voto
+                  {pendingTotal > 0 && <Badge className="h-6 bg-accent px-2 font-semibold text-accent-foreground">{pendingTotal}</Badge>}
+                </h2>
+                <Link to="/pautas" search={{ status: 'OPEN', missing: true }} className={SECTION_LINK}>
+                  Ver todas
+                </Link>
               </div>
-              <Button nativeButton={false} render={<Link to="/pautas" search={{ status: 'OPEN' }} />} variant="ghost" size="sm" className="shrink-0">
-                Ver todas
-                <ArrowRightIcon />
-              </Button>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-2.5">
-              {loadingDashboard ? (
-                Array.from({ length: 2 }, (_, index) => <Skeleton key={index} className="h-[76px] rounded-xl" />)
-              ) : openPolls.length ? (
-                openPolls.map((item) => <PollRow key={item.poll.id} item={item} />)
+              {pending.length ? (
+                <>
+                  <p className="m-0 inline-flex items-center gap-2 text-[13px] text-muted-foreground">
+                    <LockIcon className="size-3.5 shrink-0" />
+                    Um voto por CPF. Não é possível alterar depois.
+                  </p>
+                  {pending.map((item) => (
+                    <PendingVote key={item.poll.id} item={item} onVote={onVote} />
+                  ))}
+                </>
               ) : (
-                <div className="flex flex-col items-start gap-2 rounded-xl border border-dashed p-4">
-                  <p className="m-0 font-medium">Nenhuma pauta aberta para votação no momento.</p>
-                  <p className="m-0 text-sm text-muted-foreground">Confira as próximas pautas ou explore a comunidade.</p>
-                  <Button nativeButton={false} render={<Link to="/pautas" />} variant="outline" size="sm" className="mt-1">
-                    Explorar pautas
-                  </Button>
+                <div className="flex flex-col items-center gap-2 py-8 text-center">
+                  <PartyPopperIcon className="size-6 text-primary" />
+                  <p className="m-0 font-semibold">Você está em dia</p>
+                  <p className="m-0 text-sm text-muted-foreground">Não há pautas abertas esperando o seu voto.</p>
                 </div>
               )}
-            </CardContent>
-          </Card>
-
-          <Card className="gap-4 rounded-2xl">
-            <CardHeader className="flex flex-row items-start justify-between gap-3">
-              <div className="flex flex-col gap-1">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <CalendarClockIcon className="size-5 text-primary" />
-                  Próximas pautas
-                </CardTitle>
-                <CardDescription>Votações agendadas para começar em breve.</CardDescription>
-              </div>
-              <Button nativeButton={false} render={<Link to="/pautas" search={{ status: 'SCHEDULED' }} />} variant="ghost" size="sm" className="shrink-0">
-                Ver todas
-                <ArrowRightIcon />
-              </Button>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-2.5">
-              {loadingDashboard ? (
-                Array.from({ length: 2 }, (_, index) => <Skeleton key={index} className="h-[76px] rounded-xl" />)
-              ) : scheduledPolls.length ? (
-                scheduledPolls.map((item) => <PollRow key={item.poll.id} item={item} />)
-              ) : (
-                <div className="flex flex-col items-start gap-2 rounded-xl border border-dashed p-4">
-                  <p className="m-0 font-medium">Nenhuma votação agendada no momento.</p>
-                  <p className="m-0 text-sm text-muted-foreground">As novas pautas aparecerão aqui assim que forem publicadas.</p>
-                  <Button nativeButton={false} render={<Link to="/pautas" />} variant="outline" size="sm" className="mt-1">
-                    Explorar pautas
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </section>
-
-        {isCitizen && (
-          <section aria-label="Resumo da sua participação">
-            <Card className="gap-5 rounded-2xl">
-              <CardHeader>
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="flex flex-col gap-1">
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                      <CheckCheckIcon className="size-5 text-primary" />
-                      Minha participação
-                    </CardTitle>
-                    <CardDescription>Seu histórico registra participação, sem revelar em qual opção você votou.</CardDescription>
-                  </div>
-                  <Button nativeButton={false} render={<Link to="/minha-participacao" />} variant="ghost" size="sm">
-                    Histórico completo
-                    <ArrowRightIcon />
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-5">
-                {loadingDashboard ? (
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <Skeleton className="h-20 rounded-xl" />
-                    <Skeleton className="h-20 rounded-xl" />
-                  </div>
-                ) : (
-                  <>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-xl border bg-muted/20 p-4">
-                        <p className="m-0 text-sm text-muted-foreground">Votações em que participou</p>
-                        <p className="m-0 mt-1 text-2xl font-bold">{participationCount}</p>
-                      </div>
-                      <div className="rounded-xl border bg-muted/20 p-4">
-                        <p className="m-0 text-sm text-muted-foreground">Com resultados disponíveis</p>
-                        <p className="m-0 mt-1 text-2xl font-bold">{resultsAvailableCount}</p>
-                      </div>
-                    </div>
-
-                    {recentParticipations.length ? (
-                      <div className="flex flex-col gap-2.5">
-                        <h2 className="m-0 text-sm font-semibold">Participações recentes</h2>
-                        {recentParticipations.map((item) => {
-                          const CategoryIcon = item.categoryLook.icon
-                          return (
-                            <Link
-                              key={item.poll.id}
-                              to="/pautas/$pollId"
-                              params={{ pollId: item.poll.id }}
-                              className="flex items-center gap-3 rounded-xl border p-3.5 text-inherit no-underline transition-colors hover:bg-muted/50 hover:no-underline"
-                            >
-                              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg" style={item.categoryLook.style}>
-                                <CategoryIcon className="size-4" />
-                              </span>
-                              <span className="flex min-w-0 flex-1 flex-col gap-1">
-                                <span className="truncate font-semibold">{item.poll.title}</span>
-                                <span className="text-xs text-muted-foreground">
-                                  Participou em {item.participatedAtLabel} · {item.resultsAvailable ? 'Resultados disponíveis' : 'Votação ainda não iniciada'}
-                                </span>
-                              </span>
-                              <span className="shrink-0 text-sm font-medium text-primary">
-                                {item.resultsAvailable ? 'Ver resultados' : 'Ver pauta'}
-                              </span>
-                              <ArrowRightIcon className="size-4 shrink-0 text-muted-foreground" />
-                            </Link>
-                          )
-                        })}
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-start gap-2 rounded-xl border border-dashed p-4">
-                        <p className="m-0 font-medium">Você ainda não participou de nenhuma votação.</p>
-                        <p className="m-0 text-sm text-muted-foreground">Encontre uma pauta aberta e registre sua participação.</p>
-                        <Button nativeButton={false} render={<Link to="/pautas" search={{ status: 'OPEN' }} />} size="sm" className="mt-1">
-                          Ver pautas abertas
-                          <ArrowRightIcon />
-                        </Button>
-                      </div>
-                    )}
-                  </>
-                )}
-              </CardContent>
             </Card>
-          </section>
-        )}
 
-        <div className="flex max-w-md items-center gap-3.5 rounded-xl border bg-card p-4">
-          <Avatar className="size-12">
-            {image && <AvatarImage src={image} alt="" />}
-            <AvatarFallback className="bg-accent font-semibold text-accent-foreground">{initials}</AvatarFallback>
-          </Avatar>
-          <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <span className="font-semibold">{name}</span>
-            <span className="truncate text-sm text-muted-foreground">{email}</span>
+            <Card className="min-w-0 gap-1.5 rounded-2xl px-5 pt-5 pb-2.5">
+              <div className="flex items-baseline justify-between gap-2 pb-2">
+                <h2 className={CARD_TITLE}>Seus comentários</h2>
+                <Link to="/minha-participacao" search={{ tab: 'comentarios' }} className={SECTION_LINK}>
+                  Ver todos
+                </Link>
+              </div>
+              {comments.length ? (
+                comments.map((comment) => (
+                  <Link
+                    key={comment.id}
+                    to="/pautas/$pollId"
+                    params={{ pollId: comment.pollId }}
+                    className="flex flex-col gap-1 border-t py-3 text-inherit no-underline hover:no-underline"
+                  >
+                    <span className="truncate text-[13px] font-semibold">{comment.pollTitle}</span>
+                    <span className="line-clamp-2 text-sm text-muted-foreground">{comment.text}</span>
+                    <Badge className={`mt-0.5 h-6 w-fit px-2.5 font-semibold ${comment.statusClassName}`}>{comment.statusLabel}</Badge>
+                  </Link>
+                ))
+              ) : (
+                <p className="m-0 border-t py-3 text-sm text-muted-foreground">Você ainda não comentou em nenhuma pauta.</p>
+              )}
+            </Card>
           </div>
-          <Badge variant="secondary" className="bg-accent text-accent-foreground">{roleLabel}</Badge>
-        </div>
-      </main>
-    </div>
+
+          <div className={SPLIT_GRID}>
+            <Card className="min-w-0 gap-4 rounded-2xl p-5">
+              <h2 className={CARD_TITLE}>Sua participação</h2>
+              <ParticipationsChart days={months} caption="Suas participações por mês" className="aspect-auto h-52 w-full" highlightLast />
+            </Card>
+            <Card className="min-w-0 gap-4 rounded-2xl p-5">
+              <h2 className={CARD_TITLE}>Temas em que você mais participa</h2>
+              <CategoryBars categories={categories} empty="Suas participações aparecem aqui." />
+            </Card>
+          </div>
+
+          {results.length > 0 && (
+            <div className="flex flex-col gap-3.5">
+              <h2 className={CARD_TITLE}>Resultados das pautas em que você votou</h2>
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,310px),1fr))] gap-4">
+                {results.map((poll) => (
+                  <PollCard key={poll.id} poll={poll} citizen linkTo="/pautas/$pollId" action={<PollOutcome results={poll.results} />} />
+                ))}
+              </div>
+              <VoteLegend />
+              <p className="m-0 text-xs text-muted-foreground">Seu voto é anônimo — ninguém, nem a prefeitura, vê como você votou.</p>
+            </div>
+          )}
+        </>
+      )}
+
+      {voting && (
+        <VoteDialog key={voting.poll.id} poll={voting.poll} initialOption={voting.option} onClose={onCloseVote} onVoted={onVoted} />
+      )}
+    </section>
   )
 }

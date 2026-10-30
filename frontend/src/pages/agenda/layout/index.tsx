@@ -1,142 +1,146 @@
 import { Link } from '@tanstack/react-router'
-import {
-  addDays,
-  endOfMonth,
-  endOfWeek,
-  format,
-  isSameDay,
-  isSameMonth,
-  startOfMonth,
-  startOfWeek,
-} from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-import { CalendarDaysIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon, CircleAlertIcon } from 'lucide-react'
 
-import { CommunityNavigation } from '@/components/community-navigation'
-import { SiteHeader } from '@/components/site-header'
+import { PageHeader } from '@/components/page-header'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
+import { Card } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-import { POLL_STATUS } from '@/lib/poll/status'
+import { cn } from '@/lib/utils'
 
-import type { AgendaLayoutProps } from '../data'
+import type { AgendaEvent, AgendaLayoutProps } from '../data'
 
-const WEEKDAYS = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
+const CARD_TITLE = 'm-0 text-[17px] font-bold tracking-tight'
+const TONES: Record<AgendaEvent['tone'], { dot: string; text: string }> = {
+  open: { dot: 'bg-blue-500', text: 'text-blue-700 dark:text-blue-300' },
+  close: { dot: 'bg-primary', text: 'text-primary' },
+  past: { dot: 'bg-muted-foreground/40', text: 'text-muted-foreground' },
+}
 
 export function Agenda({
-  month,
-  selectedDay,
-  polls,
+  monthLabel,
+  weekdays,
+  days,
+  listTitle,
+  groups,
+  hasSelectedDay,
   loading,
   error,
-  onMonthChange,
+  onPreviousMonth,
+  onNextMonth,
+  onToday,
   onDaySelect,
+  onClearDay,
 }: AgendaLayoutProps) {
-  const days = []
-  const firstDay = startOfWeek(startOfMonth(month), { weekStartsOn: 1 })
-  const lastDay = endOfWeek(endOfMonth(month), { weekStartsOn: 1 })
-  for (let day = firstDay; day <= lastDay; day = addDays(day, 1)) days.push(day)
-
-  const eventsForDay = (day: Date) =>
-    polls.filter((poll) => isSameDay(new Date(poll.startsAt), day))
-  const selectedEvents = eventsForDay(selectedDay)
-
   return (
-    <div className="flex min-h-dvh flex-col bg-background">
-      <SiteHeader />
-      <CommunityNavigation active="agenda">
-        <header className="flex flex-col gap-2">
-          <h1 className="m-0 text-3xl font-bold tracking-tight">Agenda</h1>
-          <p className="m-0 text-muted-foreground">Acompanhe as datas de início das pautas da comunidade.</p>
-        </header>
+    <section className="flex animate-[word-in_.35s_cubic-bezier(.16,1,.3,1)] flex-col gap-6">
+      <PageHeader title="Agenda" description="Quando cada votação abre e encerra. Pautas agendadas abrem sozinhas na data marcada." />
 
-        {error && <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>}
+      {error && (
+        <Alert variant="destructive">
+          <CircleAlertIcon />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
-        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(280px,.7fr)]">
-          <Card className="rounded-2xl">
-            <CardHeader className="flex flex-row items-center justify-between gap-3">
-              <div>
-                <CardTitle className="capitalize">{format(month, 'MMMM yyyy', { locale: ptBR })}</CardTitle>
-                <CardDescription>Selecione um dia para ver as pautas previstas.</CardDescription>
-              </div>
-              <div className="flex gap-1">
-                <Button aria-label="Mês anterior" variant="outline" size="icon" onClick={() => onMonthChange(new Date(month.getFullYear(), month.getMonth() - 1, 1))}>
-                  <ChevronLeftIcon />
-                </Button>
-                <Button aria-label="Próximo mês" variant="outline" size="icon" onClick={() => onMonthChange(new Date(month.getFullYear(), month.getMonth() + 1, 1))}>
-                  <ChevronRightIcon />
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-7 gap-1 text-center">
-                {WEEKDAYS.map((weekday) => (
-                  <div key={weekday} className="py-2 text-xs font-medium text-muted-foreground">{weekday}</div>
+      <div className="grid items-start gap-4 min-[1100px]:grid-cols-[minmax(0,1fr)_380px]">
+        <Card className="min-w-0 gap-4 rounded-2xl p-5">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className={CARD_TITLE}>{monthLabel}</h2>
+            <div className="flex gap-1.5">
+              <Button variant="outline" size="sm" className="h-8.5 rounded-xl" onClick={onToday}>Hoje</Button>
+              <Button aria-label="Mês anterior" variant="outline" size="icon" className="size-8.5 rounded-xl" onClick={onPreviousMonth}>
+                <ChevronLeftIcon />
+              </Button>
+              <Button aria-label="Próximo mês" variant="outline" size="icon" className="size-8.5 rounded-xl" onClick={onNextMonth}>
+                <ChevronRightIcon />
+              </Button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-7 gap-1">
+            {weekdays.map((weekday) => (
+              <span key={weekday} className="pb-1.5 text-center font-mono text-[11px] text-muted-foreground uppercase">{weekday}</span>
+            ))}
+            {days.map((day) => (
+              <button
+                key={day.key}
+                type="button"
+                aria-label={day.ariaLabel}
+                aria-pressed={day.selected}
+                onClick={() => onDaySelect(day)}
+                className={cn(
+                  'flex min-h-13 min-w-0 cursor-pointer flex-col gap-1 rounded-xl border-[1.5px] p-1.5 text-left transition-colors hover:bg-muted/60 min-[700px]:min-h-21',
+                  day.selected ? 'border-primary bg-accent/60' : 'border-border/60 bg-card',
+                  !day.inMonth && 'opacity-40',
+                )}
+              >
+                <span
+                  className={cn(
+                    'grid h-6 min-w-6 place-items-center self-start rounded-full px-1 text-[13px] font-medium',
+                    day.today && 'bg-primary font-bold text-primary-foreground',
+                  )}
+                >
+                  {day.label}
+                </span>
+                {day.events.map((event) => (
+                  <span key={event.key} className={cn('flex min-w-0 items-center gap-1 text-[11px] font-semibold', TONES[event.tone].text)}>
+                    <span className={cn('size-1.5 shrink-0 rounded-full', TONES[event.tone].dot)} />
+                    <span className="hidden truncate min-[700px]:inline">{event.title}</span>
+                  </span>
                 ))}
-                {days.map((day) => {
-                  const dayEvents = eventsForDay(day)
-                  const isSelected = isSameDay(day, selectedDay)
-                  return (
-                    <button
-                      key={day.toISOString()}
-                      type="button"
-                      aria-label={`${format(day, "d 'de' MMMM", { locale: ptBR })}${dayEvents.length ? `, ${dayEvents.length} ${dayEvents.length === 1 ? 'pauta' : 'pautas'}` : ''}`}
-                      aria-pressed={isSelected}
-                      disabled={!isSameMonth(day, month)}
-                      onClick={() => onDaySelect(day)}
-                      className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-lg text-sm transition-colors disabled:cursor-default disabled:text-muted-foreground/35 ${isSelected ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}
-                    >
-                      <span>{format(day, 'd')}</span>
-                      {dayEvents.length > 0 && (
-                        <span className={`size-1.5 rounded-full ${isSelected ? 'bg-primary-foreground' : 'bg-primary'}`} />
-                      )}
-                    </button>
-                  )
-                })}
-              </div>
-              {loading && <Skeleton className="mt-4 h-10 w-full" />}
-            </CardContent>
-          </Card>
+              </button>
+            ))}
+          </div>
 
-          <Card className="rounded-2xl">
-            <CardHeader>
-              <CardTitle>{format(selectedDay, "d 'de' MMMM", { locale: ptBR })}</CardTitle>
-              <CardDescription>{selectedEvents.length} {selectedEvents.length === 1 ? 'pauta' : 'pautas'} com início nesta data</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-3">
-              {loading ? (
-                <Skeleton className="h-24 w-full" />
-              ) : selectedEvents.length ? (
-                selectedEvents.map((poll) => (
-                  <div key={poll.id} className="flex flex-col gap-2 rounded-xl border p-3">
-                    <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline">{poll.category.name}</Badge>
-                      <Badge className={POLL_STATUS[poll.status].className}>{POLL_STATUS[poll.status].label}</Badge>
-                    </div>
-                    <h3 className="m-0 font-semibold">{poll.title}</h3>
-                    <p className="m-0 text-sm text-muted-foreground">{format(new Date(poll.startsAt), 'HH:mm')}</p>
-                    <Button nativeButton={false} render={<Link to="/pautas/$pollId" params={{ pollId: poll.id }} />} variant="link" className="h-auto w-fit px-0">
-                      Ver pauta
-                      <ChevronRightIcon />
-                    </Button>
-                  </div>
-                ))
-              ) : (
-                <Empty className="rounded-xl border border-dashed py-6">
-                  <EmptyHeader>
-                    <EmptyMedia variant="icon"><CalendarDaysIcon /></EmptyMedia>
-                    <EmptyTitle>Nenhuma pauta neste dia</EmptyTitle>
-                    <EmptyDescription>Escolha outra data no calendário para consultar a agenda.</EmptyDescription>
-                  </EmptyHeader>
-                </Empty>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </CommunityNavigation>
-    </div>
+          <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5"><span className={cn('size-2 rounded-full', TONES.open.dot)} />Abre votação</span>
+            <span className="inline-flex items-center gap-1.5"><span className={cn('size-2 rounded-full', TONES.close.dot)} />Encerra votação</span>
+          </div>
+        </Card>
+
+        <Card className="min-w-0 gap-1.5 rounded-2xl px-5 pt-5 pb-2">
+          <div className="flex items-center justify-between gap-2 pb-2">
+            <h2 className={CARD_TITLE}>{listTitle}</h2>
+            {hasSelectedDay && (
+              <button type="button" onClick={onClearDay} className="cursor-pointer text-[13px] font-semibold whitespace-nowrap text-primary hover:underline">
+                Ver próximos
+              </button>
+            )}
+          </div>
+          {loading ? (
+            <Skeleton className="mb-3 h-40 rounded-xl" />
+          ) : groups.length ? (
+            groups.map((group) => (
+              <div key={group.label} className="flex flex-col gap-0.5 border-t py-3">
+                {group.label && <span className="pb-1 text-xs font-semibold text-muted-foreground">{group.label}</span>}
+                {group.events.map((event) => (
+                  <Link
+                    key={event.key}
+                    to="/pautas/$pollId"
+                    params={{ pollId: event.pollId }}
+                    className="-mx-2 flex items-center gap-3 rounded-xl p-2 text-inherit no-underline hover:bg-muted/60 hover:no-underline"
+                  >
+                    <span className={cn('w-1 shrink-0 self-stretch rounded-full', TONES[event.tone].dot)} />
+                    <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+                      <span className="truncate text-sm font-semibold">{event.title}</span>
+                      <span className="text-xs text-muted-foreground">
+                        <span className={cn('font-semibold', TONES[event.tone].text)}>{event.kindLabel}</span> · {event.time} · {event.category}
+                      </span>
+                    </span>
+                    {event.badge && <Badge className={cn('h-5.5 px-2 text-[11px] font-semibold', event.badge.className)}>{event.badge.label}</Badge>}
+                  </Link>
+                ))}
+              </div>
+            ))
+          ) : (
+            <p className="m-0 border-t py-4 text-sm text-muted-foreground">
+              {hasSelectedDay ? 'Nenhuma votação abre ou encerra neste dia.' : 'Nenhuma votação prevista.'}
+            </p>
+          )}
+        </Card>
+      </div>
+    </section>
   )
 }

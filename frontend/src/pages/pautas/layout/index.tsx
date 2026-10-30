@@ -1,274 +1,192 @@
-import { useState } from 'react'
-import {
-  AlertCircleIcon,
-  ChevronDownIcon,
-  ListChecksIcon,
-  SearchIcon,
-  XIcon,
-} from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { BellIcon, BellRingIcon, CircleAlertIcon, CircleCheckIcon, ListChecksIcon, LockIcon, XIcon } from 'lucide-react'
 
-import { CommunityNavigation } from '@/components/community-navigation'
+import { FilterChips } from '@/components/filter-chips'
+import { PageHeader } from '@/components/page-header'
 import { PollCard } from '@/components/poll-card'
-import { SiteHeader } from '@/components/site-header'
+import { PollOutcome } from '@/components/poll-outcome'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Command, CommandEmpty, CommandItem, CommandList } from '@/components/ui/command'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
-import { Input } from '@/components/ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Switch } from '@/components/ui/switch'
+import { VoteDialog } from '@/components/vote-dialog'
+import { VoteLegend } from '@/components/vote-legend'
+import type { Poll } from '@/lib/poll/types'
 
-import type { PautasLayoutProps, PollSort, PollStatusFilter } from '../data'
+import type { PautasLayoutProps } from '../data'
 
 const GRID = 'grid grid-cols-[repeat(auto-fill,minmax(min(100%,310px),1fr))] gap-4'
+const ACTION = 'h-8.5 rounded-full px-3.5 font-semibold'
 
-interface FilterSelectProps {
-  label: string
-  searchTerm?: string
-  options: { value: string; label: string }[]
-  value: string
-  onValueChange: (value: string) => void
+interface PollActionProps extends Pick<PautasLayoutProps, 'viewer' | 'onVote' | 'onToggleReminder'> {
+  poll: Poll
 }
 
-function FilterSelect({ label, searchTerm, options, value, onValueChange }: FilterSelectProps) {
-  const [open, setOpen] = useState(false)
-  const [query, setQuery] = useState('')
-  const selectedOption = options.find((option) => option.value === value) ?? options[0]
-  const searchLabel = searchTerm ?? label.toLocaleLowerCase('pt-BR').replace('filtrar por ', '')
-  const filteredOptions = options.filter((option) =>
-    option.label.toLocaleLowerCase('pt-BR').includes(query.trim().toLocaleLowerCase('pt-BR')),
-  )
+function PollAction({ poll, viewer, onVote, onToggleReminder }: PollActionProps) {
+  if (poll.status === 'CLOSED') return <PollOutcome results={poll.results} />
+  if (viewer === 'staff') return null
 
-  const selectValue = (nextValue: string) => {
-    onValueChange(nextValue)
-    setOpen(false)
-    setQuery('')
+  if (poll.status === 'OPEN') {
+    if (poll.hasVoted) {
+      return (
+        <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary">
+          <CircleCheckIcon className="size-4" />
+          Você votou
+        </span>
+      )
+    }
+    return viewer === 'citizen' ? (
+      <Button size="sm" className={ACTION} onClick={() => onVote(poll)}>Votar</Button>
+    ) : (
+      <Button nativeButton={false} render={<Link to="/pautas/$pollId" params={{ pollId: poll.id }} />} size="sm" className={ACTION}>
+        Votar
+      </Button>
+    )
   }
 
-  return (
-    <Popover
-      open={open}
-      onOpenChange={(isOpen) => {
-        setOpen(isOpen)
-        if (!isOpen) setQuery('')
-      }}
+  return viewer === 'citizen' ? (
+    <Button variant={poll.hasReminder ? 'secondary' : 'outline'} size="sm" className={ACTION} onClick={() => onToggleReminder(poll)}>
+      {poll.hasReminder ? <BellRingIcon /> : <BellIcon />}
+      {poll.hasReminder ? 'Lembrete ativo' : 'Lembrar-me'}
+    </Button>
+  ) : (
+    <Button
+      nativeButton={false}
+      render={<Link to="/entrar" search={{ redirect: `/pautas/${poll.id}` }} />}
+      variant="outline"
+      size="sm"
+      className={ACTION}
     >
-      <div className="relative">
-        <PopoverTrigger
-          nativeButton={false}
-          render={
-            <div className="inline-flex h-10 w-full items-center justify-between gap-1.5 rounded-lg border border-border bg-background px-2.5 text-sm font-normal whitespace-nowrap outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:border-input dark:bg-input/30 dark:hover:bg-input/50" />
-          }
-          aria-label={label}
-          aria-expanded={open}
-        >
-          {open ? (
-            <>
-              <SearchIcon className="size-4 shrink-0 text-muted-foreground" />
-              <input
-                autoFocus
-                aria-label={`Buscar ${searchLabel}`}
-                className={`h-full min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground ${selectedOption.value !== options[0].value ? 'pr-6' : ''}`}
-                placeholder={`Buscar ${searchLabel}...`}
-                value={query}
-                onClick={(event) => event.stopPropagation()}
-                onChange={(event) => setQuery(event.target.value)}
-              />
-            </>
-          ) : (
-            <>
-              <span className="truncate">{selectedOption.label}</span>
-              {selectedOption.value === options[0].value && (
-                <ChevronDownIcon className="size-4 shrink-0 text-muted-foreground" />
-              )}
-            </>
-          )}
-        </PopoverTrigger>
-        {selectedOption.value !== options[0].value && (
-          <button
-            type="button"
-            aria-label={`Limpar ${searchLabel}`}
-            className="absolute top-1/2 right-2 z-20 flex size-6 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            onPointerDown={(event) => {
-              event.preventDefault()
-              event.stopPropagation()
-            }}
-            onClick={(event) => {
-              event.stopPropagation()
-              selectValue(options[0].value)
-            }}
-          >
-            <XIcon className="size-4" />
-          </button>
-        )}
-      </div>
-      <PopoverContent align="start" className="w-(--anchor-width) p-0">
-        <Command shouldFilter={false}>
-          <CommandList>
-            {filteredOptions.length === 0 && <CommandEmpty>Nenhuma opção encontrada.</CommandEmpty>}
-            {filteredOptions.map((option) => (
-              <CommandItem
-                key={option.value}
-                value={option.label}
-                className="cursor-pointer"
-                onSelect={() => selectValue(option.value)}
-              >
-                {option.label}
-              </CommandItem>
-            ))}
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+      <BellIcon />
+      Lembrar-me
+    </Button>
   )
 }
 
 export function Pautas({
-  categories,
+  viewer,
   polls,
-  categoryId,
+  statusFilters,
   status,
-  sort,
+  categoryFilters,
+  categoryId,
+  missing,
+  showMissing,
   page,
   pageSize,
   total,
-  search,
+  hasActiveFilters,
+  voting,
   loading,
   error,
   onCategoryChange,
   onStatusChange,
-  onSortChange,
+  onMissingChange,
   onPageChange,
-  onSearchChange,
   onClearFilters,
+  onVote,
+  onCloseVote,
+  onVoted,
+  onToggleReminder,
 }: PautasLayoutProps) {
-  const statusOptions: { value: PollStatusFilter; label: string }[] = [
-    { value: 'ALL', label: 'Todas as situações' },
-    { value: 'SCHEDULED', label: 'Agendadas' },
-    { value: 'OPEN', label: 'Abertas' },
-    { value: 'CLOSED', label: 'Encerradas' },
-  ]
-  const sortOptions: { value: PollSort; label: string }[] = [
-    { value: 'recent', label: 'Mais recentes' },
-    { value: 'start', label: 'Início mais próximo' },
-    { value: 'ending', label: 'Encerramento próximo' },
-  ]
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
   const firstItem = total === 0 ? 0 : (page - 1) * pageSize + 1
   const lastItem = Math.min(page * pageSize, total)
-  const hasActiveFilters = Boolean(search.trim() || categoryId || status !== 'ALL')
 
   return (
-    <div className="min-h-dvh bg-background">
-      <SiteHeader />
+    <section className="flex animate-[word-in_.35s_cubic-bezier(.16,1,.3,1)] flex-col gap-6">
+      <PageHeader
+        title="Pautas"
+        description="Consulte propostas locais, acompanhe os períodos de votação e veja os resultados parciais."
+      />
 
-      <CommunityNavigation active="pautas">
-        <div className="flex flex-col gap-2">
-          <h1 className="m-0 text-[clamp(28px,3.2vw,38px)] font-extrabold tracking-tighter">Pautas</h1>
-          <p className="m-0 text-[15px] text-muted-foreground">
-            Consulte propostas locais, acompanhe os períodos de votação e veja os resultados parciais.
-          </p>
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          <FilterChips label="Situação" chips={statusFilters} value={status} onChange={onStatusChange} />
+          {showMissing && (
+            <Label className="cursor-pointer gap-2 text-sm font-semibold sm:ml-auto">
+              <Switch checked={missing} onCheckedChange={onMissingChange} />
+              Só as que faltam meu voto
+            </Label>
+          )}
         </div>
-
-        <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-[minmax(0,1fr)_repeat(3,220px)]">
-          <div className="relative sm:col-span-3 lg:col-span-1">
-            <SearchIcon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              aria-label="Buscar pautas"
-              placeholder="Buscar por pauta ou categoria"
-              value={search}
-              onChange={(event) => onSearchChange(event.target.value)}
-              className="h-10 pl-9"
-            />
-          </div>
-          <FilterSelect
-            label="Filtrar por categoria"
-            options={[{ value: 'ALL', label: 'Todas as categorias' }, ...categories.map(({ id, name }) => ({ value: id, label: name }))]}
-            value={categoryId || 'ALL'}
-            onValueChange={(value) => onCategoryChange(value === 'ALL' ? '' : value)}
-          />
-          <FilterSelect
-            label="Filtrar por situação"
-            options={statusOptions}
-            value={status}
-            onValueChange={(value) => value && onStatusChange(value as PollStatusFilter)}
-          />
-          <FilterSelect
-            label="Ordenar pautas"
-            searchTerm="ordenação"
-            options={sortOptions}
-            value={sort}
-            onValueChange={(value) => value && onSortChange(value as PollSort)}
-          />
-        </div>
-        {hasActiveFilters && (
-          <div className="-mt-4 flex justify-end">
+        <div className="flex flex-wrap items-center gap-3">
+          <FilterChips compact label="Categoria" chips={categoryFilters} value={categoryId} onChange={onCategoryChange} />
+          {hasActiveFilters && (
             <Button variant="ghost" size="sm" onClick={onClearFilters}>
               <XIcon />
-              Limpar todos os filtros
+              Limpar filtros
             </Button>
-          </div>
-        )}
+          )}
+        </div>
+      </div>
 
-        {error ? (
-          <Alert variant="destructive">
-            <AlertCircleIcon />
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        ) : loading ? (
+      {error ? (
+        <Alert variant="destructive">
+          <CircleAlertIcon />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      ) : loading ? (
+        <div className={GRID}>
+          {Array.from({ length: 3 }, (_, index) => (
+            <Skeleton key={index} className="h-56 rounded-2xl" />
+          ))}
+        </div>
+      ) : polls.length ? (
+        <>
           <div className={GRID}>
-            {Array.from({ length: 3 }, (_, index) => (
-              <Skeleton key={index} className="h-60 rounded-2xl" />
+            {polls.map((poll) => (
+              <PollCard
+                key={poll.id}
+                poll={poll}
+                citizen
+                linkTo="/pautas/$pollId"
+                action={<PollAction poll={poll} viewer={viewer} onVote={onVote} onToggleReminder={onToggleReminder} />}
+              />
             ))}
           </div>
-        ) : polls.length ? (
-          <div className="flex flex-col gap-5">
-            <div className={GRID}>
-              {polls.map((poll) => (
-                <PollCard key={poll.id} poll={poll} showDetails />
-              ))}
-            </div>
-            <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
-              <p className="m-0 text-sm text-muted-foreground">
-                Exibindo {firstItem}–{lastItem} de {total} {total === 1 ? 'pauta' : 'pautas'}
-              </p>
-              {totalPages > 1 && (
-                <nav aria-label="Paginação das pautas" className="flex items-center gap-3">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={page <= 1}
-                    onClick={() => onPageChange(page - 1)}
-                  >
-                    Anterior
-                  </Button>
-                  <span className="text-sm text-muted-foreground">
-                    Página {page} de {totalPages}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={page >= totalPages}
-                    onClick={() => onPageChange(page + 1)}
-                  >
-                    Próxima
-                  </Button>
-                </nav>
-              )}
-            </div>
+          <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
+            <p className="m-0 text-sm text-muted-foreground">
+              Exibindo {firstItem}–{lastItem} de {total} {total === 1 ? 'pauta' : 'pautas'}
+            </p>
+            {totalPages > 1 && (
+              <nav aria-label="Paginação das pautas" className="flex items-center gap-3">
+                <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
+                  Anterior
+                </Button>
+                <span className="text-sm text-muted-foreground">
+                  Página {page} de {totalPages}
+                </span>
+                <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)}>
+                  Próxima
+                </Button>
+              </nav>
+            )}
           </div>
-        ) : (
-          <Empty className="rounded-2xl border border-dashed">
-            <EmptyHeader>
-              <EmptyMedia variant="icon">
-                <ListChecksIcon />
-              </EmptyMedia>
-              <EmptyTitle>Nenhuma pauta encontrada</EmptyTitle>
-              <EmptyDescription>Experimente alterar os filtros ou a busca.</EmptyDescription>
-            </EmptyHeader>
-          </Empty>
-        )}
-      </CommunityNavigation>
-    </div>
+        </>
+      ) : (
+        <Empty className="rounded-2xl border border-dashed">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <ListChecksIcon />
+            </EmptyMedia>
+            <EmptyTitle>Nenhuma pauta encontrada</EmptyTitle>
+            <EmptyDescription>Experimente alterar os filtros ou a busca.</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      )}
+
+      <VoteLegend />
+      {status === 'OPEN' && (
+        <p className="m-0 inline-flex items-center gap-2 text-[13px] text-muted-foreground">
+          <LockIcon className="size-3.5 shrink-0" />
+          Voto sigiloso. O resultado parcial é atualizado ao vivo para todos.
+        </p>
+      )}
+
+      {voting && <VoteDialog key={voting.id} poll={voting} onClose={onCloseVote} onVoted={onVoted} />}
+    </section>
   )
 }

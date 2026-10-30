@@ -8,15 +8,17 @@ import { prisma } from '../../lib/prisma.js'
 import { BadRequestError } from './_errors/bad-request-error.js'
 import { ConflictError } from './_errors/conflict-error.js'
 
-const PAGE_SIZE = 20
+const PAGE_SIZE = 10
 const roleSchema = z.enum(['CITIZEN', 'MANAGER', 'MODERATOR', 'ADMIN'])
 
 // Sem fastify-plugin de propósito: o hook de admin vale só para as rotas deste arquivo.
 export async function adminRoutes(app: FastifyInstance) {
   const api = app.withTypeProvider<ZodTypeProvider>()
 
+  // Moderador só consulta; qualquer escrita (criar usuário, alterar perfil) é exclusiva do administrador.
   api.addHook('preHandler', async (request) => {
-    await request.requireRole('ADMIN')
+    if (request.method === 'GET') await request.requireRole('MODERATOR', 'ADMIN')
+    else await request.requireRole('ADMIN')
   })
 
   api.get(

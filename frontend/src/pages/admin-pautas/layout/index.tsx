@@ -1,12 +1,13 @@
 import { CircleAlertIcon, ListChecksIcon, PlusIcon } from 'lucide-react'
 
 import { FilterChips } from '@/components/filter-chips'
+import { PageHeader } from '@/components/page-header'
 import { PollCard } from '@/components/poll-card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { Skeleton } from '@/components/ui/skeleton'
-import { VOTE_OPTIONS } from '@/lib/poll/votes'
+import { VoteLegend } from '@/components/vote-legend'
 
 import { PollDrawer } from '../components/poll-drawer'
 import type { AdminPautasLayoutProps } from '../data'
@@ -28,16 +29,12 @@ export function AdminPautas({
 }: AdminPautasLayoutProps) {
   return (
     <section className="flex animate-[word-in_.35s_cubic-bezier(.16,1,.3,1)] flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex flex-col gap-1.5">
-          <h1 className="m-0 text-[clamp(28px,3.2vw,38px)] font-extrabold tracking-tighter">Pautas</h1>
-          <p className="m-0 text-[15px] text-muted-foreground">Cadastre, edite e acompanhe as votações da comunidade.</p>
-        </div>
+      <PageHeader title="Pautas" description="Cadastre, edite e acompanhe as votações da comunidade.">
         <Button onClick={onNew} className="h-11 rounded-full pr-4.5 pl-3.5 font-semibold">
           <PlusIcon />
           Nova pauta
         </Button>
-      </div>
+      </PageHeader>
 
       <FilterChips label="Situação" chips={filters} value={statusFilter} onChange={onStatusFilterChange} />
 
@@ -55,7 +52,7 @@ export function AdminPautas({
       ) : polls.length ? (
         <div className={GRID}>
           {polls.map((poll) => (
-            <PollCard key={poll.id} poll={poll} onEdit={onEdit} />
+            <PollCard key={poll.id} poll={poll} onEdit={onEdit} linkTo="/admin/pautas/$pollId" />
           ))}
         </div>
       ) : (
@@ -70,15 +67,7 @@ export function AdminPautas({
         </Empty>
       )}
 
-      <div className="flex flex-wrap gap-4 text-xs text-muted-foreground">
-        {VOTE_OPTIONS.map((option) => (
-          <span key={option.key} className="inline-flex items-center gap-1.5">
-            <span className="size-2.5 rounded-[3px]" style={{ background: option.color }} />
-            {option.label}
-          </span>
-        ))}
-        <span>Resultados agregados — votos individuais não são exibidos.</span>
-      </div>
+      <VoteLegend />
 
       <PollDrawer {...drawer} onOpenChange={onDrawerOpenChange} onSaved={onSaved} />
     </section>
