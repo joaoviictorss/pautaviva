@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowLeftIcon, ArrowRightIcon, CheckCheckIcon, CircleAlertIcon } from 'lucide-react'
 
+import { CommunityNavigation } from '@/components/community-navigation'
 import { SiteHeader } from '@/components/site-header'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -27,7 +28,7 @@ export function MinhaParticipacao({
   return (
     <div className="flex min-h-dvh flex-col bg-background">
       <SiteHeader />
-      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 py-8 sm:px-6 sm:py-10">
+      <CommunityNavigation active="minha-participacao">
         <Button onClick={onBack} variant="link" className="w-fit px-0">
           <ArrowLeftIcon />
           Voltar
@@ -122,24 +123,34 @@ export function MinhaParticipacao({
               )}
             </div>
           ) : (
-            <Empty className="rounded-2xl border border-dashed">
-              <EmptyHeader>
-                <EmptyMedia variant="icon">
-                  <CheckCheckIcon />
+            <Empty className="min-h-80 gap-5 rounded-3xl border bg-gradient-to-b from-accent/35 via-background to-background px-6 py-12 shadow-sm">
+              <EmptyHeader className="max-w-md gap-3">
+                <EmptyMedia
+                  variant="icon"
+                  className="mb-1 size-16 rounded-2xl bg-accent text-accent-foreground shadow-sm [&_svg:not([class*='size-'])]:size-7"
+                >
+                  <CheckCheckIcon aria-hidden="true" />
                 </EmptyMedia>
-                <EmptyTitle>Você ainda não participou de nenhuma votação</EmptyTitle>
-                <EmptyDescription>
-                  Quando votar em uma pauta aberta, sua participação aparecerá aqui sem identificar sua escolha.
+                <EmptyTitle className="text-xl font-semibold">
+                  Sua participação começa com uma pauta
+                </EmptyTitle>
+                <EmptyDescription className="max-w-sm text-pretty">
+                  Você ainda não participou de uma votação. Explore as pautas abertas e acompanhe suas contribuições
+                  por aqui, sem revelar em qual opção votou.
                 </EmptyDescription>
               </EmptyHeader>
-              <Button nativeButton={false} render={<Link to="/pautas" search={{ status: 'OPEN' }} />}>
-                Ver pautas abertas
+              <Button
+                nativeButton={false}
+                render={<Link to="/pautas" search={{ status: 'OPEN' }} />}
+                className="mt-1 h-10 rounded-full px-5"
+              >
+                Explorar pautas abertas
                 <ArrowRightIcon />
               </Button>
             </Empty>
           )}
         </section>
-      </main>
+      </CommunityNavigation>
     </div>
   )
 }

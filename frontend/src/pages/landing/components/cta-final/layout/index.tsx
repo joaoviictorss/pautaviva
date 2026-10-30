@@ -7,8 +7,8 @@ import type { CtaFinalLayoutProps } from '../data'
 
 export function CtaFinal(_props: CtaFinalLayoutProps) {
   return (
-    <section className="px-6 pt-4 pb-16 sm:pt-8 md:pb-24">
-      <Reveal className="relative mx-auto max-w-[1152px] overflow-hidden rounded-[40px] bg-[radial-gradient(90%_70%_at_20%_0%,oklch(0.72_0.19_45)_0%,transparent_60%),linear-gradient(165deg,var(--primary),oklch(0.5_0.18_33))]">
+    <section className="w-full px-3.5 pt-4 pb-16 sm:px-10 sm:pt-8 md:pb-24">
+      <Reveal className="relative w-full overflow-hidden rounded-[40px] bg-[radial-gradient(90%_70%_at_20%_0%,oklch(0.72_0.19_45)_0%,transparent_60%),linear-gradient(165deg,var(--primary),oklch(0.5_0.18_33))]">
         <div className="pointer-events-none absolute inset-0 opacity-60 [background-image:radial-gradient(rgba(255,255,255,.12)_1px,transparent_1px)] [background-size:22px_22px]" />
 
         <div className="relative px-6 pt-12 text-center sm:pt-20">

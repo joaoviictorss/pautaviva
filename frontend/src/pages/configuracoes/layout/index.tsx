@@ -1,5 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowLeftIcon, CircleAlertIcon, CircleCheckIcon, ClipboardListIcon, VoteIcon } from 'lucide-react'
+import { ArrowLeftIcon, CircleAlertIcon, CircleCheckIcon, ClipboardListIcon, LogOutIcon, VoteIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
@@ -17,7 +17,7 @@ import type { ConfiguracoesLayoutProps } from '../data'
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex flex-col gap-1 border-b py-3 last:border-0">
+    <div className="flex min-w-0 flex-col gap-1 rounded-xl border bg-muted/20 p-3.5">
       <dt className="text-sm text-muted-foreground">{label}</dt>
       <dd className="m-0 break-words font-medium">{value}</dd>
     </div>
@@ -33,6 +33,8 @@ export function Configuracoes({
   photoError,
   onPhotoChange,
   onRemovePhoto,
+  signingOut,
+  onSignOut,
 }: ConfiguracoesLayoutProps) {
   return (
     <div className="flex min-h-dvh flex-col bg-background">
@@ -99,15 +101,18 @@ export function Configuracoes({
               <CardDescription>Informações pessoais vinculadas ao seu acesso.</CardDescription>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex flex-col gap-5">
             {loading ? (
-              <div className="flex flex-col gap-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 {Array.from({ length: 6 }, (_, index) => <Skeleton key={index} className="h-12" />)}
               </div>
             ) : user ? (
-              <div>
-                <div className="mb-5 flex flex-col gap-2 border-b pb-5">
-                  <label htmlFor="profile-photo" className="text-sm font-medium">Foto de perfil</label>
+              <>
+                <section aria-labelledby="profile-photo-heading" className="flex flex-col gap-3 rounded-xl border bg-muted/20 p-4">
+                  <div className="flex flex-col gap-1">
+                    <h3 id="profile-photo-heading" className="m-0 text-sm font-semibold">Foto de perfil</h3>
+                    <p className="m-0 text-sm text-muted-foreground">Escolha uma imagem para identificar sua conta.</p>
+                  </div>
                   <div className="flex flex-wrap items-center gap-3">
                     <input
                       id="profile-photo"
@@ -128,18 +133,18 @@ export function Configuracoes({
                     )}
                     {savingPhoto && <span className="text-sm text-muted-foreground">Salvando foto…</span>}
                   </div>
-                  <p className="m-0 text-sm text-muted-foreground">Imagens de até 8 MB. A foto será reduzida para otimizar o carregamento.</p>
+                  <p className="m-0 text-xs text-muted-foreground">Até 8 MB. A imagem será reduzida para otimizar o carregamento.</p>
                   {photoError && (
                     <Alert variant="destructive">
                       <CircleAlertIcon />
                       <AlertDescription>{photoError}</AlertDescription>
                     </Alert>
                   )}
-                </div>
-                <dl className="m-0">
+                </section>
+                <dl className="m-0 grid gap-3 sm:grid-cols-2">
                   <InfoRow label="Nome" value={user.name} />
                   <InfoRow label="E-mail" value={user.email} />
-                  <div className="flex flex-col gap-1 border-b py-3">
+                  <div className="flex min-w-0 flex-col gap-1 rounded-xl border bg-muted/20 p-3.5">
                     <dt className="text-sm text-muted-foreground">Confirmação do e-mail</dt>
                     <dd className="m-0">
                       <Badge variant={user.emailVerified ? 'secondary' : 'outline'}>
@@ -153,9 +158,22 @@ export function Configuracoes({
                   <InfoRow label="Perfil" value={ROLE_LABELS[user.role]} />
                   <InfoRow label="Conta criada em" value={format(new Date(user.createdAt), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })} />
                 </dl>
-              </div>
+              </>
             ) : null}
           </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl">
+          <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-col gap-1">
+              <CardTitle>Sessão</CardTitle>
+              <CardDescription>Encerre sua sessão neste dispositivo.</CardDescription>
+            </div>
+            <Button variant="outline" onClick={onSignOut} disabled={signingOut}>
+              <LogOutIcon />
+              {signingOut ? 'Saindo…' : 'Sair'}
+            </Button>
+          </CardHeader>
         </Card>
       </main>
     </div>

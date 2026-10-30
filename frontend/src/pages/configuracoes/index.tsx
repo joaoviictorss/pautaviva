@@ -1,17 +1,21 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 
 import { api } from '@/lib/api/client'
-import { authClient } from '@/lib/auth/client'
+import { signOut, authClient } from '@/lib/auth/client'
+import { toast } from '@/components/ui/toast'
 
 import { Configuracoes as Layout } from './layout'
 import type { ConfiguracoesLayoutProps, ConfiguracoesProps, UserSettings } from './data'
 
 export function Configuracoes(_props: ConfiguracoesProps) {
+  const navigate = useNavigate()
   const [user, setUser] = useState<UserSettings>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>()
   const [savingPhoto, setSavingPhoto] = useState(false)
   const [photoError, setPhotoError] = useState<string>()
+  const [signingOut, setSigningOut] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -85,6 +89,19 @@ export function Configuracoes(_props: ConfiguracoesProps) {
     }
   }, [])
 
+  const handleSignOut = useCallback(async () => {
+    setSigningOut(true)
+    const { error: signOutError } = await signOut()
+    setSigningOut(false)
+
+    if (signOutError) {
+      toast.add({ type: 'error', title: 'Não foi possível sair', description: 'Tente novamente em instantes.' })
+      return
+    }
+
+    await navigate({ to: '/entrar' })
+  }, [navigate])
+
   useEffect(() => {
     void load()
   }, [load])
@@ -98,6 +115,8 @@ export function Configuracoes(_props: ConfiguracoesProps) {
     photoError,
     onPhotoChange: (file) => void changePhoto(file),
     onRemovePhoto: () => void removePhoto(),
+    signingOut,
+    onSignOut: () => void handleSignOut(),
   }
 
   return <Layout {...layoutProps} />

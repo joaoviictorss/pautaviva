@@ -42,12 +42,12 @@ export function Features({
   syncClients,
 }: FeaturesLayoutProps) {
   return (
-    <section id="recursos" className="scroll-mt-20 px-6">
-      <div className="relative mx-auto max-w-[1392px] overflow-hidden rounded-[40px] bg-[oklch(0.1448_0_0)]">
+    <section id="recursos" className="scroll-mt-20 px-3.5 sm:px-10">
+      <div className="relative w-full overflow-hidden rounded-[40px] bg-[oklch(0.1448_0_0)]">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_45%_at_12%_0%,oklch(0.6404_0.2153_35.9/.38),transparent_70%),radial-gradient(50%_40%_at_100%_100%,oklch(0.5828_0.1809_259.7/.18),transparent_70%)]" />
         <div className="pointer-events-none absolute inset-0 opacity-50 [background-image:radial-gradient(rgba(255,255,255,.07)_1px,transparent_1px)] [background-size:22px_22px]" />
 
-        <div className="relative mx-auto flex max-w-[1152px] flex-col gap-6 px-4 py-16 sm:px-10 md:py-24">
+        <div className="relative flex w-full flex-col gap-6 px-4 py-16 sm:px-8 md:py-24">
           <Reveal className="mx-auto mb-2 flex max-w-[680px] flex-col gap-3.5 text-center">
             <span className="text-sm font-semibold text-[oklch(0.85_0.09_40)]">
               Da proposta ao resultado

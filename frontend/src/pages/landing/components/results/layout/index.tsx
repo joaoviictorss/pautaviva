@@ -18,7 +18,7 @@ export function Results({
   heat,
 }: ResultsLayoutProps) {
   return (
-    <section id="resultados" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-16 md:py-24">
+    <section id="resultados" className="w-full scroll-mt-20 px-3.5 py-16 sm:px-10 md:py-24">
       <Reveal className="mx-auto flex max-w-[640px] flex-col items-center gap-3.5 text-center">
         <span className="text-sm font-semibold text-accent-foreground">Painel de resultados</span>
         <h2 className="text-[clamp(1.875rem,3.8vw,2.875rem)] leading-[1.1] font-bold text-balance tracking-[-0.035em]">
