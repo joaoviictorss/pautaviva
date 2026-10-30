@@ -2,19 +2,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
 
 import { api } from '@/lib/api/client'
+import { POLL_STATUS_FILTERS } from '@/lib/poll/status'
 import type { PollPage } from '@/lib/poll/types'
 
 import { AdminPautas as Layout } from './layout'
 import type { AdminPautasLayoutProps, AdminPautasProps, Category, Poll, StatusFilter } from './data'
 
 const route = getRouteApi('/_autenticado/admin/pautas')
-
-const FILTERS: [StatusFilter, string][] = [
-  ['ALL', 'Todas'],
-  ['OPEN', 'Abertas'],
-  ['SCHEDULED', 'Agendadas'],
-  ['CLOSED', 'Encerradas'],
-]
 
 export function AdminPautas(_props: AdminPautasProps) {
   const { q = '', status = 'ALL', nova, editar } = route.useSearch()
@@ -65,7 +59,7 @@ export function AdminPautas(_props: AdminPautasProps) {
   )
 
   const layoutProps: AdminPautasLayoutProps = {
-    filters: FILTERS.map(([value, label]) => ({
+    filters: POLL_STATUS_FILTERS.map(({ value, label }) => ({
       value,
       label,
       count: matching.filter((poll) => value === 'ALL' || poll.status === value).length,

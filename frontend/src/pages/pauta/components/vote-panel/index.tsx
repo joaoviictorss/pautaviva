@@ -2,22 +2,19 @@ import { useState } from 'react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
-import { toast } from '@/components/ui/toast'
-import { api, ApiError } from '@/lib/api/client'
+import { useVote } from '@/hooks/use-vote'
 import { useSession } from '@/lib/auth/client'
+import { setPollReminder } from '@/lib/poll/reminders'
 import type { VoteOption } from '@/lib/poll/types'
-import { VOTE_OPTIONS } from '@/lib/poll/votes'
 
 import { VotePanel as Layout } from './layout'
 import type { VotePanelLayoutProps, VotePanelProps, VotePanelState } from './data'
-
-const OPTION_KEYS: VoteOption[] = ['FOR', 'AGAINST', 'ABSTAIN']
 
 export function VotePanel(props: VotePanelProps) {
   const { poll, onVoted } = props
   const { data: session, isPending } = useSession()
   const [option, setOption] = useState<VoteOption>()
-  const [submitting, setSubmitting] = useState(false)
+  const { submitting, vote } = useVote(poll.id, onVoted)
 
   function getState(): VotePanelState {
     if (poll.status === 'SCHEDULED') return 'scheduled'
@@ -28,33 +25,25 @@ export function VotePanel(props: VotePanelProps) {
     return poll.hasVoted ? 'voted' : 'vote'
   }
 
-  async function handleSubmit(event: React.FormEvent) {
+  function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
-    if (!option) return
+    if (option) void vote(option)
+  }
 
-    setSubmitting(true)
-    try {
-      await api(`/polls/${poll.id}/votes`, { method: 'POST', json: { option } })
-      toast.add({ type: 'success', title: 'Voto registrado', description: 'Obrigado por participar!' })
-    } catch (err) {
-      toast.add({ type: 'error', title: 'Não foi possível votar', description: (err as Error).message })
-      // 409 (já votou) e 400 (pauta fechou) mudam a pauta: recarrega para refletir
-      if (!(err instanceof ApiError && (err.status === 409 || err.status === 400))) return
-    } finally {
-      setSubmitting(false)
-    }
-    onVoted()
+  async function toggleReminder() {
+    if (await setPollReminder(poll.id, !poll.hasReminder)) onVoted()
   }
 
   const layoutProps: VotePanelLayoutProps = {
     ...props,
     state: getState(),
     opensLabel: format(new Date(poll.startsAt), "dd 'de' MMMM", { locale: ptBR }),
-    options: VOTE_OPTIONS.map(({ label, color }, i) => ({ value: OPTION_KEYS[i], label, color })),
+    reminder: isPending ? undefined : !session ? 'sign-in' : session.user.role === 'CITIZEN' ? 'toggle' : undefined,
     option,
     onOptionChange: setOption,
     submitting,
     onSubmit: handleSubmit,
+    onToggleReminder: () => void toggleReminder(),
   }
 
   return <Layout {...layoutProps} />

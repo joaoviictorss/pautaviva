@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { CheckCheckIcon, CheckIcon, CircleAlertIcon, CircleCheckIcon, FlagIcon, Undo2Icon, XIcon } from 'lucide-react'
 
+import { PageHeader } from '@/components/page-header'
 import { RejectCommentDialog } from '@/components/reject-comment-dialog'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -42,10 +43,7 @@ export function Moderacao({
 
   return (
     <section className="flex animate-[word-in_.35s_cubic-bezier(.16,1,.3,1)] flex-col gap-6">
-      <div className="flex flex-col gap-1.5">
-        <h1 className="m-0 text-[clamp(28px,3.2vw,38px)] font-extrabold tracking-tighter">Moderação</h1>
-        <p className="m-0 text-[15px] text-muted-foreground">Comentários só aparecem na pauta depois de aprovados.</p>
-      </div>
+      <PageHeader title="Moderação" description="Comentários só aparecem na pauta depois de aprovados." />
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-2">

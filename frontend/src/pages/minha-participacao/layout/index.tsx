@@ -1,156 +1,207 @@
 import { Link } from '@tanstack/react-router'
-import { ArrowLeftIcon, ArrowRightIcon, CheckCheckIcon, CircleAlertIcon } from 'lucide-react'
+import { ArrowRightIcon, CheckCheckIcon, CircleAlertIcon, DownloadIcon, LockIcon, MessageCircleIcon, PencilIcon, Trash2Icon } from 'lucide-react'
 
-import { CommunityNavigation } from '@/components/community-navigation'
-import { SiteHeader } from '@/components/site-header'
+import { FilterChips } from '@/components/filter-chips'
+import { PageHeader } from '@/components/page-header'
+import { ParticipationRowLink } from '@/components/poll-rows'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Textarea } from '@/components/ui/textarea'
 
 import type { MinhaParticipacaoLayoutProps } from '../data'
 
+const PILL = 'h-10 rounded-full px-5 font-semibold'
+
 export function MinhaParticipacao({
-  items,
+  tabs,
+  tab,
+  months,
+  comments,
   total,
-  resultsAvailable,
   page,
   pageSize,
+  editingId,
+  editingText,
+  deletingId,
+  saving,
+  downloading,
   loading,
   error,
+  onTabChange,
   onPageChange,
-  onBack,
+  onEdit,
+  onEditingTextChange,
+  onCancelEdit,
+  onResubmit,
+  onAskDelete,
+  onDelete,
+  onDownload,
 }: MinhaParticipacaoLayoutProps) {
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
 
   return (
-    <div className="flex min-h-dvh flex-col bg-background">
-      <SiteHeader />
-      <CommunityNavigation active="minha-participacao">
-        <Button onClick={onBack} variant="link" className="w-fit px-0">
-          <ArrowLeftIcon />
-          Voltar
+    <section className="flex animate-[word-in_.35s_cubic-bezier(.16,1,.3,1)] flex-col gap-6">
+      <PageHeader title="Minhas participações" description="Seu histórico de votos e comentários.">
+        <Button variant="outline" disabled={downloading || total === 0} className={`${PILL} bg-card`} onClick={onDownload}>
+          <DownloadIcon />
+          {downloading ? 'Gerando...' : 'Baixar meu histórico'}
         </Button>
+      </PageHeader>
 
-        <header className="flex flex-col gap-2">
-          <h1 className="m-0 text-3xl font-bold tracking-tight">Minha participação</h1>
-          <p className="m-0 text-muted-foreground">
-            Acompanhe seu histórico. Esta página não registra nem revela em qual opção você votou.
+      <FilterChips label="Tipo de participação" chips={tabs} value={tab} onChange={onTabChange} />
+
+      {error ? (
+        <Alert variant="destructive">
+          <CircleAlertIcon />
+          <AlertTitle>Não foi possível carregar sua participação</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      ) : loading ? (
+        <Skeleton className="h-96 rounded-2xl" />
+      ) : tab === 'votos' ? (
+        <>
+          <p className="m-0 inline-flex items-center gap-2 text-[13px] text-muted-foreground">
+            <LockIcon className="size-3.5 shrink-0" />
+            Seu voto é secreto: guardamos apenas que você participou, nunca a opção escolhida.
           </p>
-        </header>
-
-        {error && (
-          <Alert variant="destructive">
-            <CircleAlertIcon />
-            <AlertTitle>Não foi possível carregar sua participação</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        <section className="grid gap-3 sm:grid-cols-2" aria-label="Resumo da participação">
-          <Card className="rounded-2xl">
-            <CardHeader className="gap-1">
-              <CardDescription>Votações em que participou</CardDescription>
-              <CardTitle className="text-3xl">{loading ? <Skeleton className="h-9 w-16" /> : total}</CardTitle>
-            </CardHeader>
-          </Card>
-          <Card className="rounded-2xl">
-            <CardHeader className="gap-1">
-              <CardDescription>Com resultados disponíveis</CardDescription>
-              <CardTitle className="text-3xl">{loading ? <Skeleton className="h-9 w-16" /> : resultsAvailable}</CardTitle>
-            </CardHeader>
-          </Card>
-        </section>
-
-        <section aria-label="Histórico de participação">
-          {loading ? (
-            <div className="flex flex-col gap-3">
-              {Array.from({ length: 3 }, (_, index) => <Skeleton key={index} className="h-24 rounded-2xl" />)}
-            </div>
-          ) : error ? null : items.length ? (
-            <div className="flex flex-col gap-3">
-              {items.map((item) => {
-                const CategoryIcon = item.categoryLook.icon
-                return (
-                  <Card key={item.poll.id} className="gap-0 rounded-2xl">
-                    <CardContent className="flex flex-wrap items-center gap-3 p-4 sm:p-5">
-                      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl" style={item.categoryLook.style}>
-                        <CategoryIcon className="size-5" />
-                      </span>
-                      <div className="flex min-w-0 flex-1 flex-col gap-1">
-                        <h2 className="m-0 text-base font-semibold">{item.poll.title}</h2>
-                        <p className="m-0 text-sm text-muted-foreground">
-                          {item.poll.category.name} · Participou em {item.participatedAtLabel}
-                        </p>
-                      </div>
-                      <Badge variant={item.resultsAvailable ? 'secondary' : 'outline'}>
-                        {item.resultsAvailable ? 'Resultados disponíveis' : 'Votação ainda não iniciada'}
-                      </Badge>
-                      <Button
-                        render={<Link to="/pautas/$pollId" params={{ pollId: item.poll.id }} />}
-                        variant="outline"
-                        size="sm"
-                      >
-                        {item.resultsAvailable ? 'Ver resultados' : 'Ver pauta'}
-                        <ArrowRightIcon />
-                      </Button>
-                    </CardContent>
-                  </Card>
-                )
-              })}
-
-              {totalPages > 1 && (
-                <nav aria-label="Paginação do histórico" className="flex items-center justify-between gap-3 pt-2">
-                  <p className="m-0 text-sm text-muted-foreground">
-                    Página {page} de {totalPages} · {total} {total === 1 ? 'participação' : 'participações'}
-                  </p>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
-                      Anterior
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={page >= totalPages}
-                      onClick={() => onPageChange(page + 1)}
-                    >
-                      Próxima
-                    </Button>
-                  </div>
-                </nav>
-              )}
-            </div>
+          {months.length ? (
+            months.map((month) => (
+              <Card key={month.label} className="@container gap-1.5 rounded-2xl px-5 pt-5 pb-2.5">
+                <h2 className="m-0 pb-2 text-[15px] font-bold tracking-tight first-letter:uppercase">{month.label}</h2>
+                {month.items.map((item) => (
+                  <ParticipationRowLink key={item.id} item={item} />
+                ))}
+              </Card>
+            ))
           ) : (
-            <Empty className="min-h-80 gap-5 rounded-3xl border bg-gradient-to-b from-accent/35 via-background to-background px-6 py-12 shadow-sm">
-              <EmptyHeader className="max-w-md gap-3">
-                <EmptyMedia
-                  variant="icon"
-                  className="mb-1 size-16 rounded-2xl bg-accent text-accent-foreground shadow-sm [&_svg:not([class*='size-'])]:size-7"
-                >
-                  <CheckCheckIcon aria-hidden="true" />
+            <Empty className="rounded-2xl border border-dashed">
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <CheckCheckIcon />
                 </EmptyMedia>
-                <EmptyTitle className="text-xl font-semibold">
-                  Sua participação começa com uma pauta
-                </EmptyTitle>
-                <EmptyDescription className="max-w-sm text-pretty">
-                  Você ainda não participou de uma votação. Explore as pautas abertas e acompanhe suas contribuições
-                  por aqui, sem revelar em qual opção votou.
-                </EmptyDescription>
+                <EmptyTitle>Sua participação começa com uma pauta</EmptyTitle>
+                <EmptyDescription>Você ainda não votou. Explore as pautas abertas.</EmptyDescription>
               </EmptyHeader>
-              <Button
-                nativeButton={false}
-                render={<Link to="/pautas" search={{ status: 'OPEN' }} />}
-                className="mt-1 h-10 rounded-full px-5"
-              >
+              <Button nativeButton={false} render={<Link to="/pautas" search={{ status: 'OPEN' }} />} className={PILL}>
                 Explorar pautas abertas
                 <ArrowRightIcon />
               </Button>
             </Empty>
           )}
-        </section>
-      </CommunityNavigation>
-    </div>
+
+          {totalPages > 1 && (
+            <nav aria-label="Paginação do histórico" className="flex items-center justify-between gap-3">
+              <p className="m-0 text-sm text-muted-foreground">
+                Página {page} de {totalPages} · {total} {total === 1 ? 'participação' : 'participações'}
+              </p>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
+                  Anterior
+                </Button>
+                <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)}>
+                  Próxima
+                </Button>
+              </div>
+            </nav>
+          )}
+        </>
+      ) : comments.length ? (
+        <div className="flex flex-col gap-3">
+          {comments.map((comment) => (
+            <Card key={comment.id} className="gap-2.5 rounded-2xl p-5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <Link to="/pautas/$pollId" params={{ pollId: comment.pollId }} className="min-w-0 font-bold tracking-tight text-foreground no-underline hover:underline">
+                  {comment.pollTitle}
+                </Link>
+                <Badge className={`h-6 px-2.5 font-semibold ${comment.statusClassName}`}>{comment.statusLabel}</Badge>
+              </div>
+              <span className="text-xs text-muted-foreground">{comment.dateLabel}</span>
+              {editingId === comment.id ? (
+                <div className="flex flex-col gap-2">
+                  <Textarea
+                    aria-label="Editar comentário"
+                    maxLength={1000}
+                    value={editingText}
+                    disabled={saving}
+                    onChange={(event) => onEditingTextChange(event.target.value)}
+                  />
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-xs text-muted-foreground">{editingText.length}/1000</span>
+                    <div className="flex gap-2">
+                      <Button variant="outline" size="sm" disabled={saving} onClick={onCancelEdit}>Cancelar</Button>
+                      <Button size="sm" disabled={saving || editingText.trim().length < 5} onClick={onResubmit}>
+                        {saving ? 'Reenviando...' : 'Reenviar para moderação'}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <p className="m-0 text-sm leading-relaxed whitespace-pre-wrap">{comment.text}</p>
+              )}
+              {comment.rejectionReason && (
+                <p className="m-0 rounded-xl bg-muted/60 px-3 py-2 text-[13px] text-muted-foreground">
+                  <strong className="font-semibold">Motivo:</strong> {comment.rejectionReason}
+                </p>
+              )}
+              {editingId !== comment.id && (comment.canResubmit || comment.canDelete) && (
+                <div className="flex flex-wrap gap-1">
+                  {comment.canResubmit && (
+                    <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => onEdit(comment)}>
+                      <PencilIcon />
+                      Editar e reenviar
+                    </Button>
+                  )}
+                  {comment.canDelete && (
+                    <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => onAskDelete(comment.id)}>
+                      <Trash2Icon />
+                      Excluir
+                    </Button>
+                  )}
+                </div>
+              )}
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <Empty className="rounded-2xl border border-dashed">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <MessageCircleIcon />
+            </EmptyMedia>
+            <EmptyTitle>Nenhum comentário ainda</EmptyTitle>
+            <EmptyDescription>Seus comentários e o andamento da moderação aparecem aqui.</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      )}
+
+      <AlertDialog open={!!deletingId} onOpenChange={(open) => !open && onAskDelete(undefined)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir comentário?</AlertDialogTitle>
+            <AlertDialogDescription>Ele deixa de aparecer na pauta e não poderá ser recuperado por você.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={saving}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction disabled={saving} onClick={onDelete}>
+              {saving ? 'Excluindo...' : 'Excluir'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </section>
   )
 }

@@ -115,13 +115,13 @@ function actionEmail({ heading, intro, action, url, outro }: ActionEmailParams) 
 export function sendVerificationMail(to: string, name: string, url: string) {
   return sendMail({
     to,
-    subject: 'Confirme seu cadastro no PautaViva',
+    subject: 'Confirme seu e-mail no PautaViva',
     ...actionEmail({
       heading: `Olá, ${name.split(' ')[0]}`,
-      intro: 'Falta só um passo: confirme seu e-mail para ativar sua conta e começar a votar nas pautas da sua comunidade.',
+      intro: 'Falta só um passo: confirme este e-mail para usar sua conta e votar nas pautas da sua comunidade.',
       action: 'Confirmar e-mail',
       url,
-      outro: 'O link vale por 1 hora. Se você não criou uma conta no PautaViva, ignore esta mensagem.',
+      outro: 'O link vale por 1 hora. Se você não fez esse pedido, ignore esta mensagem.',
     }),
   })
 }
@@ -136,6 +136,42 @@ export function sendResetPasswordMail(to: string, name: string, url: string) {
       action: 'Criar nova senha',
       url,
       outro: 'O link vale por 1 hora. Se você não pediu a redefinição, ignore esta mensagem; sua senha continua a mesma.',
+    }),
+  })
+}
+
+export function sendPollOpenedMail(to: string, name: string, title: string, url: string) {
+  return sendMail({
+    to,
+    subject: `A votação abriu: ${title}`,
+    ...actionEmail({
+      heading: `Olá, ${name.split(' ')[0]}`,
+      intro: `A pauta "${title}", que você pediu para acompanhar, já está aberta para votação.`,
+      action: 'Votar agora',
+      url,
+      outro: 'Você recebeu este aviso porque ativou um lembrete nesta pauta.',
+    }),
+  })
+}
+
+interface NoticeMailParams {
+  subject: string
+  intro: string
+  action: string
+  url: string
+  outro?: string
+}
+
+export function sendNoticeMail(to: string, name: string, { subject, intro, action, url, outro }: NoticeMailParams) {
+  return sendMail({
+    to,
+    subject,
+    ...actionEmail({
+      heading: `Olá, ${name.split(' ')[0]}`,
+      intro,
+      action,
+      url,
+      outro: outro ?? 'Você recebeu este aviso porque ativou esta notificação. Para desativar, acesse Configurações.',
     }),
   })
 }

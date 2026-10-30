@@ -119,7 +119,6 @@ export function AdminPauta(_props: AdminPautaProps) {
     error,
     live,
     bars,
-    barLabel: bars?.map((bar) => `${bar.percentLabel} ${bar.label.toLowerCase()}`).join(', '),
     days,
     peakLabel: peak.count ? `Pico: ${formatNumber(peak.count)} em ${peak.label}` : undefined,
     comments: comments.map((comment) => ({

@@ -50,7 +50,6 @@ export interface AdminPautaLayoutProps extends AdminPautaProps {
   resultNote?: string
   emptyResultLabel?: string
   bars?: VoteBar[]
-  barLabel?: string
   days: AdminPautaDayPoint[]
   peakLabel?: string
   comments: AdminPautaCommentItem[]

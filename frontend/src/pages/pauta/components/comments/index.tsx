@@ -4,11 +4,16 @@ import { api } from '@/lib/api/client'
 import { useSession } from '@/lib/auth/client'
 
 import { Comments as Layout } from './layout'
+import type { MyComment } from '@/lib/poll/types'
+
 import type { CommentReportReason, CommentsLayoutProps, CommentsProps, PollComment } from './data'
 
 export function Comments({ pollId, commentable }: CommentsProps) {
   const { data: session } = useSession()
+  const user = session?.user
+  const canComment = user?.role === 'CITIZEN'
   const [comments, setComments] = useState<PollComment[]>([])
+  const [ownPending, setOwnPending] = useState<MyComment[]>([])
   const [text, setText] = useState('')
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
@@ -21,14 +26,19 @@ export function Comments({ pollId, commentable }: CommentsProps) {
 
   const load = useCallback(async () => {
     try {
-      setComments(await api<PollComment[]>(`/polls/${encodeURIComponent(pollId)}/comments`))
+      const [published, mine] = await Promise.all([
+        api<PollComment[]>(`/polls/${encodeURIComponent(pollId)}/comments`),
+        canComment ? api<MyComment[]>('/comments/me') : [],
+      ])
+      setComments(published)
+      setOwnPending(mine.filter(({ poll, status }) => poll.id === pollId && status === 'PENDING'))
       setError(undefined)
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : 'Não foi possível carregar os comentários.')
     } finally {
       setLoading(false)
     }
-  }, [pollId])
+  }, [pollId, canComment])
 
   useEffect(() => {
     void load()
@@ -45,12 +55,13 @@ export function Comments({ pollId, commentable }: CommentsProps) {
       })
       setText('')
       setNotice('Comentário enviado para análise. Ele ficará visível após a aprovação da moderação.')
+      void load()
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : 'Não foi possível enviar o comentário.')
     } finally {
       setSubmitting(false)
     }
-  }, [pollId, text])
+  }, [load, pollId, text])
 
   const report = useCallback(async () => {
     if (!reportedCommentId) return
@@ -76,12 +87,25 @@ export function Comments({ pollId, commentable }: CommentsProps) {
   const layoutProps: CommentsLayoutProps = {
     pollId,
     commentable,
-    comments,
+    comments: [
+      ...(user
+        ? ownPending.map(({ id, text: ownText, createdAt }) => ({
+            id,
+            text: ownText,
+            createdAt,
+            author: { name: user.name, image: user.image ?? null },
+            pending: true,
+          }))
+        : []),
+      ...comments,
+    ],
+    publishedCount: comments.length,
+    viewer: user,
     text,
     loading,
     submitting,
     signedIn: !!session,
-    canComment: session?.user.role === 'CITIZEN',
+    canComment,
     reportOpen,
     reportReason,
     reporting,

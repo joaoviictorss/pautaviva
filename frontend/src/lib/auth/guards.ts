@@ -29,7 +29,7 @@ export async function redirectAfterVerification({ search }: { search: { error?: 
   throw redirect({ to: (await getSession()) ? '/painel' : '/entrar' })
 }
 
-const STAFF_ROLES = ['ADMIN', 'MANAGER', 'MODERATOR']
+export const STAFF_ROLES = ['ADMIN', 'MANAGER', 'MODERATOR']
 
 interface SessionContext {
   context: { session: { user: { role?: string | null } } }

@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
-import { differenceInCalendarDays, format, parseISO } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { ListChecksIcon, MessageSquareWarningIcon, UsersIcon, VoteIcon } from 'lucide-react'
 
+import type { Kpi } from '@/components/kpi-card'
 import { useModerationQueue } from '@/hooks/use-moderation-queue'
 import { api } from '@/lib/api/client'
-import { getCategoryLook } from '@/lib/poll/categories'
-import { VOTE_OPTIONS } from '@/lib/poll/votes'
+import { toCategoryBars } from '@/lib/poll/categories'
+import { toClosingRow, toUpcomingRow } from '@/lib/poll/rows'
 import { getDefaultAvatar } from '@/lib/utils/avatar'
 import { formatAge, formatNumber, getInitials, isOlderThanDay } from '@/lib/utils/format'
 import type { ModerationComment } from '@/pages/moderacao/data'
@@ -16,7 +17,6 @@ import { AdminInicio as Layout } from './layout'
 import type {
   AdminDashboard,
   AdminDashboardTotal,
-  AdminInicioKpi,
   AdminInicioLayoutProps,
   AdminInicioPeriod,
   AdminInicioProps,
@@ -25,26 +25,18 @@ import type {
 const route = getRouteApi('/_autenticado')
 
 const PERIODS: AdminInicioPeriod[] = [7, 30, 90]
-const URGENT_DAYS = 6
 const COMPARISON_NOTE = 'vs. período anterior'
 const MODERATION_ITEMS = 3
 
 const shortDate = (date: Date) => format(date, 'dd MMM', { locale: ptBR }).replace('.', '')
-const participationsLabel = (count: number) => `${formatNumber(count)} ${count === 1 ? 'participação' : 'participações'}`
 
 function deltaOf({ current, previous }: AdminDashboardTotal, percent = true) {
   const difference = current - previous
   const value = percent && previous ? `${Math.round((difference / previous) * 100)}%` : formatNumber(difference)
   return {
     delta: difference > 0 ? `+${value}` : value,
-    deltaTone: (difference > 0 ? 'up' : difference < 0 ? 'down' : 'neutral') as AdminInicioKpi['deltaTone'],
+    deltaTone: (difference > 0 ? 'up' : difference < 0 ? 'down' : 'neutral') as Kpi['deltaTone'],
   }
-}
-
-function timeLabel(endsAt: string) {
-  const days = differenceInCalendarDays(new Date(endsAt), new Date())
-  if (days <= 0) return 'Encerra hoje'
-  return days === 1 ? '1 dia' : `${days} dias`
 }
 
 export function AdminInicio(_props: AdminInicioProps) {
@@ -82,8 +74,6 @@ export function AdminInicio(_props: AdminInicioProps) {
 
   const days = (dashboard?.participationsByDay ?? []).map(({ day, count }) => ({ label: shortDate(parseISO(day)), count }))
   const peak = days.reduce((highest, day) => (day.count > highest.count ? day : highest), { label: '', count: 0 })
-  const categories = dashboard?.participationsByCategory ?? []
-  const largestCategory = Math.max(1, ...categories.map((category) => category.count))
   const oldestFirst = [...queue].sort((a, b) => a.createdAt.localeCompare(b.createdAt))
 
   const layoutProps: AdminInicioLayoutProps = {
@@ -129,39 +119,9 @@ export function AdminInicio(_props: AdminInicioProps) {
       : [],
     days,
     peakLabel: peak.count ? `Pico: ${formatNumber(peak.count)} em ${peak.label}` : undefined,
-    categories: categories.map(({ name, count }) => {
-      const look = getCategoryLook(name)
-      return {
-        name,
-        value: formatNumber(count),
-        percent: (count / largestCategory) * 100,
-        icon: look.icon,
-        color: String(look.style.color),
-      }
-    }),
-    closing: (dashboard?.endingSoon ?? []).map((poll) => {
-      const { FOR, AGAINST, ABSTAIN } = poll.results
-      const totalVotes = FOR + AGAINST + ABSTAIN
-      const percents = [FOR, AGAINST, ABSTAIN].map((votes) => (totalVotes ? Math.round((votes / totalVotes) * 100) : 0))
-      return {
-        id: poll.id,
-        title: poll.title,
-        timeLabel: timeLabel(poll.endsAt),
-        urgent: differenceInCalendarDays(new Date(poll.endsAt), new Date()) <= URGENT_DAYS,
-        bar: {
-          segments: VOTE_OPTIONS.map(({ key, color }, i) => ({ key, color, percent: percents[i] })),
-          label: `${percents[0]}% a favor, ${percents[1]}% contra, ${percents[2]}% abstenção`,
-        },
-        participationsLabel: participationsLabel(poll.participations),
-      }
-    }),
-    upcoming: (dashboard?.upcoming ?? []).map((poll) => ({
-      id: poll.id,
-      title: poll.title,
-      day: format(new Date(poll.startsAt), 'dd'),
-      month: format(new Date(poll.startsAt), 'MMM', { locale: ptBR }).replace('.', ''),
-      detail: `${poll.category.name} · até ${shortDate(new Date(poll.endsAt))}`,
-    })),
+    categories: toCategoryBars(dashboard?.participationsByCategory ?? []),
+    closing: (dashboard?.endingSoon ?? []).map(toClosingRow),
+    upcoming: (dashboard?.upcoming ?? []).map(toUpcomingRow),
     moderation: canModerate
       ? {
           count: formatNumber(queue.length),

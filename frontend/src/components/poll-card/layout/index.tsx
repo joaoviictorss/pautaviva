@@ -11,7 +11,7 @@ import type { PollCardLayoutProps } from '../data'
 
 export function PollCard({
   poll,
-  linked,
+  linkTo,
   categoryLook,
   statusLabel,
   statusClassName,
@@ -20,6 +20,8 @@ export function PollCard({
   participationsLabel,
   scheduleLabel,
   timeLabel,
+  citizenTimeLabel,
+  action,
   onEditClick,
 }: PollCardLayoutProps) {
   const CategoryIcon = categoryLook.icon
@@ -31,14 +33,21 @@ export function PollCard({
           <CategoryIcon />
           {poll.category.name}
         </Badge>
-        <Badge className={cn('h-6 px-2.5 font-semibold', statusClassName)}>{statusLabel}</Badge>
+        {citizenTimeLabel ? (
+          <span className="inline-flex items-center gap-1.5 text-[13px] whitespace-nowrap text-muted-foreground">
+            <ClockIcon className="size-3.5" />
+            {citizenTimeLabel}
+          </span>
+        ) : (
+          <Badge className={cn('h-6 px-2.5 font-semibold', statusClassName)}>{statusLabel}</Badge>
+        )}
       </CardHeader>
 
       <CardContent className="flex flex-1 flex-col gap-1.5 px-0">
         <CardTitle className="text-[17px] font-bold tracking-tight text-pretty">
-          {linked ? (
+          {linkTo ? (
             <Link
-              to="/admin/pautas/$pollId"
+              to={linkTo}
               params={{ pollId: poll.id }}
               className="text-inherit no-underline after:absolute after:inset-0 after:rounded-2xl hover:no-underline"
             >
@@ -83,6 +92,7 @@ export function PollCard({
             {timeLabel}
           </span>
         )}
+        {action && <span className="relative z-10 shrink-0">{action}</span>}
         {onEditClick && (
           <Button variant="outline" size="sm" onClick={onEditClick} className="relative z-10">
             <PencilIcon />

@@ -5,8 +5,9 @@ import { FlagIcon, MessageCircleIcon, SendIcon } from 'lucide-react'
 
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -19,6 +20,7 @@ import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
+import { COMMENT_STATUS } from '@/lib/poll/status'
 import { getDefaultAvatar } from '@/lib/utils/avatar'
 import { getInitials } from '@/lib/utils/format'
 
@@ -34,6 +36,8 @@ const reportReasons: { value: CommentReportReason; label: string }[] = [
 export function Comments({
   commentable,
   comments,
+  publishedCount,
+  viewer,
   text,
   loading,
   submitting,
@@ -52,18 +56,24 @@ export function Comments({
   onReport,
 }: CommentsLayoutProps) {
   return (
-    <Card className="rounded-2xl">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2"><MessageCircleIcon className="size-5" />Discussão</CardTitle>
-        <CardDescription>Comentários publicados após aprovação da moderação.</CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-5">
-        {error && <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>}
-        {notice && <Alert><AlertDescription>{notice}</AlertDescription></Alert>}
+    <Card className="gap-5 rounded-2xl p-5">
+      <h2 className="m-0 flex items-center gap-2 text-[17px] font-bold tracking-tight">
+        Comentários
+        <span className="font-mono text-sm font-medium text-muted-foreground">{publishedCount}</span>
+      </h2>
+      {error && <Alert variant="destructive"><AlertDescription>{error}</AlertDescription></Alert>}
+      {notice && <Alert><AlertDescription>{notice}</AlertDescription></Alert>}
 
-        {commentable && (
-          canComment ? (
-            <div className="flex flex-col items-end gap-2">
+      {commentable && (
+        canComment ? (
+          <div className="flex gap-3">
+            {viewer && (
+              <Avatar className="size-9 shrink-0">
+                <AvatarImage src={viewer.image ?? getDefaultAvatar(viewer.name)} alt="" />
+                <AvatarFallback>{getInitials(viewer.name)}</AvatarFallback>
+              </Avatar>
+            )}
+            <div className="flex min-w-0 flex-1 flex-col gap-2">
               <Textarea
                 aria-label="Escreva um comentário"
                 placeholder="Compartilhe sua opinião com respeito..."
@@ -72,74 +82,79 @@ export function Comments({
                 onChange={(event) => onTextChange(event.target.value)}
                 disabled={submitting}
               />
-              <div className="flex w-full items-center justify-between gap-3">
-                <span className="text-xs text-muted-foreground">{text.length}/1000</span>
-                <Button disabled={submitting || text.trim().length < 5} onClick={onSubmit}>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <span className="text-xs text-muted-foreground">
+                  Comentários passam por moderação antes de aparecer. {text.length}/1000
+                </span>
+                <Button disabled={submitting || text.trim().length < 5} onClick={onSubmit} className="rounded-full font-semibold">
                   <SendIcon />
-                  {submitting ? 'Enviando...' : 'Enviar para moderação'}
+                  {submitting ? 'Enviando...' : 'Enviar'}
                 </Button>
               </div>
             </div>
-          ) : (
-            <Alert>
-              <AlertDescription className="flex flex-wrap items-center justify-between gap-3">
-                <span>{signedIn ? 'Somente cidadãos podem comentar nesta pauta.' : 'Entre com uma conta de cidadão para participar da discussão.'}</span>
-                {!signedIn && (
-                  <Button nativeButton={false} render={<Link to="/entrar" />} variant="outline" size="sm">Entrar</Button>
-                )}
-              </AlertDescription>
-            </Alert>
-          )
-        )}
-
-        {loading ? (
-          <div className="flex flex-col gap-3">
-            <Skeleton className="h-20 w-full" />
-            <Skeleton className="h-20 w-full" />
-          </div>
-        ) : comments.length ? (
-          <div className="flex flex-col gap-4">
-            {comments.map((comment) => (
-              <article key={comment.id} className="flex gap-3 border-t pt-4">
-                <Avatar className="size-9 shrink-0">
-                  <AvatarImage src={comment.author.image ?? getDefaultAvatar(comment.author.name)} alt="" />
-                  <AvatarFallback>{getInitials(comment.author.name)}</AvatarFallback>
-                </Avatar>
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                    <span className="font-semibold">{comment.author.name}</span>
-                    <time className="text-xs text-muted-foreground" dateTime={comment.createdAt}>
-                      {format(new Date(comment.createdAt), "dd 'de' MMM 'às' HH:mm", { locale: ptBR })}
-                    </time>
-                  </div>
-                  <p className="m-0 mt-1 whitespace-pre-wrap text-sm leading-relaxed">{comment.text}</p>
-                  {canComment && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="mt-2 h-8 px-2 text-muted-foreground"
-                      onClick={() => onOpenReport(comment.id)}
-                    >
-                      <FlagIcon />
-                      Denunciar
-                    </Button>
-                  )}
-                </div>
-              </article>
-            ))}
           </div>
         ) : (
-          <Empty className="rounded-xl border border-dashed py-5">
-            <EmptyHeader>
-              <EmptyMedia variant="icon"><MessageCircleIcon /></EmptyMedia>
-              <EmptyTitle>Nenhum comentário publicado</EmptyTitle>
-              <EmptyDescription>
-                {commentable ? 'Seja a primeira pessoa a contribuir com a conversa.' : 'Ainda não há comentários publicados para esta pauta.'}
-              </EmptyDescription>
-            </EmptyHeader>
-          </Empty>
-        )}
-      </CardContent>
+          <Alert>
+            <AlertDescription className="flex flex-wrap items-center justify-between gap-3">
+              <span>{signedIn ? 'Somente cidadãos podem comentar nesta pauta.' : 'Entre com uma conta de cidadão para participar da discussão.'}</span>
+              {!signedIn && (
+                <Button nativeButton={false} render={<Link to="/entrar" />} variant="outline" size="sm" className="rounded-full">Entrar</Button>
+              )}
+            </AlertDescription>
+          </Alert>
+        )
+      )}
+
+      {loading ? (
+        <div className="flex flex-col gap-3">
+          <Skeleton className="h-20 w-full" />
+          <Skeleton className="h-20 w-full" />
+        </div>
+      ) : comments.length ? (
+        <div className="flex flex-col gap-4">
+          {comments.map((comment) => (
+            <article key={comment.id} className="flex gap-3 border-t pt-4">
+              <Avatar className="size-9 shrink-0">
+                <AvatarImage src={comment.author.image ?? getDefaultAvatar(comment.author.name)} alt="" />
+                <AvatarFallback>{getInitials(comment.author.name)}</AvatarFallback>
+              </Avatar>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                  <span className="font-semibold">{comment.author.name}</span>
+                  <time className="text-xs text-muted-foreground" dateTime={comment.createdAt}>
+                    {format(new Date(comment.createdAt), "dd 'de' MMM 'às' HH:mm", { locale: ptBR })}
+                  </time>
+                </div>
+                <p className="m-0 mt-1 whitespace-pre-wrap text-sm leading-relaxed">{comment.text}</p>
+                {comment.pending && (
+                  <Badge className={`mt-2 h-6 px-2.5 font-semibold ${COMMENT_STATUS.PENDING.className}`}>Em análise · só você vê</Badge>
+                )}
+                {canComment && !comment.pending && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="mt-2 h-8 px-2 text-muted-foreground"
+                    onClick={() => onOpenReport(comment.id)}
+                  >
+                    <FlagIcon />
+                    Denunciar
+                  </Button>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <Empty className="rounded-xl border border-dashed py-5">
+          <EmptyHeader>
+            <EmptyMedia variant="icon"><MessageCircleIcon /></EmptyMedia>
+            <EmptyTitle>Nenhum comentário publicado</EmptyTitle>
+            <EmptyDescription>
+              {commentable ? 'Seja a primeira pessoa a contribuir com a conversa.' : 'Ainda não há comentários publicados para esta pauta.'}
+            </EmptyDescription>
+          </EmptyHeader>
+        </Empty>
+      )}
       <Dialog open={reportOpen} onOpenChange={onReportOpenChange}>
         <DialogContent>
           <DialogHeader>

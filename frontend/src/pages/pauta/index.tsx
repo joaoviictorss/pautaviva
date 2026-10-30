@@ -3,6 +3,7 @@ import { getRouteApi } from '@tanstack/react-router'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
+import { toast } from '@/components/ui/toast'
 import { usePollExport } from '@/hooks/use-poll-export'
 import { usePollLive, type PollLiveUpdate } from '@/hooks/use-poll-live'
 import { api } from '@/lib/api/client'
@@ -16,8 +17,14 @@ import { formatNumber } from '@/lib/utils/format'
 import { Pauta as Layout } from './layout'
 import type { PautaLayoutProps, PautaProps } from './data'
 
-const route = getRouteApi('/pautas/$pollId')
+const route = getRouteApi('/_comunidade/pautas/$pollId')
 const longDate = (iso: string) => format(new Date(iso), "dd 'de' MMM 'de' yyyy, HH:mm", { locale: ptBR })
+
+function getElapsed({ startsAt, endsAt }: PollDetail) {
+  const start = new Date(startsAt).getTime()
+  const percent = ((Date.now() - start) / (new Date(endsAt).getTime() - start)) * 100
+  return Math.min(100, Math.max(0, percent))
+}
 
 export function Pauta(_props: PautaProps) {
   const { pollId } = route.useParams()
@@ -49,6 +56,15 @@ export function Pauta(_props: PautaProps) {
   const sync = useCallback(() => void load(), [load])
   const live = usePollLive(pollId, sync, applyResults)
 
+  async function share() {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      toast.add({ type: 'success', title: 'Link copiado' })
+    } catch {
+      toast.add({ type: 'error', title: 'Não foi possível copiar o link' })
+    }
+  }
+
   const layoutProps: PautaLayoutProps = {
     poll,
     loading,
@@ -59,11 +75,14 @@ export function Pauta(_props: PautaProps) {
     exportingFormat,
     onVoted: () => void load(),
     onExport: (format) => void exportResults(format),
+    onShare: () => void share(),
     ...(poll && {
       categoryLook: getCategoryLook(poll.category.name),
       statusLabel: POLL_STATUS[poll.status].label,
       statusClassName: POLL_STATUS[poll.status].className,
-      periodLabel: `${longDate(poll.startsAt)} a ${longDate(poll.endsAt)}`,
+      startLabel: longDate(poll.startsAt),
+      endLabel: longDate(poll.endsAt),
+      elapsed: getElapsed(poll),
       participationsLabel: `${formatNumber(poll.participations)} ${poll.participations === 1 ? 'participação' : 'participações'}`,
       bars:
         poll.status === 'SCHEDULED'

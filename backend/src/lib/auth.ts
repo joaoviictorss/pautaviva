@@ -63,6 +63,8 @@ export const auth = betterAuth({
   },
   user: {
     modelName: 'users',
+    // o link vai para o novo e-mail pelo sendVerificationEmail; o antigo vale até a confirmação
+    changeEmail: { enabled: true },
     additionalFields: {
       cpf: {
         type: 'string',

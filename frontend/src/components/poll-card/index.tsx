@@ -2,7 +2,7 @@ import { differenceInCalendarDays, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
 import { getCategoryLook } from '@/lib/poll/categories'
-import { POLL_STATUS } from '@/lib/poll/status'
+import { getPollTimeLabel, POLL_STATUS } from '@/lib/poll/status'
 import { VOTE_OPTIONS } from '@/lib/poll/votes'
 import { getDefaultAvatars } from '@/lib/utils/avatar'
 import { formatNumber } from '@/lib/utils/format'
@@ -15,7 +15,7 @@ const MAX_AVATARS = 3
 const shortDate = (iso: string) => format(new Date(iso), 'dd MMM', { locale: ptBR }).replace('.', '')
 
 export function PollCard(props: PollCardProps) {
-  const { poll, onEdit } = props
+  const { poll, onEdit, citizen } = props
   const { FOR, AGAINST, ABSTAIN } = poll.results
   const totalVotes = FOR + AGAINST + ABSTAIN
   const percents = [FOR, AGAINST, ABSTAIN].map((votes) => (totalVotes ? Math.round((votes / totalVotes) * 100) : 0))
@@ -34,17 +34,18 @@ export function PollCard(props: PollCardProps) {
           forLabel: `${percents[0]}% a favor`,
         }
       : undefined,
-    participantAvatars: getDefaultAvatars(poll.id, Math.min(MAX_AVATARS, poll.participations)),
+    participantAvatars: citizen ? [] : getDefaultAvatars(poll.id, Math.min(MAX_AVATARS, poll.participations)),
+    citizenTimeLabel: citizen ? getPollTimeLabel(poll) : undefined,
     participationsLabel:
-      poll.status === 'SCHEDULED'
+      poll.status === 'SCHEDULED' && !citizen
         ? undefined
         : `${formatNumber(poll.participations)} ${poll.participations === 1 ? 'participação' : 'participações'}`,
     scheduleLabel:
-      poll.status === 'SCHEDULED'
+      poll.status === 'SCHEDULED' && !citizen
         ? `${daysUntil <= 1 ? 'Abre amanhã' : `Abre em ${shortDate(poll.startsAt)}`} · até ${shortDate(poll.endsAt)}`
         : undefined,
     timeLabel:
-      poll.status === 'OPEN'
+      poll.status === 'OPEN' && !citizen
         ? daysLeft <= 0
           ? 'Encerra hoje'
           : daysLeft === 1

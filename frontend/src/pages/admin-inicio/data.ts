@@ -1,6 +1,8 @@
-import type { LucideIcon } from 'lucide-react'
+import type { CategoryBar } from '@/lib/poll/categories'
 
+import type { Kpi } from '@/components/kpi-card'
 import type { RejectCommentDialogProps } from '@/components/reject-comment-dialog/data'
+import type { ClosingPollRow, UpcomingPollRow } from '@/lib/poll/rows'
 import type { Poll } from '@/lib/poll/types'
 
 export interface AdminDashboardTotal {
@@ -21,44 +23,9 @@ export interface AdminDashboard {
 
 export type AdminInicioPeriod = 7 | 30 | 90
 
-export interface AdminInicioKpi {
-  label: string
-  value: string
-  icon: LucideIcon
-  delta: string
-  deltaTone: 'up' | 'down' | 'neutral' | 'warning'
-  note: string
-  to?: '/admin/moderacao'
-}
-
 export interface AdminInicioDayPoint {
   label: string
   count: number
-}
-
-export interface AdminInicioCategory {
-  name: string
-  value: string
-  percent: number
-  icon: LucideIcon
-  color: string
-}
-
-export interface AdminInicioClosingPoll {
-  id: string
-  title: string
-  timeLabel: string
-  urgent: boolean
-  bar: { segments: { key: string; color: string; percent: number }[]; label: string }
-  participationsLabel: string
-}
-
-export interface AdminInicioUpcomingPoll {
-  id: string
-  title: string
-  day: string
-  month: string
-  detail: string
 }
 
 export interface AdminInicioModerationItem {
@@ -94,12 +61,12 @@ export interface AdminInicioLayoutProps extends AdminInicioProps {
   periods: AdminInicioPeriod[]
   period: AdminInicioPeriod
   onPeriodChange: (period: AdminInicioPeriod) => void
-  kpis: AdminInicioKpi[]
+  kpis: Kpi[]
   days: AdminInicioDayPoint[]
   peakLabel?: string
-  categories: AdminInicioCategory[]
-  closing: AdminInicioClosingPoll[]
-  upcoming: AdminInicioUpcomingPoll[]
+  categories: CategoryBar[]
+  closing: ClosingPollRow[]
+  upcoming: UpcomingPollRow[]
   /** Ausente para o gestor: a fila de moderação não é dele. */
   moderation?: AdminInicioModeration
 }
