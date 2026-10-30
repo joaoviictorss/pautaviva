@@ -20,7 +20,7 @@ import type { SiteHeaderLayoutProps } from '../data'
 export function SiteHeader({ loading, signedIn, user }: SiteHeaderLayoutProps) {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur-md">
-      <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+      <nav className="flex h-16 w-full items-center justify-between gap-4 px-3.5 sm:px-7">
         <Link to="/" className="flex items-center gap-2.5 text-inherit no-underline hover:no-underline">
           <img src="/logo-mark.svg" alt="" className="block size-8" />
           <span className="text-lg font-bold tracking-tight text-primary">PautaViva</span>

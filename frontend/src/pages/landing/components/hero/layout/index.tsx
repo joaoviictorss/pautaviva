@@ -28,7 +28,7 @@ export function Hero({
     <section className="relative overflow-hidden">
       <div className="pointer-events-none absolute top-[-20%] right-[-10%] h-[120%] w-[70%] bg-[radial-gradient(closest-side,var(--accent),transparent)]" />
 
-      <div className="relative mx-auto flex max-w-6xl flex-wrap items-center gap-x-16 gap-y-12 px-6 py-14 md:py-20">
+      <div className="relative flex w-full flex-wrap items-center gap-x-16 gap-y-12 px-3.5 py-14 sm:px-10 md:py-20">
         <Reveal className="max-w-[560px] flex-1 basis-[400px]">
           <div className="flex flex-wrap gap-2">
             <Badge
@@ -130,9 +130,9 @@ export function Hero({
               </div>
 
               <div>
-                <h3 className="text-xl leading-snug font-bold tracking-tight">
+                <h2 className="text-xl leading-snug font-bold tracking-tight">
                   Ciclofaixa na Av. Paulo VI
-                </h3>
+                </h2>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                   Proposta de faixa exclusiva para bicicletas entre a praça e a estação do metrô.
                 </p>

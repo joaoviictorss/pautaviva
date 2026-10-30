@@ -24,4 +24,6 @@ export interface ConfiguracoesLayoutProps extends ConfiguracoesProps {
   photoError?: string
   onPhotoChange: (file: File) => void
   onRemovePhoto: () => void
+  signingOut: boolean
+  onSignOut: () => void
 }

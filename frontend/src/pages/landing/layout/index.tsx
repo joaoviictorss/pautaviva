@@ -17,15 +17,17 @@ export function Landing({
   return (
     <div className="min-h-screen overflow-x-hidden bg-background text-foreground">
       {header}
-      {hero}
-      {roles}
-      {features}
-      {results}
-      {mobileShowcase}
-      {howItWorks}
-      {guarantees}
-      {faq}
-      {ctaFinal}
+      <main>
+        {hero}
+        {roles}
+        {features}
+        {results}
+        {mobileShowcase}
+        {howItWorks}
+        {guarantees}
+        {faq}
+        {ctaFinal}
+      </main>
       {mobileStickyBar}
       {footer}
     </div>

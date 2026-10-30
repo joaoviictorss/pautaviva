@@ -3,7 +3,7 @@ import type { FooterLayoutProps } from '../data'
 export function Footer({ columns }: FooterLayoutProps) {
   return (
     <footer className="relative overflow-hidden border-t border-border bg-sidebar">
-      <div className="relative mx-auto max-w-6xl px-6 pt-12 md:pt-18">
+      <div className="relative w-full px-3.5 pt-12 sm:px-10 md:pt-18">
         <div className="flex flex-wrap justify-between gap-12">
           <div className="flex max-w-[380px] flex-1 basis-[280px] flex-col gap-4">
             <div className="flex items-center gap-2.5">
