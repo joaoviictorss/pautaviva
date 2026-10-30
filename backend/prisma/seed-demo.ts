@@ -8,15 +8,16 @@ import { prisma } from '../src/lib/prisma.js'
 import { hashCpf } from '../src/utils/cpf.js'
 
 const DEMO_DOMAIN = 'demo.pautaviva.test'
-const DEMO_PASSWORD = 'Demo#PautaViva2026'
+const DEMO_PASSWORD = process.env.DEMO_SEED_PASSWORD ?? 'demo1234'
 const CITIZEN_COUNT = 150
 const LOCAL_DATABASE_HOSTS = ['localhost', '127.0.0.1', 'postgres']
 const HOUR_MS = 60 * 60 * 1000
 const DAY_MS = 24 * HOUR_MS
 
-// as contas têm senha conhecida: nunca podem chegar a um banco de verdade
-if (process.env.NODE_ENV === 'production' || !LOCAL_DATABASE_HOSTS.includes(new URL(env.DATABASE_URL).hostname)) {
-  console.error('❌ O seed de demonstração só roda em banco local.')
+// a senha padrão é pública no repositório: fora do banco local, exige uma senha própria
+const remoteDatabase = process.env.NODE_ENV === 'production' || !LOCAL_DATABASE_HOSTS.includes(new URL(env.DATABASE_URL).hostname)
+if (remoteDatabase && !process.env.DEMO_SEED_PASSWORD) {
+  console.error('❌ Fora do banco local, defina DEMO_SEED_PASSWORD para o seed de demonstração.')
   process.exit(1)
 }
 
@@ -524,5 +525,5 @@ await prisma.auditLogs.createMany({ data: auditRows })
 
 console.log(`✅ ${POLLS.length} pautas, ${users.length} contas, ${participationRows.length} participações e ${commentRows.length} comentários.`)
 console.log(`   Logins: admin, gestor, gestora, moderadora, moderador e cidadao1 a cidadao${CITIZEN_COUNT} em @${DEMO_DOMAIN}.`)
-console.log('   Senha de todas as contas: constante DEMO_PASSWORD em prisma/seed-demo.ts.')
+console.log('   Senha de todas as contas: DEMO_SEED_PASSWORD ou, sem ela, a constante em prisma/seed-demo.ts.')
 await prisma.$disconnect()
