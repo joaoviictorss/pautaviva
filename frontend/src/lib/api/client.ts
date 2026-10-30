@@ -9,8 +9,11 @@ export class ApiError extends Error {
   }
 }
 
+// em produção passa pelo proxy da Vercel: o cookie de sessão só vale no domínio do site
+export const API_URL = import.meta.env.PROD ? '/api/app' : env.VITE_API_URL
+
 export async function api<T = void>(path: string, { json, ...init }: RequestInit & { json?: unknown } = {}): Promise<T> {
-  const response = await fetch(`${env.VITE_API_URL}${path}`, {
+  const response = await fetch(`${API_URL}${path}`, {
     ...init,
     credentials: 'include',
     ...(json !== undefined && {

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { env } from '@/env'
+import { API_URL } from '@/lib/api/client'
 
 export type ExportFormat = 'csv' | 'pdf'
 
@@ -14,7 +14,7 @@ export function usePollExport(pollId: string) {
       setExportingFormat(format)
       try {
         const response = await fetch(
-          `${env.VITE_API_URL}/polls/${encodeURIComponent(pollId)}/export?format=${format}`,
+          `${API_URL}/polls/${encodeURIComponent(pollId)}/export?format=${format}`,
           { credentials: 'include' },
         )
         if (!response.ok) {

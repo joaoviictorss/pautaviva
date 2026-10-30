@@ -2,6 +2,10 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     {
+      "source": "/api/app/:path*",
+      "destination": "https://pautaviva.onrender.com/:path*"
+    },
+    {
       "source": "/api/:path*",
       "destination": "https://pautaviva.onrender.com/api/:path*"
     },
