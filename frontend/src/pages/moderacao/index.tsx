@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 
 import { toast } from '@/components/ui/toast'
+import { useLiveRefresh } from '@/hooks/use-live-refresh'
 import { useModerationQueue } from '@/hooks/use-moderation-queue'
 import { api } from '@/lib/api/client'
 import { getDefaultAvatar } from '@/lib/utils/avatar'
@@ -34,13 +35,14 @@ const DECISION_LABELS = { APPROVED: 'Aprovado', REJECTED: 'Rejeitado', REMOVED: 
 
 function screeningBadge({ status, classification }: ModerationComment) {
   if (status !== 'PENDING') return undefined
-  if (!classification) return 'Triagem indisponível'
+  // sem classificação: a triagem ainda está rodando ou nem a IA nem a lista conseguiram avaliar
+  if (!classification) return 'Sem triagem'
   return classification === 'ADEQUATE' ? undefined : CLASSIFICATION_BADGES[classification]
 }
 
 function screeningNote({ moderationReason, reports }: ModerationComment) {
   if (reports.length) return `Motivos: ${[...new Set(reports.map(({ reason }) => REPORT_REASONS[reason]))].join(', ')}`
-  return moderationReason ? `Triagem automática: ${moderationReason}` : undefined
+  return moderationReason ? `Por que foi sinalizado: ${moderationReason}` : undefined
 }
 
 export function Moderacao(_props: ModeracaoProps) {
@@ -67,6 +69,9 @@ export function Moderacao(_props: ModeracaoProps) {
   useEffect(() => {
     void loadHistory()
   }, [loadHistory])
+
+  // decisões de outros moderadores também entram no histórico
+  useLiveRefresh(['comments-changed'], () => void loadHistory())
 
   const term = q.trim().toLowerCase()
   function matches(comment: { text: string; author: { name: string }; poll: { id: string } }) {

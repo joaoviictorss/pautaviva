@@ -16,6 +16,7 @@ import {
 } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
+import { useLiveRefresh } from '@/hooks/use-live-refresh'
 import { api } from '@/lib/api/client'
 import { useSession } from '@/lib/auth/client'
 import { COMMENT_STATUS } from '@/lib/poll/status'
@@ -43,6 +44,9 @@ export function Agenda(_props: AgendaProps) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>()
   const citizen = session?.user.role === 'CITIZEN'
+  const [reloads, setReloads] = useState(0)
+
+  useLiveRefresh(['poll-results', 'polls-changed'], () => setReloads((current) => current + 1))
 
   useEffect(() => {
     let active = true
@@ -68,7 +72,7 @@ export function Agenda(_props: AgendaProps) {
     return () => {
       active = false
     }
-  }, [month])
+  }, [month, reloads])
 
   function toEvents(poll: Poll): DatedEvent[] {
     const today = startOfDay(new Date())

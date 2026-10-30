@@ -21,7 +21,7 @@ São Paulo, 2026
 
 ## Resumo
 
-A participação da comunidade em decisões sobre questões locais costuma ocorrer por meio de canais dispersos, como redes sociais, grupos de mensagens e reuniões presenciais, o que dificulta a organização das propostas, o registro das discussões e a apuração confiável dos resultados. Para enfrentar esse problema, este documento especifica o PautaViva, uma plataforma digital de participação comunitária, em desenvolvimento, voltada à proposição, discussão, moderação e votação de pautas locais, com resultados de caráter consultivo. A plataforma permite que cidadãos com conta verificada por e-mail e CPF válido consultem e discutam pautas e votem uma única vez em cada uma, com o registro de quem votou mantido separado do conteúdo do voto, de forma a preservar o sigilo. Os comentários passam por uma triagem automática, realizada por um modelo de linguagem, que bloqueia conteúdos claramente impróprios antes de seguirem para a moderação humana. Os resultados das votações são atualizados em tempo real por meio de WebSocket e, ao término de cada votação, ficam disponíveis em gráficos e para exportação. O desenvolvimento é conduzido sob a metodologia ágil Scrum, e o documento reúne o levantamento de requisitos funcionais e não funcionais, a modelagem do sistema por meio de diagramas UML, a arquitetura de software e o plano de avaliação, que contempla testes de carga, de concorrência e da eficácia da moderação automática. Espera-se que o PautaViva amplie a participação cidadã em processos de decisão local, reduzindo as barreiras de tempo e mobilidade dos modelos tradicionais de participação.
+A participação da comunidade em decisões sobre questões locais costuma ocorrer por meio de canais dispersos, como redes sociais, grupos de mensagens e reuniões presenciais, o que dificulta a organização das propostas, o registro das discussões e a apuração confiável dos resultados. Para enfrentar esse problema, este documento especifica o PautaViva, uma plataforma digital de participação comunitária, em desenvolvimento, voltada à proposição, discussão, moderação e votação de pautas locais, com resultados de caráter consultivo. A plataforma permite que cidadãos com conta verificada por e-mail e CPF válido consultem e discutam pautas e votem uma única vez em cada uma, com o registro de quem votou mantido separado do conteúdo do voto, de forma a preservar o sigilo. Os comentários passam por uma triagem automática, realizada por um modelo de linguagem, que publica automaticamente os comentários adequados e encaminha os suspeitos ou impróprios à moderação humana, com o motivo da sinalização. Os resultados das votações são atualizados em tempo real por meio de WebSocket e, ao término de cada votação, ficam disponíveis em gráficos e para exportação. O desenvolvimento é conduzido sob a metodologia ágil Scrum, e o documento reúne o levantamento de requisitos funcionais e não funcionais, a modelagem do sistema por meio de diagramas UML, a arquitetura de software e o plano de avaliação, que contempla testes de carga, de concorrência e da eficácia da moderação automática. Espera-se que o PautaViva amplie a participação cidadã em processos de decisão local, reduzindo as barreiras de tempo e mobilidade dos modelos tradicionais de participação.
 
 **Palavras-chave:** Participação Cidadã. Consulta Pública Digital. Votação em Tempo Real. WebSocket. Moderação de Conteúdo.
 
@@ -180,7 +180,7 @@ Os requisitos funcionais (RF) descrevem as funcionalidades que o sistema deve di
 | RF03 | O sistema deve permitir que o gestor público cadastre pauta com título, descrição, categoria, data de início e data de término da votação. | Essencial |
 | RF04 | O sistema deve permitir que o cidadão consulte e visualize as pautas disponíveis, filtrando por categoria e status (aberta/encerrada). | Essencial |
 | RF05 | O sistema deve permitir que o cidadão vote (a favor, contra ou abstenção) em uma pauta uma única vez por conta verificada. | Essencial |
-| RF06 | O sistema deve permitir que o cidadão comente uma pauta, enviando o comentário à triagem automática de conteúdo e, em seguida, à fila de moderação antes da publicação. | Importante |
+| RF06 | O sistema deve permitir que o cidadão comente uma pauta, enviando o comentário à triagem automática de conteúdo, que publica os adequados e encaminha os demais à fila de moderação. | Importante |
 | RF07 | O sistema deve permitir que o moderador aprove, rejeite ou remova comentários da fila de moderação, avaliando também aqueles denunciados pelos cidadãos. | Importante |
 | RF08 | O sistema deve permitir que o cidadão denuncie um comentário publicado, enviando-o para reavaliação do moderador. | Desejável |
 | RF09 | O sistema deve exibir painel de resultados com o percentual de votos por opção e o total de participantes, atualizado em tempo real por meio de WebSocket. | Essencial |
@@ -356,20 +356,20 @@ FA01 – Consulta sem filtros (a partir do passo 3)
 **Casos de uso incluídos:** UC02 (SF01 – Autenticação)
 **Ator(es) secundário(s):** Sistema de Moderação Automática
 **Pré-condições:** Cidadão autenticado; pauta com situação "Aberta".
-**Pós-condições:** Comentário registrado com situação "Em análise", aguardando a moderação humana, ou bloqueado pela triagem automática (E01). Nenhum comentário é publicado sem a aprovação de um moderador.
+**Pós-condições:** Comentário publicado, quando a triagem automática o classifica como "adequado", ou registrado com situação "Em análise" na fila de moderação humana, com o motivo da sinalização. Nenhum comentário é descartado pela triagem automática: só um moderador rejeita ou remove.
 
 **Fluxo principal**
 
 1. O cidadão acessa uma pauta e seleciona a opção de comentar.
 2. O sistema exibe o campo de texto do comentário.
 3. O cidadão redige o comentário e confirma o envio.
-4. O sistema envia o texto ao ator secundário Sistema de Moderação Automática (modelo de linguagem Google Gemini), que o classifica em uma de três categorias — "adequado", "suspeito" ou "impróprio" (ofensas, discurso de ódio ou spam) — acompanhada da justificativa.
-5. O sistema registra o comentário com situação "Em análise", com a classificação recebida, e o encaminha à fila de moderação humana (UC07); comentários classificados como "suspeitos" são destacados na fila.
-6. O sistema exibe mensagem informando que o comentário será publicado após aprovação do moderador.
+4. O sistema registra o comentário com situação "Em análise" e exibe mensagem informando que ele aparecerá na pauta após a análise.
+5. Em segundo plano, o sistema verifica o texto contra uma lista de termos ofensivos (normalizando acentos, leetspeak e letras repetidas) e o envia ao ator secundário Sistema de Moderação Automática (modelo de linguagem Google Gemini), informando os termos encontrados. O modelo o classifica em "adequado", "suspeito" ou "impróprio" (ofensa, ataque pessoal, discurso de ódio, ameaça ou spam), com as categorias, o trecho que motivou a classificação e a justificativa.
+6. Classificado como "adequado", o comentário é publicado automaticamente e passa a aparecer na pauta em tempo real.
 
 **Fluxos alternativos**
 
-— Nenhum fluxo alternativo relevante identificado para este caso de uso.
+- **FA01 – Comentário sinalizado** (passo 6): classificado como "suspeito" ou "impróprio", o comentário permanece "Em análise" e segue para a fila de moderação humana (UC07), destacado com a classificação e o motivo (categorias, trecho e justificativa, e os termos da lista, quando houver). A sinalização é registrada na trilha de auditoria (RNF13).
 
 **Sub-fluxos**
 
@@ -377,9 +377,9 @@ FA01 – Consulta sem filtros (a partir do passo 3)
 
 **Exceções**
 
-- **E01 – Conteúdo bloqueado automaticamente** (passo 4): quando a classificação é "impróprio", o sistema impede o envio, exibe "Seu comentário contém conteúdo impróprio e não pôde ser enviado" e registra o bloqueio na trilha de auditoria (RNF13), sem publicar o texto.
+- **E01 – Termos ofensivos sem modelo disponível** (passo 5): se o modelo não responder mas a lista encontrar termos ofensivos, o comentário é classificado como "suspeito", com os termos encontrados como motivo, e segue o FA01.
 - **E02 – Pauta não está aberta para comentários** (passo 1): o sistema exibe "Esta pauta não está disponível para comentários no momento" e impede o acesso à ação.
-- **E03 – Serviço de triagem automática indisponível** (passo 4): caso o serviço de IA não responda, o comentário não é bloqueado; ele é registrado com situação "Em análise" e segue normalmente para a moderação humana (UC07).
+- **E03 – Serviço de triagem automática indisponível** (passo 5): caso o serviço de IA não responda e a lista não encontre termos, o comentário não é publicado automaticamente; permanece "Em análise", sem classificação, e segue para a moderação humana (UC07).
 
 #### 2.3.7 UC07 – Moderar comentários
 
@@ -391,7 +391,7 @@ FA01 – Consulta sem filtros (a partir do passo 3)
 **Fluxo principal**
 
 1. O moderador acessa a fila de moderação.
-2. O sistema exibe os comentários com situação "Em análise", em ordem cronológica, destacando os classificados como "suspeitos" pela triagem automática.
+2. O sistema exibe os comentários com situação "Em análise", em ordem cronológica, destacando a classificação ("suspeito" ou "impróprio") e o motivo apontado pela triagem automática.
 3. O moderador seleciona um comentário e analisa o conteúdo.
 4. O moderador aprova ou rejeita o comentário.
 5. O sistema altera a situação do comentário para "Publicado" (aprovado) ou "Rejeitado" (rejeitado, não exibido publicamente).

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
+import { useLiveRefresh } from '@/hooks/use-live-refresh'
 import { api } from '@/lib/api/client'
 import { useSession } from '@/lib/auth/client'
 
@@ -44,6 +45,8 @@ export function Comments({ pollId, commentable }: CommentsProps) {
     void load()
   }, [load])
 
+  useLiveRefresh(['comments-changed'], () => void load(), pollId)
+
   const submit = useCallback(async () => {
     setError(undefined)
     setNotice(undefined)
@@ -54,7 +57,7 @@ export function Comments({ pollId, commentable }: CommentsProps) {
         json: { text },
       })
       setText('')
-      setNotice('Comentário enviado para análise. Ele ficará visível após a aprovação da moderação.')
+      setNotice('Comentário enviado. Ele aparece aqui assim que passar pela análise automática ou, se precisar, pela moderação.')
       void load()
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : 'Não foi possível enviar o comentário.')

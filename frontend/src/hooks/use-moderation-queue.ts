@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { toast } from '@/components/ui/toast'
+import { useLiveRefresh } from '@/hooks/use-live-refresh'
 import { api } from '@/lib/api/client'
 import type { ModerationAction, ModerationComment } from '@/pages/moderacao/data'
 
@@ -30,6 +31,10 @@ export function useModerationQueue(enabled = true, onDecided?: () => void) {
   useEffect(() => {
     if (enabled) void load()
   }, [enabled, load])
+
+  useLiveRefresh(['comments-changed'], () => {
+    if (enabled) void load()
+  })
 
   async function decide(targets: ModerationComment[], keep: boolean, reason?: string) {
     setProcessingIds(targets.map((comment) => comment.id))

@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
 import { LayoutGridIcon } from 'lucide-react'
 
+import { useLiveRefresh } from '@/hooks/use-live-refresh'
 import { api } from '@/lib/api/client'
 import { useSession } from '@/lib/auth/client'
 import { getCategoryChipStyle, getCategoryLook } from '@/lib/poll/categories'
@@ -41,11 +42,19 @@ export function Pautas(_props: PautasProps) {
   const role = session?.user.role
   const viewer = !session ? 'visitor' : role === 'CITIZEN' ? 'citizen' : 'staff'
   const onlyMissing = !!missing && status === 'OPEN'
+  // atualização ao vivo troca os cards sem passar pelo skeleton
+  const silentReload = useRef(false)
+
+  useLiveRefresh(['poll-results', 'polls-changed'], () => {
+    silentReload.current = true
+    setReloads((current) => current + 1)
+  })
 
   useEffect(() => {
     let active = true
     const load = async () => {
-      setLoading(true)
+      if (!silentReload.current) setLoading(true)
+      silentReload.current = false
       try {
         const query = new URLSearchParams({
           status,

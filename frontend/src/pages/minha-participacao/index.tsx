@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
 import { toast } from '@/components/ui/toast'
+import { useLiveRefresh } from '@/hooks/use-live-refresh'
 import { api } from '@/lib/api/client'
 import { fetchAllParticipations } from '@/lib/poll/participations'
 import { toParticipationRow } from '@/lib/poll/rows'
@@ -68,6 +69,8 @@ export function MinhaParticipacao(_props: MinhaParticipacaoProps) {
   const [downloading, setDownloading] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>()
+
+  useLiveRefresh(['polls-changed', 'comments-changed'], () => setReloads((current) => current + 1))
 
   useEffect(() => {
     let active = true

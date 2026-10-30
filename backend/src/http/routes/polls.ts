@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 import { prisma } from '../../lib/prisma.js'
 import { BadRequestError } from './_errors/bad-request-error.js'
-import { emitToPoll } from '../sockets/index.js'
+import { emitLive } from '../sockets/index.js'
 import { ConflictError } from './_errors/conflict-error.js'
 import { NotFoundError } from './_errors/not-found-error.js'
 import { UnauthorizedError } from './_errors/unauthorized-error.js'
@@ -121,7 +121,7 @@ async function broadcastResults(pollId: string) {
   ])
   const results = { FOR: 0, AGAINST: 0, ABSTAIN: 0 }
   for (const row of votes) results[row.option] = row.count
-  emitToPoll(pollId, 'poll-results', { results, participations })
+  emitLive('poll-results', { pollId, results, participations })
 }
 
 function csvCell(value: string | number) {
@@ -694,6 +694,7 @@ export async function pollRoutes(app: FastifyInstance) {
         })
         return createdPoll
       })
+      emitLive('polls-changed', { pollId: poll.id })
 
       return reply.status(201).send({ id: poll.id, status: poll.status })
     }
@@ -724,6 +725,7 @@ export async function pollRoutes(app: FastifyInstance) {
         }),
         prisma.auditLogs.create({ data: { action: 'POLL_UPDATED', actorId: user.id, targetId: poll.id } }),
       ])
+      emitLive('polls-changed', { pollId: poll.id })
 
       return reply.status(204).send()
     }

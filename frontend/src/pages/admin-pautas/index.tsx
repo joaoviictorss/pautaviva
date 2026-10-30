@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { getRouteApi, useNavigate } from '@tanstack/react-router'
 
+import { useLiveRefresh } from '@/hooks/use-live-refresh'
 import { api } from '@/lib/api/client'
 import { POLL_STATUS_FILTERS } from '@/lib/poll/status'
 import type { PollPage } from '@/lib/poll/types'
@@ -44,6 +45,8 @@ export function AdminPautas(_props: AdminPautasProps) {
   useEffect(() => {
     load()
   }, [load])
+
+  useLiveRefresh(['poll-results', 'polls-changed'], () => void load())
 
   // Atalhos do Início: abrem o painel uma vez e saem da URL para não reabrir ao salvar ou recarregar.
   useEffect(() => {

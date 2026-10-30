@@ -4,6 +4,7 @@ import { format, isSameMonth, subMonths } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { CheckCheckIcon, CircleCheckIcon, HourglassIcon, MessageCircleIcon } from 'lucide-react'
 
+import { useLiveRefresh } from '@/hooks/use-live-refresh'
 import { api } from '@/lib/api/client'
 import { getCategoryLook, toCategoryBars } from '@/lib/poll/categories'
 import { COMMENT_STATUS, getPollTimeLabel } from '@/lib/poll/status'
@@ -49,6 +50,8 @@ export function Painel(_props: PainelProps) {
   useEffect(() => {
     void load()
   }, [load])
+
+  useLiveRefresh(['poll-results', 'polls-changed', 'comments-changed'], () => void load())
 
   const summary = dashboard?.summary
   const activity = summary?.activity ?? []

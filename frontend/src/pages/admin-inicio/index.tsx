@@ -5,6 +5,7 @@ import { ptBR } from 'date-fns/locale'
 import { ListChecksIcon, MessageSquareWarningIcon, UsersIcon, VoteIcon } from 'lucide-react'
 
 import type { Kpi } from '@/components/kpi-card'
+import { useLiveRefresh } from '@/hooks/use-live-refresh'
 import { useModerationQueue } from '@/hooks/use-moderation-queue'
 import { api } from '@/lib/api/client'
 import { toCategoryBars } from '@/lib/poll/categories'
@@ -56,6 +57,8 @@ export function AdminInicio(_props: AdminInicioProps) {
     decide,
     error: moderationError,
   } = useModerationQueue(canModerate, () => setRefresh((current) => current + 1))
+
+  useLiveRefresh(['poll-results', 'polls-changed', 'comments-changed'], () => setRefresh((current) => current + 1))
 
   useEffect(() => {
     let stale = false

@@ -1,12 +1,13 @@
 import { Prisma } from '@prisma/client'
-import type { FastifyInstance, FastifyRequest } from 'fastify'
+import type { FastifyBaseLogger, FastifyInstance, FastifyRequest } from 'fastify'
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
 import { env } from '../../env.js'
-import { classifyComment } from '../../lib/comment-moderation.js'
+import { screenComment } from '../../lib/comment-moderation.js'
 import { sendNoticeMail } from '../../lib/mail.js'
 import { prisma } from '../../lib/prisma.js'
+import { emitLive } from '../sockets/index.js'
 import { BadRequestError } from './_errors/bad-request-error.js'
 import { ConflictError } from './_errors/conflict-error.js'
 import { NotFoundError } from './_errors/not-found-error.js'
@@ -18,28 +19,35 @@ const reportBody = z.object({
   reason: z.enum(['OFFENSIVE_CONTENT', 'SPAM', 'HATE_SPEECH', 'OTHER']),
 })
 
-/** Triagem automática: bloqueia o impróprio; se a triagem falhar, segue para moderação humana. */
-async function screenComment(request: FastifyRequest, text: string, actorId: string, pollId: string) {
-  let screening: Awaited<ReturnType<typeof classifyComment>> = null
+/**
+ * Triagem em segundo plano, depois de o comentário já estar salvo como pendente: o adequado é publicado direto;
+ * suspeito, impróprio ou sem classificação fica para a moderação humana, com o motivo.
+ */
+async function screenInBackground(log: FastifyBaseLogger, commentId: string, pollId: string, text: string) {
   try {
-    screening = await classifyComment(text)
-  } catch (error) {
-    request.log.error(error, 'falha na triagem automática de comentário; encaminhando para moderação humana')
-  }
+    const { classification, reason } = await screenComment(text, log)
+    const approved = classification === 'ADEQUATE'
 
-  if (screening?.classification === 'INAPPROPRIATE') {
-    await prisma.auditLogs.create({
-      data: {
-        action: 'COMMENT_BLOCKED',
-        actorId,
-        targetId: pollId,
-        details: { classification: screening.classification, reason: screening.reason },
-      },
+    const screened = await prisma.$transaction(async (transaction) => {
+      // reenvio ou decisão humana no meio do caminho vencem a triagem
+      const result = await transaction.comments.updateMany({
+        where: { id: commentId, status: 'PENDING', moderatedById: null, text },
+        data: { classification, moderationReason: reason, ...(approved && { status: 'APPROVED' }) },
+      })
+      if (result.count !== 1) return false
+      await transaction.auditLogs.create({
+        data: {
+          action: approved ? 'COMMENT_AUTO_APPROVED' : 'COMMENT_FLAGGED',
+          targetId: commentId,
+          details: { pollId, classification: classification ?? 'UNAVAILABLE', reason },
+        },
+      })
+      return true
     })
-    throw new BadRequestError('Seu comentário contém conteúdo impróprio e não pôde ser enviado.')
+    if (screened) emitLive('comments-changed', { pollId })
+  } catch (error) {
+    log.error(error, 'falha na triagem automática de comentário; ele segue pendente para a moderação humana')
   }
-
-  return screening
 }
 
 async function notifyCommentDecision(request: FastifyRequest, commentId: string, approved: boolean) {
@@ -91,29 +99,18 @@ export async function commentRoutes(app: FastifyInstance) {
         throw new BadRequestError('Esta pauta não está disponível para comentários no momento.')
       }
 
-      const screening = await screenComment(request, request.body.text, user.id, poll.id)
-
       const comment = await prisma.$transaction(async (transaction) => {
         const created = await transaction.comments.create({
-          data: {
-            text: request.body.text,
-            pollId: poll.id,
-            authorId: user.id,
-            classification: screening?.classification,
-            moderationReason: screening?.reason,
-          },
+          data: { text: request.body.text, pollId: poll.id, authorId: user.id },
           select: { id: true, status: true },
         })
         await transaction.auditLogs.create({
-          data: {
-            action: 'COMMENT_SUBMITTED',
-            actorId: user.id,
-            targetId: created.id,
-            details: { pollId: poll.id, classification: screening?.classification ?? 'UNAVAILABLE' },
-          },
+          data: { action: 'COMMENT_SUBMITTED', actorId: user.id, targetId: created.id, details: { pollId: poll.id } },
         })
         return created
       })
+      emitLive('comments-changed', { pollId: poll.id })
+      void screenInBackground(request.log, comment.id, poll.id, request.body.text)
 
       return reply.status(201).send(comment)
     },
@@ -156,7 +153,6 @@ export async function commentRoutes(app: FastifyInstance) {
         throw new BadRequestError('Esta pauta não está disponível para comentários no momento.')
       }
 
-      const screening = await screenComment(request, request.body.text, user.id, comment.pollId)
       await prisma.$transaction([
         prisma.comments.update({
           where: { id: comment.id },
@@ -164,14 +160,16 @@ export async function commentRoutes(app: FastifyInstance) {
             text: request.body.text,
             status: 'PENDING',
             moderatedById: null,
-            classification: screening?.classification ?? null,
-            moderationReason: screening?.reason ?? null,
+            classification: null,
+            moderationReason: null,
           },
         }),
         prisma.auditLogs.create({
           data: { action: 'COMMENT_RESUBMITTED', actorId: user.id, targetId: comment.id, details: { pollId: comment.pollId } },
         }),
       ])
+      emitLive('comments-changed', { pollId: comment.pollId })
+      void screenInBackground(request.log, comment.id, comment.pollId, request.body.text)
       return reply.status(204).send()
     },
   )
@@ -193,6 +191,7 @@ export async function commentRoutes(app: FastifyInstance) {
         data: { action: 'COMMENT_DELETED_BY_AUTHOR', actorId: user.id, targetId: comment.id, details: { pollId: comment.pollId } },
       }),
     ])
+    emitLive('comments-changed', { pollId: comment.pollId })
     return reply.status(204).send()
   })
 
@@ -203,7 +202,7 @@ export async function commentRoutes(app: FastifyInstance) {
       const user = await request.requireRole('CITIZEN')
       const comment = await prisma.comments.findUnique({
         where: { id: request.params.id },
-        select: { id: true, authorId: true, status: true },
+        select: { id: true, authorId: true, status: true, pollId: true },
       })
       if (!comment) throw new NotFoundError('Comentário não encontrado.')
       if (comment.status !== 'APPROVED') {
@@ -233,6 +232,7 @@ export async function commentRoutes(app: FastifyInstance) {
         }
         throw error
       }
+      emitLive('comments-changed', { pollId: comment.pollId })
 
       return reply.status(201).send()
     },
@@ -297,10 +297,10 @@ export async function commentRoutes(app: FastifyInstance) {
       const moderator = await request.requireRole('MODERATOR', 'ADMIN')
       const { action, reason } = request.body
 
-      await prisma.$transaction(async (transaction) => {
+      const pollId = await prisma.$transaction(async (transaction) => {
         const comment = await transaction.comments.findUnique({
           where: { id: request.params.id },
-          select: { status: true },
+          select: { status: true, pollId: true },
         })
         if (!comment) throw new ConflictError('Este comentário já foi tratado ou não existe.')
 
@@ -353,7 +353,9 @@ export async function commentRoutes(app: FastifyInstance) {
             details: { action, reason },
           },
         })
+        return comment.pollId
       })
+      emitLive('comments-changed', { pollId })
 
       if (action === 'APPROVE' || action === 'REJECT') void notifyCommentDecision(request, request.params.id, action === 'APPROVE')
 

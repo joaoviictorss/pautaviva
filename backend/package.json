@@ -10,6 +10,7 @@
     "start": "node dist/http/server.js",
     "start:prod": "prisma migrate deploy && node dist/http/server.js",
     "postinstall": "prisma generate",
+    "test": "tsx --test src/**/*.test.ts",
     "test:requirements": "tsx scripts/verify-functional-features.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",

@@ -4,6 +4,7 @@ import { differenceInCalendarDays, format, parseISO } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
 import { toast } from '@/components/ui/toast'
+import { useLiveRefresh } from '@/hooks/use-live-refresh'
 import { usePollExport } from '@/hooks/use-poll-export'
 import { usePollLive, type PollLiveUpdate } from '@/hooks/use-poll-live'
 import { api } from '@/lib/api/client'
@@ -79,6 +80,7 @@ export function AdminPauta(_props: AdminPautaProps) {
 
   const sync = useCallback(() => void load(), [load])
   const live = usePollLive(pollId, sync, applyResults)
+  useLiveRefresh(['comments-changed'], sync, pollId)
 
   useEffect(() => {
     sync()

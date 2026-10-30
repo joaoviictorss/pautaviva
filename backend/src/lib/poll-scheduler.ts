@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 
 import { env } from '../env.js'
-import { emitToPoll } from '../http/sockets/index.js'
+import { emitLive } from '../http/sockets/index.js'
 import { sendNoticeMail, sendPollOpenedMail } from './mail.js'
 import { prisma } from './prisma.js'
 
@@ -45,6 +45,7 @@ export function startPollClosureScheduler(app: FastifyInstance) {
       for (const poll of opened) {
         const claimed = await prisma.polls.updateMany({ where: { id: poll.id, openNoticeSentAt: null }, data: { openNoticeSentAt: now } })
         if (claimed.count !== 1) continue
+        emitLive('polls-changed', { pollId: poll.id })
         const users = await prisma.users.findMany({
           where: { role: 'CITIZEN', notifyPollOpened: true },
           select: { name: true, email: true },
@@ -113,7 +114,7 @@ export function startPollClosureScheduler(app: FastifyInstance) {
           return true
         })
         if (closed) {
-          emitToPoll(poll.id, 'poll-closed', {})
+          emitLive('polls-changed', { pollId: poll.id })
           void notifyResult(poll.id).catch((error: unknown) =>
             app.log.error({ err: error, pollId: poll.id }, 'falha ao notificar resultado da pauta'),
           )
