@@ -34,7 +34,7 @@ export function PollCard(props: PollCardProps) {
           forLabel: `${percents[0]}% a favor`,
         }
       : undefined,
-    participantAvatars: citizen ? [] : getDefaultAvatars(poll.id, Math.min(MAX_AVATARS, poll.participations)),
+    participantAvatars: getDefaultAvatars(poll.id, Math.min(MAX_AVATARS, poll.participations)),
     citizenTimeLabel: citizen ? getPollTimeLabel(poll) : undefined,
     participationsLabel:
       poll.status === 'SCHEDULED' && !citizen

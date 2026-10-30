@@ -9,7 +9,7 @@ export interface PollCardProps {
   onEdit?: (poll: Poll) => void
   /** O card inteiro vira link para esta tela da pauta. */
   linkTo?: '/admin/pautas/$pollId' | '/pautas/$pollId'
-  /** Área do cidadão: prazo no topo, sem avatares. */
+  /** Área do cidadão: prazo no topo. */
   citizen?: boolean
   /** Ação no rodapé, acima do link do card. */
   action?: ReactNode
