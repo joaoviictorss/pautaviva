@@ -30,3 +30,12 @@ export interface PollPage {
 export interface PollDetail extends Poll {
   hasVoted: boolean
 }
+
+export interface PollStats extends Poll {
+  createdAt: string
+  createdBy: string
+  comments: Record<'PENDING' | 'APPROVED' | 'REJECTED' | 'REMOVED', number>
+  pendingReports: number
+  participationsByDay: { day: string; count: number }[]
+  history: { id: string; action: string; createdAt: string; actorName: string | null }[]
+}

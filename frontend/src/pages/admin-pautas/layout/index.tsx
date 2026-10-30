@@ -55,7 +55,7 @@ export function AdminPautas({
       ) : polls.length ? (
         <div className={GRID}>
           {polls.map((poll) => (
-            <PollCard key={poll.id} poll={poll} onEdit={onEdit} />
+            <PollCard key={poll.id} poll={poll} onEdit={onEdit} linked />
           ))}
         </div>
       ) : (

@@ -12,6 +12,10 @@ import { NotFoundError } from './_errors/not-found-error.js'
 import { UnauthorizedError } from './_errors/unauthorized-error.js'
 
 const DAY_MS = 24 * 60 * 60 * 1000
+const STAFF_ROLES = ['MANAGER', 'MODERATOR', 'ADMIN'] as const
+const TIME_ZONE = 'America/Sao_Paulo'
+
+const dayKey = (date: Date) => date.toLocaleDateString('en-CA', { timeZone: TIME_ZONE })
 
 function statusOf(poll: Pick<Polls, 'startsAt' | 'endsAt' | 'status'>, now = new Date()): PollStatus {
   if (poll.status === 'CLOSED' || poll.endsAt <= now) return 'CLOSED'
@@ -45,6 +49,7 @@ const agendaQuery = z.object({
 })
 
 const exportQuery = z.object({ format: z.enum(['csv', 'pdf']) })
+const dashboardQuery = z.object({ days: z.coerce.number().pipe(z.literal([7, 30, 90])).default(30) })
 const pollParams = z.object({ id: z.uuid() })
 
 function validatePeriod({ startsAt, endsAt }: { startsAt: Date; endsAt: Date }) {
@@ -53,6 +58,15 @@ function validatePeriod({ startsAt, endsAt }: { startsAt: Date; endsAt: Date }) 
   if (startsAt.getTime() < now - DAY_MS) throw new BadRequestError('A data de início não pode estar no passado.')
   if (endsAt <= startsAt || endsAt.getTime() <= now) {
     throw new BadRequestError('A data de término deve ser posterior à data de início.')
+  }
+}
+
+function statusWhere(status: PollStatus, now: Date): Prisma.PollsWhereInput {
+  if (status === 'CLOSED') return { OR: [{ status: 'CLOSED' }, { endsAt: { lte: now } }] }
+  return {
+    status: { not: 'CLOSED' },
+    startsAt: status === 'OPEN' ? { lte: now } : { gt: now },
+    endsAt: { gt: now },
   }
 }
 
@@ -233,13 +247,7 @@ export async function pollRoutes(app: FastifyInstance) {
             },
           ]
         : []),
-      ...(status === 'SCHEDULED'
-        ? [{ status: { not: 'CLOSED' as const }, startsAt: { gt: now }, endsAt: { gt: now } }]
-        : []),
-      ...(status === 'OPEN'
-        ? [{ status: { not: 'CLOSED' as const }, startsAt: { lte: now }, endsAt: { gt: now } }]
-        : []),
-      ...(status === 'CLOSED' ? [{ OR: [{ status: 'CLOSED' as const }, { endsAt: { lte: now } }] }] : []),
+      ...(status ? [statusWhere(status, now)] : []),
     ]
     const where = conditions.length ? { AND: conditions } : undefined
 
@@ -354,11 +362,138 @@ export async function pollRoutes(app: FastifyInstance) {
     return { ...toPollView(poll, votes), hasVoted }
   })
 
+  api.get('/dashboard', { schema: { querystring: dashboardQuery } }, async (request) => {
+    await request.requireRole(...STAFF_ROLES)
+    const { days } = request.query
+    const now = new Date()
+    const since = new Date(now.getTime() - days * DAY_MS)
+    const before = new Date(now.getTime() - 2 * days * DAY_MS)
+    const overdue = new Date(now.getTime() - DAY_MS)
+    const moderationQueue: Prisma.CommentsWhereInput = {
+      OR: [{ status: 'PENDING' }, { reports: { some: { status: 'PENDING' } } }],
+    }
+    const dayKeys = Array.from({ length: days }, (_, index) => dayKey(new Date(now.getTime() - (days - 1 - index) * DAY_MS)))
+
+    const [
+      openPolls,
+      openPollsBefore,
+      [period],
+      pendingModeration,
+      overdueModeration,
+      byDay,
+      byCategory,
+      endingSoon,
+      upcoming,
+    ] = await Promise.all([
+      prisma.polls.count({ where: statusWhere('OPEN', now) }),
+      prisma.polls.count({ where: { startsAt: { lte: since }, endsAt: { gt: since } } }),
+      prisma.$queryRaw<{ participations: bigint; previousParticipations: bigint; citizens: bigint; previousCitizens: bigint }[]>`
+        SELECT
+          COUNT(*) FILTER (WHERE "createdAt" >= ${since}) AS "participations",
+          COUNT(*) FILTER (WHERE "createdAt" < ${since}) AS "previousParticipations",
+          COUNT(DISTINCT "userId") FILTER (WHERE "createdAt" >= ${since}) AS "citizens",
+          COUNT(DISTINCT "userId") FILTER (WHERE "createdAt" < ${since}) AS "previousCitizens"
+        FROM participations
+        WHERE "createdAt" >= ${before}
+      `,
+      prisma.comments.count({ where: moderationQueue }),
+      prisma.comments.count({ where: { ...moderationQueue, createdAt: { lt: overdue } } }),
+      prisma.$queryRaw<{ day: string; count: bigint }[]>`
+        SELECT to_char(("createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${TIME_ZONE}, 'YYYY-MM-DD') AS day, COUNT(*) AS count
+        FROM participations
+        WHERE "createdAt" >= ${since}
+        GROUP BY day
+      `,
+      prisma.$queryRaw<{ name: string; count: bigint }[]>`
+        SELECT category.name, COUNT(*) AS count
+        FROM participations participation
+        JOIN polls poll ON poll.id = participation."pollId"
+        JOIN categories category ON category.id = poll."categoryId"
+        WHERE participation."createdAt" >= ${since}
+        GROUP BY category.name
+        ORDER BY count DESC, category.name
+        LIMIT 6
+      `,
+      prisma.polls.findMany({
+        where: statusWhere('OPEN', now),
+        select: pollSelect,
+        orderBy: [{ endsAt: 'asc' }, { id: 'asc' }],
+        take: 4,
+      }),
+      prisma.polls.findMany({
+        where: statusWhere('SCHEDULED', now),
+        select: { id: true, title: true, startsAt: true, endsAt: true, category: { select: { name: true } } },
+        orderBy: [{ startsAt: 'asc' }, { id: 'asc' }],
+        take: 4,
+      }),
+    ])
+
+    const countByDay = new Map(byDay.map((row) => [row.day, Number(row.count)]))
+    const votes = await countVotes({ pollId: { in: endingSoon.map((poll) => poll.id) } })
+
+    return {
+      openPolls: { current: openPolls, previous: openPollsBefore },
+      participations: { current: Number(period.participations), previous: Number(period.previousParticipations) },
+      citizens: { current: Number(period.citizens), previous: Number(period.previousCitizens) },
+      moderation: { pending: pendingModeration, overdue: overdueModeration },
+      participationsByDay: dayKeys.map((day) => ({ day, count: countByDay.get(day) ?? 0 })),
+      participationsByCategory: byCategory.map(({ name, count }) => ({ name, count: Number(count) })),
+      endingSoon: endingSoon.map((poll) => toPollView(poll, votes)),
+      upcoming,
+    }
+  })
+
+  api.get('/polls/:id/stats', { schema: { params: pollParams } }, async (request) => {
+    await request.requireRole(...STAFF_ROLES)
+    const { id } = request.params
+    const poll = await prisma.polls.findUnique({
+      where: { id },
+      select: { ...pollSelect, createdAt: true, createdBy: { select: { name: true } } },
+    })
+    if (!poll) throw new NotFoundError('Pauta não encontrada.')
+
+    const [votes, commentsByStatus, pendingReports, history, byDay] = await Promise.all([
+      countVotes({ pollId: id }),
+      prisma.comments.groupBy({ by: ['status'], where: { pollId: id }, _count: { _all: true } }),
+      prisma.commentReports.count({ where: { status: 'PENDING', comment: { pollId: id } } }),
+      prisma.auditLogs.findMany({
+        where: { targetId: id },
+        select: { id: true, action: true, createdAt: true, actor: { select: { name: true } } },
+        orderBy: { createdAt: 'desc' },
+      }),
+      prisma.$queryRaw<{ day: string; count: bigint }[]>`
+        SELECT to_char(("createdAt" AT TIME ZONE 'UTC') AT TIME ZONE ${TIME_ZONE}, 'YYYY-MM-DD') AS day, COUNT(*) AS count
+        FROM participations
+        WHERE "pollId" = ${id}
+        GROUP BY day
+      `,
+    ])
+
+    const countByDay = new Map(byDay.map((row) => [row.day, Number(row.count)]))
+    const lastDay = Math.min(poll.endsAt.getTime(), Date.now())
+    const dayKeys = new Set<string>()
+    for (let time = poll.startsAt.getTime(); time <= lastDay; time += DAY_MS) dayKeys.add(dayKey(new Date(time)))
+    if (poll.startsAt.getTime() <= lastDay) dayKeys.add(dayKey(new Date(lastDay)))
+
+    const comments = { PENDING: 0, APPROVED: 0, REJECTED: 0, REMOVED: 0 }
+    for (const row of commentsByStatus) comments[row.status] = row._count._all
+
+    return {
+      ...toPollView(poll, votes),
+      createdAt: poll.createdAt,
+      createdBy: poll.createdBy.name,
+      comments,
+      pendingReports,
+      participationsByDay: [...dayKeys].map((day) => ({ day, count: countByDay.get(day) ?? 0 })),
+      history: history.map(({ actor, ...entry }) => ({ ...entry, actorName: actor?.name ?? null })),
+    }
+  })
+
   api.get(
     '/polls/:id/export',
     { schema: { params: pollParams, querystring: exportQuery } },
     async (request, reply) => {
-      await request.requireRole('MANAGER', 'ADMIN')
+      await request.requireRole(...STAFF_ROLES)
       const poll = await prisma.polls.findUnique({ where: { id: request.params.id } })
       if (!poll) throw new NotFoundError('Pauta não encontrada.')
       if (statusOf(poll) !== 'CLOSED') {
@@ -447,7 +582,7 @@ export async function pollRoutes(app: FastifyInstance) {
     '/polls',
     { schema: { body: pollBody.extend({ title: z.string().trim().min(5).max(90) }) } },
     async (request, reply) => {
-      const user = await request.requireRole('MANAGER', 'ADMIN')
+      const user = await request.requireRole(...STAFF_ROLES)
       const data = request.body
       validatePeriod(data)
       const category = await prisma.categories.findUnique({ where: { id: data.categoryId }, select: { id: true } })
@@ -475,7 +610,7 @@ export async function pollRoutes(app: FastifyInstance) {
       },
     },
     async (request, reply) => {
-      const user = await request.requireRole('MANAGER', 'ADMIN')
+      const user = await request.requireRole(...STAFF_ROLES)
       const poll = await prisma.polls.findUnique({ where: { id: request.params.id } })
       if (!poll) throw new NotFoundError('Pauta não encontrada.')
       if (statusOf(poll) !== 'SCHEDULED') throw new BadRequestError('Só pautas agendadas podem ser editadas.')

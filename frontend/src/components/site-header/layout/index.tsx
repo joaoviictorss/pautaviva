@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { getDefaultAvatar } from '@/lib/utils/avatar'
 import { getInitials } from '@/lib/utils/format'
 
 import type { SiteHeaderLayoutProps } from '../data'
@@ -34,7 +35,7 @@ export function SiteHeader({ loading, signedIn, user }: SiteHeaderLayoutProps) {
                   className="flex items-center gap-2 rounded-full p-1 pr-2 outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Avatar className="size-9">
-                    {user?.image && <AvatarImage src={user.image} alt="" />}
+                    <AvatarImage src={user?.image ?? getDefaultAvatar(user?.name ?? '')} alt="" />
                     <AvatarFallback>{getInitials(user?.name ?? '')}</AvatarFallback>
                   </Avatar>
                   <ChevronDownIcon className="size-4 text-muted-foreground" />
@@ -52,7 +53,7 @@ export function SiteHeader({ loading, signedIn, user }: SiteHeaderLayoutProps) {
                     Configurações
                   </DropdownMenuItem>
                   {['MODERATOR', 'ADMIN'].includes(user?.role ?? '') && (
-                    <DropdownMenuItem render={<Link to="/moderacao" />}>
+                    <DropdownMenuItem render={<Link to="/admin/moderacao" />}>
                       <ShieldCheckIcon />
                       Moderação
                     </DropdownMenuItem>

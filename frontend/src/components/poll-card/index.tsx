@@ -4,10 +4,13 @@ import { ptBR } from 'date-fns/locale'
 import { getCategoryLook } from '@/lib/poll/categories'
 import { POLL_STATUS } from '@/lib/poll/status'
 import { VOTE_OPTIONS } from '@/lib/poll/votes'
+import { getDefaultAvatars } from '@/lib/utils/avatar'
 import { formatNumber } from '@/lib/utils/format'
 
 import { PollCard as Layout } from './layout'
 import type { PollCardLayoutProps, PollCardProps } from './data'
+
+const MAX_AVATARS = 3
 
 const shortDate = (iso: string) => format(new Date(iso), 'dd MMM', { locale: ptBR }).replace('.', '')
 
@@ -31,8 +34,11 @@ export function PollCard(props: PollCardProps) {
           forLabel: `${percents[0]}% a favor`,
         }
       : undefined,
+    participantAvatars: getDefaultAvatars(poll.id, Math.min(MAX_AVATARS, poll.participations)),
     participationsLabel:
-      poll.status === 'SCHEDULED' ? undefined : `${formatNumber(poll.participations)} participações`,
+      poll.status === 'SCHEDULED'
+        ? undefined
+        : `${formatNumber(poll.participations)} ${poll.participations === 1 ? 'participação' : 'participações'}`,
     scheduleLabel:
       poll.status === 'SCHEDULED'
         ? `${daysUntil <= 1 ? 'Abre amanhã' : `Abre em ${shortDate(poll.startsAt)}`} · até ${shortDate(poll.endsAt)}`

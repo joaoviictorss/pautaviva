@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowDownToLineIcon, ArrowLeftIcon, CalendarIcon, CircleAlertIcon, UsersIcon } from 'lucide-react'
 
+import { PollResultBars } from '@/components/poll-result-bars'
 import { SiteHeader } from '@/components/site-header'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -124,22 +125,7 @@ export function Pauta({
                     <CardDescription>Resultados agregados — votos individuais não são exibidos.</CardDescription>
                   </CardHeader>
                   <CardContent className="flex flex-col gap-4">
-                    {bars.map((bar) => (
-                      <div key={bar.key} className="flex flex-col gap-1.5">
-                        <div className="flex items-baseline justify-between gap-3 text-sm">
-                          <span className="font-semibold">{bar.label}</span>
-                          <span className="text-muted-foreground">
-                            <span className="font-semibold text-foreground">{bar.percentLabel}</span> · {bar.countLabel}
-                          </span>
-                        </div>
-                        <div className="h-2.5 overflow-hidden rounded-full bg-muted">
-                          <div
-                            className="h-full rounded-full transition-[width] duration-500"
-                            style={{ width: `${bar.percent}%`, background: bar.color }}
-                          />
-                        </div>
-                      </div>
-                    ))}
+                    <PollResultBars bars={bars} />
                   </CardContent>
                 </Card>
               )}

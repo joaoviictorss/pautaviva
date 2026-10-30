@@ -1,5 +1,6 @@
 import type { FastifyInstance } from 'fastify'
 
+import { emitToPoll } from '../http/sockets/index.js'
 import { prisma } from './prisma.js'
 
 const CHECK_INTERVAL_MS = 5_000
@@ -14,25 +15,27 @@ export function startPollClosureScheduler(app: FastifyInstance) {
       const now = new Date()
       const expiredPolls = await prisma.polls.findMany({
         where: { status: { not: 'CLOSED' }, endsAt: { lte: now } },
-        select: { id: true },
+        select: { id: true, endsAt: true },
       })
 
       for (const poll of expiredPolls) {
-        await prisma.$transaction(async (transaction) => {
+        const closed = await prisma.$transaction(async (transaction) => {
           const result = await transaction.polls.updateMany({
             where: { id: poll.id, status: { not: 'CLOSED' }, endsAt: { lte: now } },
             data: { status: 'CLOSED' },
           })
-          if (result.count !== 1) return
+          if (result.count !== 1) return false
 
           await transaction.auditLogs.create({
             data: {
               action: 'POLL_CLOSED_AUTOMATICALLY',
               targetId: poll.id,
-              details: { closedAt: now.toISOString() },
+              details: { closedAt: now.toISOString(), endsAt: poll.endsAt.toISOString() },
             },
           })
+          return true
         })
+        if (closed) emitToPoll(poll.id, 'poll-closed', {})
       }
     } catch (error) {
       app.log.error({ err: error }, 'falha ao encerrar pautas vencidas; nova tentativa será feita')

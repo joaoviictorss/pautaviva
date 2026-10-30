@@ -29,24 +29,23 @@ export async function redirectAfterVerification({ search }: { search: { error?: 
   throw redirect({ to: (await getSession()) ? '/painel' : '/entrar' })
 }
 
+const STAFF_ROLES = ['ADMIN', 'MANAGER', 'MODERATOR']
+
 interface SessionContext {
   context: { session: { user: { role?: string | null } } }
 }
 
-/** beforeLoad da área administrativa: gestores e administradores. */
+/** beforeLoad da área administrativa: gestores, moderadores e administradores. */
 export function requireStaff({ context }: SessionContext) {
-  if (!['ADMIN', 'MANAGER'].includes(context.session.user.role ?? '')) throw redirect({ to: '/painel' })
+  if (!STAFF_ROLES.includes(context.session.user.role ?? '')) throw redirect({ to: '/painel' })
 }
 
-/** beforeLoad das telas só de administrador. */
-export function requireAdmin({ context }: SessionContext) {
-  if (context.session.user.role !== 'ADMIN') throw redirect({ to: '/admin/pautas' })
-}
-
+/** beforeLoad das telas do cidadão: a equipe entra direto na área administrativa. */
 export function requireCitizen({ context }: SessionContext) {
-  if (context.session.user.role !== 'CITIZEN') throw redirect({ to: '/painel' })
+  if (STAFF_ROLES.includes(context.session.user.role ?? '')) throw redirect({ to: '/admin' })
 }
 
+/** beforeLoad das telas de usuários e moderação: o gestor volta para as pautas. */
 export function requireModerator({ context }: SessionContext) {
-  if (!['MODERATOR', 'ADMIN'].includes(context.session.user.role ?? '')) throw redirect({ to: '/painel' })
+  if (!['MODERATOR', 'ADMIN'].includes(context.session.user.role ?? '')) throw redirect({ to: '/admin/pautas' })
 }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { getRouteApi } from '@tanstack/react-router'
+import { getRouteApi, useNavigate } from '@tanstack/react-router'
 
 import { api } from '@/lib/api/client'
 import type { PollPage } from '@/lib/poll/types'
@@ -17,12 +17,13 @@ const FILTERS: [StatusFilter, string][] = [
 ]
 
 export function AdminPautas(_props: AdminPautasProps) {
-  const { q = '' } = route.useSearch()
+  const { q = '', status = 'ALL', nova, editar } = route.useSearch()
+  const navigate = useNavigate()
   const [polls, setPolls] = useState<Poll[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>()
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('ALL')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>(status)
   const [drawer, setDrawer] = useState<{ open: boolean; poll?: Poll }>({ open: false })
 
   const load = useCallback(async () => {
@@ -49,6 +50,14 @@ export function AdminPautas(_props: AdminPautasProps) {
   useEffect(() => {
     load()
   }, [load])
+
+  // Atalhos do Início: abrem o painel uma vez e saem da URL para não reabrir ao salvar ou recarregar.
+  useEffect(() => {
+    const poll = polls.find(({ id }) => id === editar)
+    if (loading || (!nova && !poll)) return
+    setDrawer({ open: true, poll })
+    navigate({ to: '/admin/pautas', search: { q: q || undefined }, replace: true })
+  }, [loading, polls, nova, editar, q, navigate])
 
   const term = q.trim().toLowerCase()
   const matching = polls.filter(

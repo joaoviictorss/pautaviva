@@ -5,7 +5,7 @@ export interface PollCardProps {
   poll: Poll
   /** Mostra o botão "Editar" (só aparece em pautas agendadas). */
   onEdit?: (poll: Poll) => void
-  /** O card inteiro vira link para o detalhe da pauta. */
+  /** O card inteiro vira link para a tela de dados da pauta no admin. */
   linked?: boolean
 }
 
@@ -14,6 +14,8 @@ export interface PollCardLayoutProps extends PollCardProps {
   statusLabel: string
   statusClassName: string
   bar?: { segments: { key: string; color: string; percent: number }[]; label: string; forLabel: string }
+  /** Imagens ilustrativas: o voto é anônimo, não representam quem votou. */
+  participantAvatars: string[]
   participationsLabel?: string
   scheduleLabel?: string
   timeLabel?: string

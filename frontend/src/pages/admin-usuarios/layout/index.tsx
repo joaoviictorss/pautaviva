@@ -16,6 +16,7 @@ import { CreateUserDialog } from '../components/create-user-dialog'
 import type { AdminUsuariosLayoutProps } from '../data'
 
 export function AdminUsuarios({
+  canManage,
   filters,
   roleFilter,
   onRoleFilterChange,
@@ -35,9 +36,11 @@ export function AdminUsuarios({
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-1.5">
           <h1 className="m-0 text-[clamp(28px,3.2vw,38px)] font-extrabold tracking-tighter">Usuários</h1>
-          <p className="m-0 text-[15px] text-muted-foreground">Cadastre gestores e moderadores e altere perfis de acesso.</p>
+          <p className="m-0 text-[15px] text-muted-foreground">
+            {canManage ? 'Cadastre gestores e moderadores e altere perfis de acesso.' : 'Consulte as contas e os perfis de acesso.'}
+          </p>
         </div>
-        <CreateUserDialog onCreated={onUserCreated} />
+        {canManage && <CreateUserDialog onCreated={onUserCreated} />}
       </div>
 
       <FilterChips label="Perfil" chips={filters} value={roleFilter} onChange={onRoleFilterChange} />
@@ -86,7 +89,7 @@ export function AdminUsuarios({
                       <Select
                         items={roleOptions}
                         value={row.role}
-                        disabled={row.isSelf || row.updating}
+                        disabled={!canManage || row.isSelf || row.updating}
                         onValueChange={(value) => value && onRoleChange(row.id, value as Role)}
                       >
                         <SelectTrigger aria-label={`Perfil de ${row.name}`} className="w-40">

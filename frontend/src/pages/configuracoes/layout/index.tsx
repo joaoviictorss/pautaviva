@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ROLE_LABELS } from '@/lib/auth/roles'
+import { getDefaultAvatar } from '@/lib/utils/avatar'
 import { getInitials } from '@/lib/utils/format'
 
 import type { ConfiguracoesLayoutProps } from '../data'
@@ -90,7 +91,7 @@ export function Configuracoes({
               <Skeleton className="size-14 rounded-full" />
             ) : (
               <Avatar className="size-14">
-                {user?.image && <AvatarImage src={user.image} alt="" />}
+                <AvatarImage src={user?.image ?? getDefaultAvatar(user?.name ?? '')} alt="" />
                 <AvatarFallback>{getInitials(user?.name ?? '')}</AvatarFallback>
               </Avatar>
             )}

@@ -166,19 +166,17 @@ function PollCard({ poll }: { poll: PautasLayoutProps['polls'][number] }) {
             aria-label={`${totalVotes} votos registrados`}
             className="flex h-2 gap-0.5 overflow-hidden rounded-full bg-muted"
           >
-            {VOTE_OPTIONS.map(({ color }, index) => (
-              <span
-                key={color}
-                style={{ width: `${totalVotes ? (votes[index] / totalVotes) * 100 : 0}%`, background: color }}
-              />
-            ))}
+            {/* sem segmento vazio: o gap dele deixaria um vão no fim da barra */}
+            {VOTE_OPTIONS.map(
+              ({ color }, index) => votes[index] > 0 && <span key={color} style={{ flex: votes[index], background: color }} />,
+            )}
           </div>
           <span className="text-xs text-muted-foreground">
             {formatNumber(poll.participations)} {poll.participations === 1 ? 'participação' : 'participações'}
           </span>
         </CardContent>
       )}
-      <CardFooter className="-mx-4.5 flex items-center justify-between gap-3 border-t px-4.5 pt-3.5 text-xs text-muted-foreground">
+      <CardFooter className="-mx-4.5 flex items-center justify-between gap-3 border-t bg-transparent px-4.5 pt-3.5 text-xs text-muted-foreground">
         <span>
           {poll.status === 'SCHEDULED' ? `Votação: ${start} – ${end}` : `Período: ${start} – ${end}`}
         </span>

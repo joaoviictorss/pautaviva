@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { getRouteApi } from '@tanstack/react-router'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { io } from 'socket.io-client'
 
-import { env } from '@/env'
+import { usePollExport } from '@/hooks/use-poll-export'
+import { usePollLive, type PollLiveUpdate } from '@/hooks/use-poll-live'
 import { api } from '@/lib/api/client'
 import { useSession } from '@/lib/auth/client'
 import { getCategoryLook } from '@/lib/poll/categories'
@@ -24,9 +24,7 @@ export function Pauta(_props: PautaProps) {
   const [poll, setPoll] = useState<PollDetail>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>()
-  const [live, setLive] = useState(false)
-  const [exportingFormat, setExportingFormat] = useState<'csv' | 'pdf'>()
-  const [exportError, setExportError] = useState<string>()
+  const { exportingFormat, exportError, exportResults } = usePollExport(pollId)
   const { data: session } = useSession()
 
   const load = useCallback(async () => {
@@ -44,51 +42,12 @@ export function Pauta(_props: PautaProps) {
     void load()
   }, [load])
 
-  useEffect(() => {
-    const socket = io(env.VITE_API_URL, { withCredentials: true })
-    socket.on('connect', () => {
-      socket.emit('join-poll', pollId)
-      setLive(true)
-      void load()
-    })
-    socket.on('disconnect', () => setLive(false))
-    socket.on('poll-results', (update: Pick<PollDetail, 'results' | 'participations'>) => {
-      setPoll((current) => (current ? { ...current, ...update } : current))
-    })
-    return () => {
-      socket.disconnect()
-    }
-  }, [pollId, load])
+  const applyResults = useCallback((update: PollLiveUpdate) => {
+    setPoll((current) => (current ? { ...current, ...update } : current))
+  }, [])
 
-  const exportResults = useCallback(async (format: 'csv' | 'pdf') => {
-    setExportError(undefined)
-    setExportingFormat(format)
-    try {
-      const response = await fetch(
-        `${env.VITE_API_URL}/polls/${encodeURIComponent(pollId)}/export?format=${format}`,
-        { credentials: 'include' },
-      )
-      if (!response.ok) {
-        const body = await response.json().catch(() => null)
-        throw new Error(body?.message ?? 'Não foi possível exportar os resultados.')
-      }
-
-      const contentDisposition = response.headers.get('Content-Disposition')
-      const filename = contentDisposition?.match(/filename="([^"]+)"/)?.[1] ?? `resultados-${pollId}.${format}`
-      const url = URL.createObjectURL(await response.blob())
-      const link = document.createElement('a')
-      link.href = url
-      link.download = filename
-      document.body.append(link)
-      link.click()
-      link.remove()
-      setTimeout(() => URL.revokeObjectURL(url), 1_000)
-    } catch (exportFailure) {
-      setExportError(exportFailure instanceof Error ? exportFailure.message : 'Não foi possível exportar os resultados.')
-    } finally {
-      setExportingFormat(undefined)
-    }
-  }, [pollId])
+  const sync = useCallback(() => void load(), [load])
+  const live = usePollLive(pollId, sync, applyResults)
 
   const layoutProps: PautaLayoutProps = {
     poll,
@@ -96,7 +55,7 @@ export function Pauta(_props: PautaProps) {
     error,
     exportError,
     live,
-    canExport: session?.user.role === 'MANAGER' || session?.user.role === 'ADMIN',
+    canExport: ['MANAGER', 'MODERATOR', 'ADMIN'].includes(session?.user.role ?? ''),
     exportingFormat,
     onVoted: () => void load(),
     onExport: (format) => void exportResults(format),

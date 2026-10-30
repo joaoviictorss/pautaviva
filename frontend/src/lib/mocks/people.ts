@@ -1,3 +1,4 @@
+import { getAvatarUrl } from '@/lib/utils/avatar'
 import { getInitials } from '@/lib/utils/format'
 
 const PALETTE: Array<[bg: string, fg: string]> = [
@@ -43,6 +44,6 @@ export function getAvatar(name: string, index: number): AvatarData {
     initials: getInitials(name),
     bg,
     fg,
-    src: `https://cdn.shadcnstudio.com/ss-assets/avatar/avatar-${id}.png`,
+    src: getAvatarUrl(id),
   }
 }

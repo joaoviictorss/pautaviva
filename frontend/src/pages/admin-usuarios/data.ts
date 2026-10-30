@@ -41,6 +41,8 @@ export interface AdminUserRow {
 export interface AdminUsuariosProps {}
 
 export interface AdminUsuariosLayoutProps extends AdminUsuariosProps {
+  /** Moderador só consulta: cadastrar e alterar perfil é do administrador. */
+  canManage: boolean
   filters: FilterChip<RoleFilter>[]
   roleFilter: RoleFilter
   onRoleFilterChange: (value: RoleFilter) => void

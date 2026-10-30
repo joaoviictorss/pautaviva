@@ -1,15 +1,15 @@
 import { useCallback, useEffect, useState } from 'react'
-import { getRouteApi, useNavigate } from '@tanstack/react-router'
+import { getRouteApi } from '@tanstack/react-router'
 import { differenceInCalendarDays, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
-import { toast } from '@/components/ui/toast'
+import { useSignOut } from '@/hooks/use-sign-out'
 import { api } from '@/lib/api/client'
-import { signOut } from '@/lib/auth/client'
 import { roleLabel } from '@/lib/auth/roles'
 import { getCategoryLook } from '@/lib/poll/categories'
 import { POLL_STATUS, type PollStatus } from '@/lib/poll/status'
 import type { PollPage } from '@/lib/poll/types'
+import { getDefaultAvatar } from '@/lib/utils/avatar'
 import { getInitials } from '@/lib/utils/format'
 
 import { Painel as Layout } from './layout'
@@ -41,25 +41,21 @@ function toDashboardPoll(poll: PollPage['items'][number]): PainelPoll {
 }
 
 export function Painel(_props: PainelProps) {
-  const navigate = useNavigate()
   const { session } = route.useRouteContext()
-  const [signingOut, setSigningOut] = useState(false)
+  const { signingOut, handleSignOut } = useSignOut()
   const [openPolls, setOpenPolls] = useState<PainelPoll[]>([])
   const [scheduledPolls, setScheduledPolls] = useState<PainelPoll[]>([])
   const [summary, setSummary] = useState<ParticipationSummary>({ total: 0, resultsAvailable: 0, items: [] })
   const [loadingDashboard, setLoadingDashboard] = useState(true)
   const [dashboardError, setDashboardError] = useState<string>()
   const { user } = session
-  const isCitizen = user.role === 'CITIZEN'
 
   const loadDashboard = useCallback(async () => {
     try {
       const [openPage, scheduledPage, participationSummary] = await Promise.all([
         api<PollPage>('/polls?status=OPEN&sort=ending&page=1&pageSize=3'),
         api<PollPage>('/polls?status=SCHEDULED&sort=start&page=1&pageSize=3'),
-        isCitizen
-          ? api<ParticipationSummary>('/participations/me')
-          : Promise.resolve({ total: 0, resultsAvailable: 0, items: [] }),
+        api<ParticipationSummary>('/participations/me'),
       ])
       setOpenPolls(openPage.items.map(toDashboardPoll))
       setScheduledPolls(scheduledPage.items.map(toDashboardPoll))
@@ -70,34 +66,19 @@ export function Painel(_props: PainelProps) {
     } finally {
       setLoadingDashboard(false)
     }
-  }, [isCitizen])
+  }, [])
 
   useEffect(() => {
     void loadDashboard()
   }, [loadDashboard])
-
-  async function handleSignOut() {
-    setSigningOut(true)
-    const { error } = await signOut()
-    setSigningOut(false)
-
-    if (error) {
-      toast.add({ type: 'error', title: 'Não foi possível sair', description: 'Tente novamente em instantes.' })
-      return
-    }
-    navigate({ to: '/entrar' })
-  }
 
   const layoutProps: PainelLayoutProps = {
     name: user.name,
     firstName: user.name.split(' ')[0],
     initials: getInitials(user.name),
     email: user.email,
-    image: user.image ?? undefined,
+    image: user.image ?? getDefaultAvatar(user.name),
     roleLabel: roleLabel(user.role),
-    isStaff: user.role === 'ADMIN' || user.role === 'MANAGER',
-    isAdmin: user.role === 'ADMIN',
-    isCitizen,
     signingOut,
     onSignOut: handleSignOut,
     openPolls,

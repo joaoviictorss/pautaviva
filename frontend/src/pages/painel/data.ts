@@ -23,8 +23,6 @@ export interface PainelLayoutProps extends PainelProps {
   email: string
   image?: string
   roleLabel: string
-  isStaff: boolean
-  isAdmin: boolean
   signingOut: boolean
   onSignOut: () => void
   openPolls: PainelPoll[]
@@ -35,7 +33,6 @@ export interface PainelLayoutProps extends PainelProps {
   loadingDashboard: boolean
   dashboardError?: string
   onRetry: () => void
-  isCitizen: boolean
 }
 
 export interface ParticipationSummary {

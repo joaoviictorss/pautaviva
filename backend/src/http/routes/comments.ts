@@ -148,7 +148,7 @@ export async function commentRoutes(app: FastifyInstance) {
         status: true,
         classification: true,
         moderationReason: true,
-        author: { select: { name: true } },
+        author: { select: { name: true, image: true } },
         poll: { select: { id: true, title: true } },
         reports: {
           where: { status: 'PENDING' },
@@ -159,17 +159,39 @@ export async function commentRoutes(app: FastifyInstance) {
     })
   })
 
+  api.get('/moderation/comments/history', async (request) => {
+    await request.requireRole('MODERATOR', 'ADMIN')
+    return prisma.comments.findMany({
+      where: { moderatedById: { not: null } },
+      orderBy: { updatedAt: 'desc' },
+      take: 50,
+      select: {
+        id: true,
+        text: true,
+        updatedAt: true,
+        status: true,
+        moderationReason: true,
+        author: { select: { name: true, image: true } },
+        moderatedBy: { select: { name: true } },
+        poll: { select: { id: true, title: true } },
+      },
+    })
+  })
+
   api.patch(
     '/moderation/comments/:id',
     {
       schema: {
         params: commentParams,
-        body: z.object({ action: z.enum(['APPROVE', 'REJECT', 'REMOVE', 'DISMISS_REPORT']) }),
+        body: z.object({
+          action: z.enum(['APPROVE', 'REJECT', 'REMOVE', 'DISMISS_REPORT', 'UNDO']),
+          reason: z.string().trim().min(1).max(200).optional(),
+        }),
       },
     },
     async (request, reply) => {
       const moderator = await request.requireRole('MODERATOR', 'ADMIN')
-      const { action } = request.body
+      const { action, reason } = request.body
 
       await prisma.$transaction(async (transaction) => {
         const comment = await transaction.comments.findUnique({
@@ -181,12 +203,22 @@ export async function commentRoutes(app: FastifyInstance) {
         if (action === 'APPROVE' || action === 'REJECT') {
           const result = await transaction.comments.updateMany({
             where: { id: request.params.id, status: 'PENDING' },
-            data: { status: action === 'APPROVE' ? 'APPROVED' : 'REJECTED', moderatedById: moderator.id },
+            data: {
+              status: action === 'APPROVE' ? 'APPROVED' : 'REJECTED',
+              moderatedById: moderator.id,
+              ...(action === 'REJECT' && reason && { moderationReason: reason }),
+            },
           })
           if (result.count !== 1) throw new ConflictError('Este comentário já foi tratado ou não existe.')
+        } else if (action === 'UNDO') {
+          const result = await transaction.comments.updateMany({
+            where: { id: request.params.id, status: { in: ['APPROVED', 'REJECTED'] }, moderatedById: { not: null } },
+            data: { status: 'PENDING', moderatedById: null, moderationReason: null },
+          })
+          if (result.count !== 1) throw new ConflictError('Esta decisão não pode mais ser desfeita.')
         } else {
           if (comment.status !== 'APPROVED') {
-            throw new ConflictError('Este comentário não possui denúncia pendente.')
+            throw new ConflictError('Este comentário já foi tratado ou não existe.')
           }
           const reports = await transaction.commentReports.updateMany({
             where: { commentId: request.params.id, status: 'PENDING' },
@@ -196,12 +228,14 @@ export async function commentRoutes(app: FastifyInstance) {
               reviewedById: moderator.id,
             },
           })
-          if (reports.count === 0) throw new ConflictError('Este comentário não possui denúncia pendente.')
+          if (action === 'DISMISS_REPORT' && reports.count === 0) {
+            throw new ConflictError('Este comentário não possui denúncia pendente.')
+          }
 
           if (action === 'REMOVE') {
             const result = await transaction.comments.updateMany({
               where: { id: request.params.id, status: 'APPROVED' },
-              data: { status: 'REMOVED', moderatedById: moderator.id },
+              data: { status: 'REMOVED', moderatedById: moderator.id, ...(reason && { moderationReason: reason }) },
             })
             if (result.count !== 1) throw new ConflictError('Este comentário já foi tratado ou não existe.')
           }
@@ -212,7 +246,7 @@ export async function commentRoutes(app: FastifyInstance) {
             action: 'COMMENT_MODERATED',
             actorId: moderator.id,
             targetId: request.params.id,
-            details: { action },
+            details: { action, reason },
           },
         })
       })

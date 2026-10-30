@@ -19,6 +19,7 @@ import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Textarea } from '@/components/ui/textarea'
+import { getDefaultAvatar } from '@/lib/utils/avatar'
 import { getInitials } from '@/lib/utils/format'
 
 import type { CommentReportReason, CommentsLayoutProps } from '../data'
@@ -101,7 +102,7 @@ export function Comments({
             {comments.map((comment) => (
               <article key={comment.id} className="flex gap-3 border-t pt-4">
                 <Avatar className="size-9 shrink-0">
-                  {comment.author.image && <AvatarImage src={comment.author.image} alt="" />}
+                  <AvatarImage src={comment.author.image ?? getDefaultAvatar(comment.author.name)} alt="" />
                   <AvatarFallback>{getInitials(comment.author.name)}</AvatarFallback>
                 </Avatar>
                 <div className="min-w-0 flex-1">

@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { ClockIcon, PencilIcon } from 'lucide-react'
 
+import { Avatar, AvatarFallback, AvatarGroup, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -15,6 +16,7 @@ export function PollCard({
   statusLabel,
   statusClassName,
   bar,
+  participantAvatars,
   participationsLabel,
   scheduleLabel,
   timeLabel,
@@ -36,7 +38,7 @@ export function PollCard({
         <CardTitle className="text-[17px] font-bold tracking-tight text-pretty">
           {linked ? (
             <Link
-              to="/pautas/$pollId"
+              to="/admin/pautas/$pollId"
               params={{ pollId: poll.id }}
               className="text-inherit no-underline after:absolute after:inset-0 after:rounded-2xl hover:no-underline"
             >
@@ -52,16 +54,29 @@ export function PollCard({
       {bar && (
         <CardContent className="flex items-center gap-2.5 px-0">
           <div role="img" aria-label={bar.label} className="flex h-2 flex-1 gap-0.5 overflow-hidden rounded-full bg-muted">
-            {bar.segments.map((segment) => (
-              <span key={segment.key} style={{ width: `${segment.percent}%`, background: segment.color }} />
+            {/* sem segmento vazio: o gap dele deixaria um vão no fim da barra */}
+            {bar.segments.filter((segment) => segment.percent > 0).map((segment) => (
+              <span key={segment.key} style={{ flex: segment.percent, background: segment.color }} />
             ))}
           </div>
           <span className="text-[13px] font-semibold whitespace-nowrap">{bar.forLabel}</span>
         </CardContent>
       )}
 
-      <CardFooter className="min-h-9 gap-3 border-t px-0 pt-3.5 text-[13px] text-muted-foreground">
-        <span className="flex-1">{participationsLabel ?? scheduleLabel}</span>
+      <CardFooter className="min-h-9 gap-3 border-t bg-transparent px-0 pt-3.5 text-[13px] text-muted-foreground">
+        <span className="flex min-w-0 flex-1 items-center gap-2">
+          {participantAvatars.length > 0 && (
+            <AvatarGroup>
+              {participantAvatars.map((src) => (
+                <Avatar key={src} className="size-7">
+                  <AvatarImage src={src} alt="" />
+                  <AvatarFallback />
+                </Avatar>
+              ))}
+            </AvatarGroup>
+          )}
+          {participationsLabel ?? scheduleLabel}
+        </span>
         {timeLabel && (
           <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
             <ClockIcon className="size-3.5" />
@@ -69,7 +84,7 @@ export function PollCard({
           </span>
         )}
         {onEditClick && (
-          <Button variant="outline" size="sm" onClick={onEditClick}>
+          <Button variant="outline" size="sm" onClick={onEditClick} className="relative z-10">
             <PencilIcon />
             Editar
           </Button>

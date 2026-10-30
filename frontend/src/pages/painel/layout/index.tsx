@@ -4,11 +4,9 @@ import {
   CalendarClockIcon,
   CheckCheckIcon,
   Clock3Icon,
-  LayoutDashboardIcon,
   ListChecksIcon,
   LogOutIcon,
   SearchIcon,
-  UsersIcon,
   type LucideIcon,
 } from 'lucide-react'
 
@@ -29,7 +27,7 @@ function ShortcutCard({
   title,
   description,
 }: {
-  to: '/minha-participacao' | '/admin/pautas' | '/admin/usuarios'
+  to: '/minha-participacao'
   icon: LucideIcon
   title: string
   description: string
@@ -87,9 +85,6 @@ export function Painel({
   email,
   image,
   roleLabel,
-  isStaff,
-  isAdmin,
-  isCitizen,
   signingOut,
   onSignOut,
   openPolls,
@@ -142,41 +137,17 @@ export function Painel({
             Explorar pautas
             <ArrowRightIcon className="size-5 transition-transform group-hover:translate-x-0.5" />
           </Button>
-          {isStaff && (
-            <Button nativeButton={false} render={<Link to="/admin/pautas" />} variant="outline" className="h-11 rounded-xl">
-              <LayoutDashboardIcon />
-              Área administrativa
-            </Button>
-          )}
         </div>
 
         <section className="flex flex-col gap-3" aria-label="Acessos rápidos">
           <h2 className="m-0 text-lg font-bold tracking-tight">Acessos rápidos</h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {isCitizen && (
-              <ShortcutCard
-                to="/minha-participacao"
-                icon={CheckCheckIcon}
-                title="Minha participação"
-                description="Consulte seu histórico e acompanhe resultados."
-              />
-            )}
-            {isStaff && (
-              <ShortcutCard
-                to="/admin/pautas"
-                icon={LayoutDashboardIcon}
-                title="Gestão de pautas"
-                description="Cadastre e acompanhe as votações."
-              />
-            )}
-            {isAdmin && (
-              <ShortcutCard
-                to="/admin/usuarios"
-                icon={UsersIcon}
-                title="Gestão de usuários"
-                description="Administre contas e permissões."
-              />
-            )}
+            <ShortcutCard
+              to="/minha-participacao"
+              icon={CheckCheckIcon}
+              title="Minha participação"
+              description="Consulte seu histórico e acompanhe resultados."
+            />
           </div>
         </section>
 
@@ -254,88 +225,86 @@ export function Painel({
           </Card>
         </section>
 
-        {isCitizen && (
-          <section aria-label="Resumo da sua participação">
-            <Card className="gap-5 rounded-2xl">
-              <CardHeader>
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="flex flex-col gap-1">
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                      <CheckCheckIcon className="size-5 text-primary" />
-                      Minha participação
-                    </CardTitle>
-                    <CardDescription>Seu histórico registra participação, sem revelar em qual opção você votou.</CardDescription>
-                  </div>
-                  <Button nativeButton={false} render={<Link to="/minha-participacao" />} variant="ghost" size="sm">
-                    Histórico completo
-                    <ArrowRightIcon />
-                  </Button>
+        <section aria-label="Resumo da sua participação">
+          <Card className="gap-5 rounded-2xl">
+            <CardHeader>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="flex flex-col gap-1">
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <CheckCheckIcon className="size-5 text-primary" />
+                    Minha participação
+                  </CardTitle>
+                  <CardDescription>Seu histórico registra participação, sem revelar em qual opção você votou.</CardDescription>
                 </div>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-5">
-                {loadingDashboard ? (
+                <Button nativeButton={false} render={<Link to="/minha-participacao" />} variant="ghost" size="sm">
+                  Histórico completo
+                  <ArrowRightIcon />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-5">
+              {loadingDashboard ? (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Skeleton className="h-20 rounded-xl" />
+                  <Skeleton className="h-20 rounded-xl" />
+                </div>
+              ) : (
+                <>
                   <div className="grid gap-3 sm:grid-cols-2">
-                    <Skeleton className="h-20 rounded-xl" />
-                    <Skeleton className="h-20 rounded-xl" />
-                  </div>
-                ) : (
-                  <>
-                    <div className="grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-xl border bg-muted/20 p-4">
-                        <p className="m-0 text-sm text-muted-foreground">Votações em que participou</p>
-                        <p className="m-0 mt-1 text-2xl font-bold">{participationCount}</p>
-                      </div>
-                      <div className="rounded-xl border bg-muted/20 p-4">
-                        <p className="m-0 text-sm text-muted-foreground">Com resultados disponíveis</p>
-                        <p className="m-0 mt-1 text-2xl font-bold">{resultsAvailableCount}</p>
-                      </div>
+                    <div className="rounded-xl border bg-muted/20 p-4">
+                      <p className="m-0 text-sm text-muted-foreground">Votações em que participou</p>
+                      <p className="m-0 mt-1 text-2xl font-bold">{participationCount}</p>
                     </div>
+                    <div className="rounded-xl border bg-muted/20 p-4">
+                      <p className="m-0 text-sm text-muted-foreground">Com resultados disponíveis</p>
+                      <p className="m-0 mt-1 text-2xl font-bold">{resultsAvailableCount}</p>
+                    </div>
+                  </div>
 
-                    {recentParticipations.length ? (
-                      <div className="flex flex-col gap-2.5">
-                        <h2 className="m-0 text-sm font-semibold">Participações recentes</h2>
-                        {recentParticipations.map((item) => {
-                          const CategoryIcon = item.categoryLook.icon
-                          return (
-                            <Link
-                              key={item.poll.id}
-                              to="/pautas/$pollId"
-                              params={{ pollId: item.poll.id }}
-                              className="flex items-center gap-3 rounded-xl border p-3.5 text-inherit no-underline transition-colors hover:bg-muted/50 hover:no-underline"
-                            >
-                              <span className="flex size-9 shrink-0 items-center justify-center rounded-lg" style={item.categoryLook.style}>
-                                <CategoryIcon className="size-4" />
+                  {recentParticipations.length ? (
+                    <div className="flex flex-col gap-2.5">
+                      <h2 className="m-0 text-sm font-semibold">Participações recentes</h2>
+                      {recentParticipations.map((item) => {
+                        const CategoryIcon = item.categoryLook.icon
+                        return (
+                          <Link
+                            key={item.poll.id}
+                            to="/pautas/$pollId"
+                            params={{ pollId: item.poll.id }}
+                            className="flex items-center gap-3 rounded-xl border p-3.5 text-inherit no-underline transition-colors hover:bg-muted/50 hover:no-underline"
+                          >
+                            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg" style={item.categoryLook.style}>
+                              <CategoryIcon className="size-4" />
+                            </span>
+                            <span className="flex min-w-0 flex-1 flex-col gap-1">
+                              <span className="truncate font-semibold">{item.poll.title}</span>
+                              <span className="text-xs text-muted-foreground">
+                                Participou em {item.participatedAtLabel} · {item.resultsAvailable ? 'Resultados disponíveis' : 'Votação ainda não iniciada'}
                               </span>
-                              <span className="flex min-w-0 flex-1 flex-col gap-1">
-                                <span className="truncate font-semibold">{item.poll.title}</span>
-                                <span className="text-xs text-muted-foreground">
-                                  Participou em {item.participatedAtLabel} · {item.resultsAvailable ? 'Resultados disponíveis' : 'Votação ainda não iniciada'}
-                                </span>
-                              </span>
-                              <span className="shrink-0 text-sm font-medium text-primary">
-                                {item.resultsAvailable ? 'Ver resultados' : 'Ver pauta'}
-                              </span>
-                              <ArrowRightIcon className="size-4 shrink-0 text-muted-foreground" />
-                            </Link>
-                          )
-                        })}
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-start gap-2 rounded-xl border border-dashed p-4">
-                        <p className="m-0 font-medium">Você ainda não participou de nenhuma votação.</p>
-                        <p className="m-0 text-sm text-muted-foreground">Encontre uma pauta aberta e registre sua participação.</p>
-                        <Button nativeButton={false} render={<Link to="/pautas" search={{ status: 'OPEN' }} />} size="sm" className="mt-1">
-                          Ver pautas abertas
-                          <ArrowRightIcon />
-                        </Button>
-                      </div>
-                    )}
-                  </>
-                )}
-              </CardContent>
-            </Card>
-          </section>
-        )}
+                            </span>
+                            <span className="shrink-0 text-sm font-medium text-primary">
+                              {item.resultsAvailable ? 'Ver resultados' : 'Ver pauta'}
+                            </span>
+                            <ArrowRightIcon className="size-4 shrink-0 text-muted-foreground" />
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-start gap-2 rounded-xl border border-dashed p-4">
+                      <p className="m-0 font-medium">Você ainda não participou de nenhuma votação.</p>
+                      <p className="m-0 text-sm text-muted-foreground">Encontre uma pauta aberta e registre sua participação.</p>
+                      <Button nativeButton={false} render={<Link to="/pautas" search={{ status: 'OPEN' }} />} size="sm" className="mt-1">
+                        Ver pautas abertas
+                        <ArrowRightIcon />
+                      </Button>
+                    </div>
+                  )}
+                </>
+              )}
+            </CardContent>
+          </Card>
+        </section>
 
         <div className="flex max-w-md items-center gap-3.5 rounded-xl border bg-card p-4">
           <Avatar className="size-12">
