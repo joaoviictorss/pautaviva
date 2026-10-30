@@ -6,11 +6,11 @@ import type { RolesLayoutProps } from '../data'
 
 export function Roles({ roles }: RolesLayoutProps) {
   return (
-    <section className="mx-auto max-w-6xl px-6 py-12 md:py-16">
+    <section className="w-full px-3.5 py-12 sm:px-10 md:py-16">
       <Reveal>
-        <p className="text-center text-[13px] font-semibold tracking-[.06em] text-muted-foreground uppercase">
+        <h2 className="text-center text-[13px] font-semibold tracking-[.06em] text-muted-foreground uppercase">
           Cada um no seu papel
-        </p>
+        </h2>
       </Reveal>
 
       <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

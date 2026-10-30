@@ -4,7 +4,7 @@ import type { HowItWorksLayoutProps } from '../data'
 
 export function HowItWorks({ steps }: HowItWorksLayoutProps) {
   return (
-    <section id="como-funciona" className="mx-auto max-w-6xl scroll-mt-20 px-6 py-18 md:py-32">
+    <section id="como-funciona" className="w-full scroll-mt-20 px-3.5 py-18 sm:px-10 md:py-32">
       <Reveal className="mx-auto flex max-w-[600px] flex-col items-center gap-3.5 text-center">
         <span className="text-sm font-semibold text-accent-foreground">Como funciona</span>
         <h2 className="text-[clamp(1.75rem,3.4vw,2.625rem)] leading-[1.12] font-bold text-balance tracking-[-0.035em]">

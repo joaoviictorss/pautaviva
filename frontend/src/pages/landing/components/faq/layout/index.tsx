@@ -7,7 +7,7 @@ import type { FaqLayoutProps } from '../data'
 
 export function Faq({ faqs, defaultOpen }: FaqLayoutProps) {
   return (
-    <section id="faq" className="mx-auto max-w-[1152px] scroll-mt-20 px-6 py-14 md:py-22">
+    <section id="faq" className="w-full scroll-mt-20 px-3.5 py-14 sm:px-10 md:py-22">
       <div className="flex flex-wrap items-start gap-10 md:gap-18">
         <Reveal className="max-w-[380px] flex-1 basis-[300px]">
           <span className="text-sm font-semibold text-accent-foreground">

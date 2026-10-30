@@ -87,7 +87,7 @@ export function Agenda({
                       aria-pressed={isSelected}
                       disabled={!isSameMonth(day, month)}
                       onClick={() => onDaySelect(day)}
-                      className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-lg text-sm transition-colors disabled:cursor-default disabled:text-muted-foreground/35 ${isSelected ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}
+                      className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-lg text-sm transition-colors disabled:cursor-default disabled:text-muted-foreground/35 ${isSelected ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`}
                     >
                       <span>{format(day, 'd')}</span>
                       {dayEvents.length > 0 && (

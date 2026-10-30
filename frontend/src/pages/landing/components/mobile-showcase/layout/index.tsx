@@ -6,7 +6,7 @@ import type { MobileShowcaseLayoutProps } from '../data'
 
 export function MobileShowcase({ items }: MobileShowcaseLayoutProps) {
   return (
-    <section className="mx-auto max-w-6xl px-6 pt-12 md:pt-24">
+    <section className="w-full px-3.5 pt-12 sm:px-10 md:pt-24">
       <div className="flex flex-wrap items-center gap-12 md:gap-16">
         <Reveal className="relative min-w-0 max-w-[520px] flex-1 basis-[360px]">
           <div className="relative aspect-4/5 w-full overflow-hidden rounded-[31px] bg-muted">

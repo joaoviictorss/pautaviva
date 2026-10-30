@@ -7,7 +7,7 @@ import type { HeaderLayoutProps } from '../data'
 export function Header({ navLinks }: HeaderLayoutProps) {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-md">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-3">
+      <nav className="flex w-full items-center justify-between gap-6 px-3.5 py-3 sm:px-7">
         <a href="#" className="flex items-center gap-2.5 text-inherit no-underline">
           <img src="/logo-mark.svg" alt="" className="block size-8" />
           <span className="text-lg font-bold tracking-tight text-primary">PautaViva</span>
