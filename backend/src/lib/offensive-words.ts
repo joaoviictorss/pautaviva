@@ -9,7 +9,7 @@ const TERMS: Record<Category, string[]> = {
     'canalha', 'safado', 'corno', 'escroto', 'piranha', 'vadia', 'verme', 'buceta', 'foder', 'fuder',
     'vai se foder', 'vai tomar no cu', 'pau no cu', 'vsf', 'tnc', 'lixo humano',
   ],
-  ódio: ['viado', 'bicha', 'sapatao', 'traveco', 'macaco imundo', 'volta pra sua terra'],
+  ódio: ['viado', 'bicha', 'sapatao', 'traveco', 'volta pra sua terra'],
   ameaça: ['vou te matar', 'vou matar', 'te pegar na saida', 'merece morrer', 'vai morrer', 'vou te encontrar'],
 }
 
