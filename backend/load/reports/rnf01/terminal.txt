@@ -1,0 +1,58 @@
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+     execution: local
+        script: /load/vote.js
+ web dashboard: http://127.0.0.1:5665
+        output: -
+     scenarios: (100.00%) 2 scenarios, 1000 max VUs, 8m0s max duration (incl. graceful stop):
+              * listeners: Up to 500 looping VUs for 7m30s over 2 stages (gracefulRampDown: 30s, exec: listen, gracefulStop: 30s)
+              * votes: Up to 500 looping VUs for 7m0s over 2 stages (gracefulRampDown: 30s, gracefulStop: 30s)
+time="2026-11-02T20:16:11Z" level=info msg="votos: 3494 | participações: 3494" source=console
+  █ THRESHOLDS 
+    checks
+    ✓ 'rate>0.99' rate=100.00%
+    http_req_duration{name:login}
+    ✓ 'p(95)<1500' p(95)=161.27ms
+    http_req_duration{name:vote}
+    ✓ 'p(95)<1000' p(95)=41.08ms
+    http_req_failed
+    ✓ 'rate<0.01' rate=0.00%
+    propagation_ms
+    ✓ 'avg<5000' avg=15.67ms
+    ✓ 'p(95)<5000' p(95)=33ms
+    ws_dropped
+    ✓ 'count==0' count=0
+  █ TOTAL RESULTS 
+    checks_total.......: 7017    15.487086/s
+    checks_succeeded...: 100.00% 7017 out of 7017
+    checks_failed......: 0.00%   0 out of 7017
+    ✓ login 200
+    ✓ voto 201
+    CUSTOM
+    propagation_ms.................: avg=15.67ms  min=1ms      med=14ms     max=102ms    p(90)=28ms     p(95)=33ms     p(99)=52ms    
+    HTTP
+    http_req_duration..............: avg=67.13ms  min=5.69ms   med=94.69ms  max=344.66ms p(90)=132.08ms p(95)=147.17ms p(99)=182.3ms 
+      { expected_response:true }...: avg=67.13ms  min=5.69ms   med=94.69ms  max=344.66ms p(90)=132.08ms p(95)=147.17ms p(99)=182.3ms 
+      { name:login }...............: avg=119.88ms min=92.77ms  med=113.55ms max=344.66ms p(90)=147.02ms p(95)=161.27ms p(99)=202.24ms
+      { name:vote }................: avg=13.95ms  min=5.69ms   med=7.5ms    max=112.2ms  p(90)=32.24ms  p(95)=41.08ms  p(99)=65.25ms 
+    http_req_failed................: 0.00%   0 out of 7019
+    http_reqs......................: 7019    15.4915/s
+    EXECUTION
+    iteration_duration.............: avg=1m39s    min=40.49s   med=56.68s   max=7m32s    p(90)=6m1s     p(95)=6m47s    p(99)=7m23s   
+    iterations.....................: 3789    8.362629/s
+    vus............................: 500     min=4         max=1000
+    vus_max........................: 1000    min=1000      max=1000
+    NETWORK
+    data_received..................: 292 MB  643 kB/s
+    data_sent......................: 2.4 MB  5.3 kB/s
+    WEBSOCKET
+    ws_connected...................: 500     1.10354/s
+    ws_connecting..................: avg=2.24ms   min=539.47µs med=943.01µs max=40.11ms  p(90)=2.94ms   p(95)=9.6ms    p(99)=24.2ms  
+    ws_dropped.....................: 0       0/s
+    ws_msgs_received...............: 1670144 3686.142737/s
+    ws_msgs_sent...................: 8005    17.667682/s
+    ws_session_duration............: avg=6m27s    min=5m28s    med=6m27s    max=7m27s    p(90)=7m15s    p(95)=7m21s    p(99)=7m26s   
+    ws_sessions....................: 500     1.10354/s

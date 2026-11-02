@@ -18,7 +18,8 @@
     "db:seed": "prisma db seed",
     "db:seed:demo": "tsx prisma/seed-demo.ts",
     "db:seed:load": "tsx prisma/seed-load.ts",
-    "db:seed:comments": "tsx prisma/seed-comments.ts"
+    "db:seed:comments": "tsx prisma/seed-comments.ts",
+    "eval:triagem": "tsx scripts/evaluate-screening.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

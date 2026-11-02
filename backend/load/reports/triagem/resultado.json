@@ -1,0 +1,1802 @@
+[
+  {
+    "text": "Essa proposta de transporte é idiota e não resolve nada.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"idiota\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 2
+  },
+  {
+    "text": "O plano de saúde pública parece coisa de imbecil.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"imbecil\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que ideia otária para melhorar as escolas.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"otario\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse projeto de saneamento é uma baita de uma babaca.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"babaca\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A mudança no orçamento foi burra do começo ao fim.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"burro\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa política de moradia é estúpida e mal planejada.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"estupido\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que decisão idiota sobre o transporte público.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"idiota\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "O corte na educação foi uma ideia de imbecil.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"imbecil\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa obra viária é uma porcaria do caralho.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"caralho\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A proposta de coleta seletiva está uma merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse reajuste de tarifa é uma bosta de decisão.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"bosta\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que plano vagabundo para as unidades de saúde.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"vagabundo\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa regra de licenciamento é coisa de canalha.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"canalha\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "O projeto de iluminação pública ficou uma porcaria.",
+    "offensive": true,
+    "classification": "SUSPECT",
+    "autoRejected": false,
+    "reason": "IA: crítica agressiva — \"uma porcaria\". O comentário utiliza linguagem pejorativa para criticar o projeto, mas não chega a constituir uma ofensa pessoal direta ou discurso de ódio.",
+    "failure": "",
+    "ms": 1914
+  },
+  {
+    "text": "Essa mudança no imposto é um negócio escroto.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"escroto\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A proposta de ciclovias está uma merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que política safada para reduzir o atendimento nos postos.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"safado\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse plano de segurança é uma ideia burra.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"burro\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A verba para cultura foi distribuída de um jeito idiota.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"idiota\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse cronograma de obras é uma bosta.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"bosta\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que proposta de moradia de merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A decisão sobre o transporte escolar foi muito otária.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"otario\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 1
+  },
+  {
+    "text": "Esse projeto de lei é uma porcaria, caralho.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"caralho\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A reforma administrativa ficou uma merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que plano imbecil para cuidar dos parques.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"imbecil\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa política de tarifas é uma bosta.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"bosta\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "O corte nas bibliotecas foi uma decisão idiota.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"idiota\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse projeto de drenagem é uma porcaria do cacete.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": false,
+    "reason": "IA: ofensa — \"uma porcaria do cacete\". O comentário contém linguagem chula e ofensiva direcionada ao projeto.",
+    "failure": "",
+    "ms": 1492
+  },
+  {
+    "text": "Que ideia burra para reorganizar as linhas de ônibus.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"burro\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A gestão do lixo está uma merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa proposta de orçamento é de um otário.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"otario\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "O plano de habitação ficou escroto e mal explicado.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"escroto\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que política vagabunda para a merenda escolar.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"vagabundo\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa mudança no atendimento é uma bosta.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"bosta\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "O projeto de revitalização do centro está uma porcaria.",
+    "offensive": true,
+    "classification": "SUSPECT",
+    "autoRejected": false,
+    "reason": "IA: ofensa — \"uma porcaria\". O comentário utiliza linguagem pejorativa para criticar o projeto, situando-se no limite entre a crítica dura e a ofensa.",
+    "failure": "",
+    "ms": 1068
+  },
+  {
+    "text": "Que decisão idiota sobre as creches.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"idiota\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 1
+  },
+  {
+    "text": "A proposta de pedágio urbano é uma merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse plano de arborização foi feito por um imbecil.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"imbecil\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A cobrança por esse serviço público é uma bosta.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"bosta\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa regra de estacionamento é uma ideia estúpida.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"estupido\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que projeto de saneamento mais escroto.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"escroto\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A redução do horário dos postos foi uma decisão burra.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"burro\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa obra sem acessibilidade é uma porcaria.",
+    "offensive": true,
+    "classification": "SUSPECT",
+    "autoRejected": false,
+    "reason": "IA: linguagem inadequada — \"uma porcaria\". O comentário expressa uma crítica legítima à falta de acessibilidade, mas utiliza um termo chulo ('porcaria'), gerando dúvida quanto à adequação formal.",
+    "failure": "",
+    "ms": 1212
+  },
+  {
+    "text": "O plano de coleta de lixo está uma merda, puta que pariu.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"puta\" (ofensa), \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que ideia idiota para reorganizar as feiras públicas.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"idiota\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa proposta de imposto é coisa de babaca.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"babaca\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "O investimento em transporte foi um negócio vagabundo.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"vagabundo\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse corte na cultura é uma bosta.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"bosta\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que plano burro para cuidar das praças.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"burro\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A reforma das escolas está uma porcaria do caralho.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"caralho\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse projeto de mobilidade é uma merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que proposta imbecil para reduzir filas nos hospitais.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"imbecil\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A decisão sobre a merenda foi muito safada.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"safado\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa regra para os ambulantes é escrota.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"escroto\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 1
+  },
+  {
+    "text": "O plano de manutenção das ruas é uma bosta.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"bosta\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que ideia otária para melhorar a iluminação.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"otario\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa política de aluguel social está uma porcaria.",
+    "offensive": true,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário expressa uma crítica dura e insatisfação com a política pública, o que é permitido no contexto de participação cidadã, sem configurar ofensa pessoal ou discurso de ódio.",
+    "failure": "",
+    "ms": 2581
+  },
+  {
+    "text": "O corte de verba para creches foi uma decisão idiota.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"idiota\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que projeto de drenagem malfeito, caralho.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"caralho\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse plano de fiscalização é uma merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A nova tarifa é uma bosta de ideia.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"bosta\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que proposta burra para os parques municipais.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"burro\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse edital de obras é uma porcaria.",
+    "offensive": true,
+    "classification": "SUSPECT",
+    "autoRejected": false,
+    "reason": "IA: linguagem informal, crítica agressiva — \"uma porcaria\". O comentário utiliza um tom pejorativo para criticar o edital, gerando dúvida entre crítica dura e ofensa de baixo calão.",
+    "failure": "",
+    "ms": 6060
+  },
+  {
+    "text": "A gestão das filas nos postos está uma merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que plano vagabundo para ampliar o saneamento.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"vagabundo\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa decisão sobre as ciclovias foi de um imbecil.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"imbecil\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "O projeto de reforma do mercado público ficou escroto.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"escroto\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa política de transporte é uma ideia de merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que orçamento idiota para a manutenção das escolas.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"idiota\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A mudança no serviço de coleta foi uma bosta.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"bosta\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse plano para as calçadas é uma porcaria, porra.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"porra\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que regra estúpida para o uso das praças.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"estupido\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A proposta de corte de impostos ficou uma merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse projeto de habitação é muito babaca.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"babaca\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que decisão burra sobre os horários dos ônibus.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"burro\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A obra no bairro está uma bosta e não termina nunca.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"bosta\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa política de atendimento é escrota.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"escroto\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "O plano de segurança viária parece feito por um otário.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"otario\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que proposta idiota para as escolas municipais.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"idiota\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A licitação das obras está uma porcaria do caralho.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"caralho\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse projeto de coleta seletiva é uma ideia de merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que plano imbecil para recuperar as praças.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"imbecil\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A redução de linhas foi uma decisão vagabunda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"vagabundo\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa regra de acesso aos serviços é uma bosta.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"bosta\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que proposta burra para o orçamento da saúde.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"burro\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse projeto de iluminação ficou uma merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A mudança no zoneamento é uma ideia escrota.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"escroto\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que plano safado para diminuir o atendimento público.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"safado\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "O corte nas atividades culturais foi uma decisão idiota.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"idiota\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa obra sem planejamento é uma porcaria.",
+    "offensive": true,
+    "classification": "SUSPECT",
+    "autoRejected": false,
+    "reason": "IA: ofensa — \"uma porcaria\". O comentário utiliza linguagem pejorativa para criticar a obra, gerando dúvida entre crítica dura e ofensa leve.",
+    "failure": "",
+    "ms": 45766
+  },
+  {
+    "text": "Que política estúpida para a habitação popular.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"estupido\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Esse aumento de tarifa é uma bosta, puta que pariu.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"puta\" (ofensa), \"bosta\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "O projeto de acessibilidade ficou uma merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que ideia de babaca para reorganizar o trânsito.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"babaca\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Essa proposta de privatização é escrota e mal explicada.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"escroto\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "O plano de manutenção dos postos é uma porcaria.",
+    "offensive": true,
+    "classification": "SUSPECT",
+    "autoRejected": false,
+    "reason": "IA: ofensa — \"uma porcaria\". O comentário utiliza linguagem pejorativa para criticar o plano, situando-se no limite entre a crítica dura e a ofensa.",
+    "failure": "",
+    "ms": 1853
+  },
+  {
+    "text": "Que decisão idiota sobre o orçamento da educação.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"idiota\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 1
+  },
+  {
+    "text": "Essa política de limpeza urbana está uma merda.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"merda\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "O projeto de transporte escolar é uma bosta.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"bosta\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "Que proposta vagabunda para resolver a falta de moradia.",
+    "offensive": true,
+    "classification": "INAPPROPRIATE",
+    "autoRejected": true,
+    "reason": "Lista de palavras: \"vagabundo\" (ofensa). Comentário reprovado automaticamente por conter termo proibido.",
+    "failure": "",
+    "ms": 0
+  },
+  {
+    "text": "A prefeitura anunciou a ampliação das linhas de ônibus.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é apenas informativo sobre uma ação da prefeitura, sem conter ofensas, spam ou conteúdo inadequado.",
+    "failure": "",
+    "ms": 1625
+  },
+  {
+    "text": "O conselho municipal discutirá a reforma das escolas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é estritamente informativo e descreve um tópico de discussão do conselho municipal, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 1565
+  },
+  {
+    "text": "A proposta prevê mais consultas nas unidades de saúde.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário refere-se apenas ao conteúdo da proposta de forma respeitosa e informativa.",
+    "failure": "",
+    "ms": 1485
+  },
+  {
+    "text": "O orçamento inclui recursos para a drenagem urbana.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo e relata de forma neutra a inclusão de recursos no orçamento.",
+    "failure": "",
+    "ms": 1126
+  },
+  {
+    "text": "A audiência pública será realizada na próxima semana.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa neutra sobre a realização de uma audiência pública.",
+    "failure": "",
+    "ms": 1345
+  },
+  {
+    "text": "O município pretende construir novas moradias populares.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração neutra e informativa sobre uma ação do município, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 1051
+  },
+  {
+    "text": "A secretaria apresentou um plano de arborização.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é apenas uma constatação neutra sobre as ações da secretaria, sem conter ofensas ou irregularidades.",
+    "failure": "",
+    "ms": 2762
+  },
+  {
+    "text": "O projeto prevê iluminação em ruas com pouca cobertura.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário descreve de forma neutra e objetiva uma característica do projeto.",
+    "failure": "",
+    "ms": 7379
+  },
+  {
+    "text": "A tarifa de ônibus será debatida com os moradores.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre o debate da tarifa de ônibus, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 4282
+  },
+  {
+    "text": "A cidade estuda ampliar a coleta seletiva.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre uma política pública, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 1196
+  },
+  {
+    "text": "A reforma do posto de saúde deve começar em março.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma contribuição informativa e neutra sobre a reforma do posto de saúde.",
+    "failure": "",
+    "ms": 1506
+  },
+  {
+    "text": "A nova ciclovia ligará bairros ao centro.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre a nova ciclovia, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 1241
+  },
+  {
+    "text": "O programa oferece apoio a famílias em situação de vulnerabilidade.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa neutra sobre o programa, sem conter violações.",
+    "failure": "",
+    "ms": 2222
+  },
+  {
+    "text": "A câmara analisará mudanças nas regras de zoneamento.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre as ações da câmara, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 1127
+  },
+  {
+    "text": "A escola municipal receberá melhorias de acessibilidade.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma constatação neutra e informativa sobre melhorias na escola, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 1172
+  },
+  {
+    "text": "O plano inclui a recuperação de praças públicas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo, neutro e refere-se ao conteúdo do plano de forma respeitosa.",
+    "failure": "",
+    "ms": 1249
+  },
+  {
+    "text": "A prefeitura divulgará os custos das obras.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra, sem qualquer sinal de ofensa, spam ou inadequação.",
+    "failure": "",
+    "ms": 945
+  },
+  {
+    "text": "O conselho de saúde fará uma reunião aberta.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre uma reunião pública.",
+    "failure": "",
+    "ms": 2275
+  },
+  {
+    "text": "A proposta prevê mais vagas em creches.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo e relata uma proposta sobre vagas em creches de forma neutra e respeitosa.",
+    "failure": "",
+    "ms": 873
+  },
+  {
+    "text": "O município vai revisar o plano de mobilidade.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é apenas uma declaração informativa sobre uma ação do município, sem conter ofensas, spam ou conteúdo inadequado.",
+    "failure": "",
+    "ms": 1821
+  },
+  {
+    "text": "A manutenção das calçadas será priorizada em áreas escolares.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra relacionada a políticas públicas, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 1177
+  },
+  {
+    "text": "A secretaria apresentou dados sobre a qualidade da água.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é puramente informativo e descreve uma ação da secretaria sem conter ofensas, ataques ou spam.",
+    "failure": "",
+    "ms": 904
+  },
+  {
+    "text": "A nova política busca reduzir o tempo de espera nos postos.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é estritamente informativo e neutro sobre a nova política, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 1154
+  },
+  {
+    "text": "Os moradores poderão enviar sugestões pela plataforma municipal.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra, sem qualquer conteúdo ofensivo ou inadequado.",
+    "failure": "",
+    "ms": 741
+  },
+  {
+    "text": "O projeto inclui espaços de convivência nos bairros.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma afirmação informativa e neutra sobre o projeto, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 7635
+  },
+  {
+    "text": "A audiência tratará do orçamento para o próximo ano.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é puramente informativo e descreve o tema da audiência pública de forma neutra.",
+    "failure": "",
+    "ms": 1047
+  },
+  {
+    "text": "A prefeitura pretende ampliar o atendimento odontológico.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é apenas uma constatação informativa sobre os planos da prefeitura, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 1154
+  },
+  {
+    "text": "O plano de segurança viária prevê faixas mais visíveis.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma contribuição neutra e informativa relacionada ao tema do plano de segurança viária.",
+    "failure": "",
+    "ms": 7018
+  },
+  {
+    "text": "As obras de saneamento devem alcançar três bairros.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma contribuição neutra e informativa sobre obras de saneamento.",
+    "failure": "",
+    "ms": 32594
+  },
+  {
+    "text": "A escola terá uma biblioteca renovada.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre melhorias na escola, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 2898
+  },
+  {
+    "text": "O município publicará um calendário de manutenção das ruas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre as ações do município, sem conter violações às diretrizes.",
+    "failure": "",
+    "ms": 3759
+  },
+  {
+    "text": "A proposta prevê mais ônibus nos horários de pico.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma constatação neutra e objetiva sobre a proposta, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 4036
+  },
+  {
+    "text": "O programa de habitação terá critérios públicos de seleção.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma afirmação informativa e neutra sobre o programa de habitação, sem violar as diretrizes.",
+    "failure": "",
+    "ms": 2182
+  },
+  {
+    "text": "A cidade vai instalar pontos de coleta de resíduos eletrônicos.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é estritamente informativo sobre um serviço da cidade, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 840
+  },
+  {
+    "text": "O conselho de transporte avaliará a integração das linhas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre as atividades do conselho de transporte, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 1911
+  },
+  {
+    "text": "A secretaria pretende ampliar as atividades culturais gratuitas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre as atividades culturais, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 1047
+  },
+  {
+    "text": "O projeto prevê rampas em prédios públicos.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma constatação neutra e informativa sobre o projeto, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 965
+  },
+  {
+    "text": "A prefeitura vai divulgar o cronograma das obras.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração neutra e informativa sobre as ações da prefeitura, sem violar nenhuma diretriz.",
+    "failure": "",
+    "ms": 853
+  },
+  {
+    "text": "A política de alimentação escolar será revisada.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração neutra e informativa sobre a revisão da política de alimentação escolar, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 1071
+  },
+  {
+    "text": "O plano inclui a recuperação de nascentes urbanas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma contribuição neutra e informativa sobre o plano, sem violar nenhuma diretriz.",
+    "failure": "",
+    "ms": 2620
+  },
+  {
+    "text": "A câmara realizará uma consulta sobre a cobrança de serviços.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é estritamente informativo e neutro, sem conter ofensas, ataques ou spam.",
+    "failure": "",
+    "ms": 1921
+  },
+  {
+    "text": "O município estuda novos locais para feiras públicas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre as ações do município, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 820
+  },
+  {
+    "text": "A proposta inclui manutenção preventiva das unidades de saúde.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma contribuição neutra e informativa sobre a proposta de manutenção preventiva.",
+    "failure": "",
+    "ms": 6841
+  },
+  {
+    "text": "Os moradores serão consultados sobre o projeto da praça.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração neutra e informativa sobre a consulta aos moradores.",
+    "failure": "",
+    "ms": 1106
+  },
+  {
+    "text": "A secretaria vai publicar os indicadores de educação.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma constatação neutra e informativa sobre a publicação de indicadores.",
+    "failure": "",
+    "ms": 5067
+  },
+  {
+    "text": "O plano de drenagem prevê intervenções em áreas alagáveis.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma constatação neutra e informativa sobre o plano de drenagem, sem violações.",
+    "failure": "",
+    "ms": 83527
+  },
+  {
+    "text": "A cidade pretende ampliar o acesso à internet nas escolas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre uma política pública, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 2609
+  },
+  {
+    "text": "O conselho municipal discutirá medidas para reduzir o desperdício de água.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é estritamente informativo e descreve uma pauta do conselho municipal de forma neutra.",
+    "failure": "",
+    "ms": 1000
+  },
+  {
+    "text": "A proposta prevê sinalização acessível nos equipamentos públicos.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma menção neutra e objetiva sobre a proposta, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 965
+  },
+  {
+    "text": "A prefeitura iniciou a reforma de duas creches.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é apenas uma constatação informativa sobre a reforma de creches, sem conter ofensas ou desrespeito.",
+    "failure": "",
+    "ms": 871
+  },
+  {
+    "text": "O orçamento municipal pode ser consultado no portal da transparência.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma informação objetiva e útil sobre onde consultar o orçamento municipal, sem violar nenhuma regra.",
+    "failure": "",
+    "ms": 994
+  },
+  {
+    "text": "A política de transporte escolar será atualizada.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa neutra, sem qualquer sinal de ofensa, ataque ou conteúdo inadequado.",
+    "failure": "",
+    "ms": 1686
+  },
+  {
+    "text": "O programa oferece cursos gratuitos em centros comunitários.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo e relata uma característica neutra do programa, sem apresentar conteúdo ofensivo ou inadequado.",
+    "failure": "",
+    "ms": 876
+  },
+  {
+    "text": "A cidade vai plantar árvores em vias movimentadas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração neutra e informativa sobre uma ação da cidade, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 961
+  },
+  {
+    "text": "A secretaria apresentará uma proposta para melhorar a coleta de lixo.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo e relata uma ação institucional sem conter ofensas, ataques ou spam.",
+    "failure": "",
+    "ms": 6987
+  },
+  {
+    "text": "O plano prevê mais áreas de lazer nos bairros.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma constatação neutra e informativa sobre o plano, sem conter ofensas, ataques ou spam.",
+    "failure": "",
+    "ms": 3997
+  },
+  {
+    "text": "A audiência pública discutirá o uso de espaços municipais.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é estritamente informativo e neutro sobre o tema da audiência pública.",
+    "failure": "",
+    "ms": 755
+  },
+  {
+    "text": "A prefeitura pretende ampliar o horário das bibliotecas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é apenas uma constatação informativa sobre a atuação da prefeitura, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 803
+  },
+  {
+    "text": "O projeto inclui melhorias nos pontos de ônibus.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma contribuição neutra e informativa sobre o projeto, sem violar nenhuma diretriz.",
+    "failure": "",
+    "ms": 813
+  },
+  {
+    "text": "A equipe técnica avaliará a qualidade das calçadas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração neutra e informativa sobre o processo de avaliação técnica.",
+    "failure": "",
+    "ms": 2959
+  },
+  {
+    "text": "O município vai revisar as regras de estacionamento no centro.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração neutra e informativa sobre a revisão das regras de estacionamento, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 5208
+  },
+  {
+    "text": "A rede de saúde terá novos equipamentos de diagnóstico.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma afirmação neutra sobre melhorias na rede de saúde, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 2436
+  },
+  {
+    "text": "A proposta prevê formação continuada para professores.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo e relata uma previsão da proposta sem conter ofensas, ataques ou spam.",
+    "failure": "",
+    "ms": 1381
+  },
+  {
+    "text": "O conselho de cultura receberá sugestões da comunidade.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra, sem qualquer sinal de ofensa, ataque ou conteúdo inadequado.",
+    "failure": "",
+    "ms": 2619
+  },
+  {
+    "text": "A cidade vai recuperar áreas verdes próximas aos rios.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre a recuperação de áreas verdes, sem conter ofensas, spam ou conteúdo inadequado.",
+    "failure": "",
+    "ms": 942
+  },
+  {
+    "text": "O plano inclui iluminação em passagens de pedestres.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo, neutro e relata aspectos do plano de forma objetiva, sem violar nenhuma diretriz.",
+    "failure": "",
+    "ms": 1573
+  },
+  {
+    "text": "A prefeitura divulgará os critérios para concessão de moradia.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra, sem qualquer sinal de ofensa, ataque ou conteúdo inadequado.",
+    "failure": "",
+    "ms": 949
+  },
+  {
+    "text": "O programa pretende apoiar pequenos produtores locais.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração neutra e informativa sobre o programa, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 915
+  },
+  {
+    "text": "A secretaria vai mapear locais com risco de alagamento.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma afirmação informativa e neutra sobre as ações da secretaria, sem conter ofensas ou desrespeito.",
+    "failure": "",
+    "ms": 1253
+  },
+  {
+    "text": "O projeto prevê a reforma de quadras esportivas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma constatação neutra e informativa sobre o projeto, sem conter ofensas ou irregularidades.",
+    "failure": "",
+    "ms": 1146
+  },
+  {
+    "text": "A nova linha de ônibus atenderá a região norte.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo, neutro e relata um fato sobre o transporte público sem conter ofensas ou desvios.",
+    "failure": "",
+    "ms": 945
+  },
+  {
+    "text": "Os moradores poderão acompanhar a execução do orçamento.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo e relata uma ação de transparência pública, sem conter ofensas ou irregularidades.",
+    "failure": "",
+    "ms": 1075
+  },
+  {
+    "text": "A política de resíduos será apresentada em reunião aberta.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa neutra sobre um evento público, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 6192
+  },
+  {
+    "text": "O município pretende ampliar os serviços de assistência social.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração neutra e informativa sobre as intenções do município, sem conter ofensas, spam ou conteúdo inadequado.",
+    "failure": "",
+    "ms": 4825
+  },
+  {
+    "text": "A escola receberá melhorias na ventilação das salas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma informação objetiva sobre melhorias na escola, sem conter ofensas, spam ou conteúdo inadequado.",
+    "failure": "",
+    "ms": 1366
+  },
+  {
+    "text": "A prefeitura vai avaliar a acessibilidade das calçadas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração neutra e informativa sobre as ações da prefeitura, sem violar nenhuma diretriz.",
+    "failure": "",
+    "ms": 4190
+  },
+  {
+    "text": "O projeto inclui novas vagas para atendimento infantil.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo e relata de forma neutra uma característica do projeto, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 2176
+  },
+  {
+    "text": "O conselho de meio ambiente discutirá a proteção de áreas verdes.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo, neutro e aborda o tema de forma respeitosa, sem conter ofensas ou spam.",
+    "failure": "",
+    "ms": 2682
+  },
+  {
+    "text": "A cidade realizará uma campanha de vacinação nos bairros.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma constatação informativa e neutra sobre uma campanha de vacinação, sem conter ofensas, spam ou conteúdo inadequado.",
+    "failure": "",
+    "ms": 31819
+  },
+  {
+    "text": "A secretaria vai informar os prazos para a reforma das ruas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo e relata uma ação institucional sem conter ofensas, ataques ou spam.",
+    "failure": "",
+    "ms": 970
+  },
+  {
+    "text": "O plano de mobilidade prevê integração entre ônibus e bicicleta.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo e relata uma previsão do plano de mobilidade, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 793
+  },
+  {
+    "text": "A proposta inclui a modernização da iluminação pública.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma constatação neutra e informativa sobre a proposta, sem qualquer violação das diretrizes.",
+    "failure": "",
+    "ms": 1090
+  },
+  {
+    "text": "A câmara analisará investimentos em saneamento básico.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo e relata uma ação institucional sem conter ofensas, spam ou ataques.",
+    "failure": "",
+    "ms": 1075
+  },
+  {
+    "text": "O município pretende ampliar o atendimento em saúde mental.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre uma intenção do município, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 782
+  },
+  {
+    "text": "A prefeitura vai instalar mais bebedouros em parques.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração neutra e informativa sobre uma ação da prefeitura, sem violar nenhuma diretriz.",
+    "failure": "",
+    "ms": 1034
+  },
+  {
+    "text": "O projeto prevê espaços seguros para travessia de pedestres.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma afirmação neutra e informativa sobre o projeto, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 1448
+  },
+  {
+    "text": "A comunidade poderá acompanhar as reuniões pela internet.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma informação objetiva e neutra sobre o formato das reuniões, sem conter violações.",
+    "failure": "",
+    "ms": 3391
+  },
+  {
+    "text": "A secretaria apresentará dados sobre a demanda por creches.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é estritamente informativo e neutro, sem conter ofensas, ataques ou spam.",
+    "failure": "",
+    "ms": 1109
+  },
+  {
+    "text": "A política de habitação será discutida com organizações locais.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa neutra sobre a política de habitação, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 929
+  },
+  {
+    "text": "O plano inclui melhorias na sinalização de trânsito.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma contribuição neutra e informativa sobre o plano, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 5684
+  },
+  {
+    "text": "A cidade vai ampliar a oferta de atividades esportivas gratuitas.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre políticas públicas, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 1008
+  },
+  {
+    "text": "A proposta prevê manutenção regular dos equipamentos públicos.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é informativo, neutro e refere-se diretamente ao tema da proposta pública, sem conter infrações.",
+    "failure": "",
+    "ms": 1104
+  },
+  {
+    "text": "A prefeitura vai consultar os moradores sobre a feira do bairro.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa neutra sobre uma ação da prefeitura, sem conter violações às diretrizes.",
+    "failure": "",
+    "ms": 3779
+  },
+  {
+    "text": "O município pretende apoiar iniciativas de compostagem.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre uma iniciativa do município, sem conter ofensas ou inadequações.",
+    "failure": "",
+    "ms": 1042
+  },
+  {
+    "text": "A rede municipal terá um novo calendário de atendimento.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa e neutra sobre o calendário de atendimento municipal, sem violações.",
+    "failure": "",
+    "ms": 4647
+  },
+  {
+    "text": "O projeto inclui a recuperação de centros comunitários.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário descreve de forma neutra e informativa uma característica do projeto, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 1046
+  },
+  {
+    "text": "O conselho de educação discutirá o acesso ao transporte escolar.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é estritamente informativo e descreve um tópico de discussão pública sem conter ofensas, ataques ou spam.",
+    "failure": "",
+    "ms": 1517
+  },
+  {
+    "text": "A secretaria vai divulgar os resultados da consulta pública.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa neutra sobre um procedimento administrativo.",
+    "failure": "",
+    "ms": 899
+  },
+  {
+    "text": "A cidade pretende ampliar a coleta de materiais recicláveis.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração neutra e informativa sobre a gestão pública, sem conter ofensas, spam ou discursos inadequados.",
+    "failure": "",
+    "ms": 1723
+  },
+  {
+    "text": "A prefeitura apresentará um relatório sobre as obras em andamento.",
+    "offensive": false,
+    "classification": "ADEQUATE",
+    "autoRejected": false,
+    "reason": "IA: O comentário é uma declaração informativa sobre as obras em andamento, sem violar nenhuma diretriz.",
+    "failure": "",
+    "ms": 76977
+  }
+]

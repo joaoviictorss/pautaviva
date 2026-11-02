@@ -114,14 +114,15 @@ async function countVotes(where: Prisma.VotesWhereInput = {}) {
 
 type VoteCount = Awaited<ReturnType<typeof countVotes>>[number]
 
-async function broadcastResults(pollId: string) {
+async function broadcastResults(pollId: string, registeredAt: number) {
   const [votes, participations] = await Promise.all([
     countVotes({ pollId }),
     prisma.participations.count({ where: { pollId } }),
   ])
   const results = { FOR: 0, AGAINST: 0, ABSTAIN: 0 }
   for (const row of votes) results[row.option] = row.count
-  emitLive('poll-results', { pollId, results, participations })
+  // registeredAt mede o atraso de propagação (RNF01); é só o instante, sem ligação com quem votou
+  emitLive('poll-results', { pollId, results, participations, registeredAt })
 }
 
 function csvCell(value: string | number) {
@@ -669,7 +670,7 @@ export async function pollRoutes(app: FastifyInstance) {
       }
 
       // falha na propagação não afeta a confirmação do voto; o cliente ressincroniza ao reconectar (UC05, E03)
-      broadcastResults(poll.id).catch((err) => request.log.error(err, 'falha ao propagar resultados'))
+      broadcastResults(poll.id, Date.now()).catch((err) => request.log.error(err, 'falha ao propagar resultados'))
 
       return reply.status(201).send()
     }

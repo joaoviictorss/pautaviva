@@ -1,0 +1,11 @@
+{
+  "verdadeirosPositivos": 99,
+  "falsosNegativos": 1,
+  "falsosPositivos": 0,
+  "verdadeirosNegativos": 100,
+  "revocacao": 0.99,
+  "taxaFalsosPositivos": 0,
+  "precisao": 1,
+  "detectadosPelaLista": 92,
+  "semRespostaDaIa": 0
+}
