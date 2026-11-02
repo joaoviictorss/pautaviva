@@ -1,0 +1,888 @@
+{
+  "axe": [
+    {
+      "screen": "cadastro",
+      "viewport": "desktop",
+      "passed": 27,
+      "toReview": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".inline-flex"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".hover\\:underline"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screen": "cadastro",
+      "viewport": "mobile",
+      "passed": 27,
+      "toReview": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".inline-flex"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".hover\\:underline"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screen": "cadastro-erros",
+      "viewport": "desktop",
+      "passed": 27,
+      "toReview": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/field.data-\\[invalid\\=true\\]\\:text-destructive.\\*\\:w-full:nth-child(2) > .font-normal.text-destructive[role=\"alert\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.78 (foreground color: #e54b4f, background color: #fdfdfd, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/field.data-\\[invalid\\=true\\]\\:text-destructive.\\*\\:w-full:nth-child(3) > .font-normal.text-destructive[role=\"alert\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.78 (foreground color: #e54b4f, background color: #fdfdfd, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/field.data-\\[invalid\\=true\\]\\:text-destructive.\\*\\:w-full:nth-child(4) > .font-normal.text-destructive[role=\"alert\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.78 (foreground color: #e54b4f, background color: #fdfdfd, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/field.data-\\[invalid\\=true\\]\\:text-destructive.\\*\\:w-full:nth-child(5) > .font-normal.text-destructive[role=\"alert\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.78 (foreground color: #e54b4f, background color: #fdfdfd, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".inline-flex"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".hover\\:underline"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screen": "cadastro-erros",
+      "viewport": "mobile",
+      "passed": 27,
+      "toReview": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/field.data-\\[invalid\\=true\\]\\:text-destructive.\\*\\:w-full:nth-child(2) > .font-normal.text-destructive[role=\"alert\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.78 (foreground color: #e54b4f, background color: #fdfdfd, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/field.data-\\[invalid\\=true\\]\\:text-destructive.\\*\\:w-full:nth-child(3) > .font-normal.text-destructive[role=\"alert\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.78 (foreground color: #e54b4f, background color: #fdfdfd, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/field.data-\\[invalid\\=true\\]\\:text-destructive.\\*\\:w-full:nth-child(4) > .font-normal.text-destructive[role=\"alert\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.78 (foreground color: #e54b4f, background color: #fdfdfd, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/field.data-\\[invalid\\=true\\]\\:text-destructive.\\*\\:w-full:nth-child(5) > .font-normal.text-destructive[role=\"alert\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.78 (foreground color: #e54b4f, background color: #fdfdfd, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".inline-flex"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".hover\\:underline"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screen": "consulta",
+      "viewport": "desktop",
+      "passed": 25,
+      "toReview": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".sm\\:inline-flex"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".top-17 > .active[href$=\"pautas\"][data-status=\"active\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".h-9\\.5.px-4[data-pressed=\"\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".h-9\\.5.px-4[data-pressed=\"\"] > .opacity-75.font-mono.font-medium"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.64 (foreground color: #fcd1c2, background color: #f2470c, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(1) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(2) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(3) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(4) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(5) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(6) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(7) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(8) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(9) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screen": "consulta",
+      "viewport": "mobile",
+      "passed": 25,
+      "toReview": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".mb-5 > .active[href$=\"pautas\"][data-status=\"active\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".h-9\\.5.px-4[data-pressed=\"\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".h-9\\.5.px-4[data-pressed=\"\"] > .opacity-75.font-mono.font-medium"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.64 (foreground color: #fcd1c2, background color: #f2470c, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(1) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(2) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(3) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(4) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(5) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(6) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(7) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(8) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.ring-1:nth-child(9) > .rounded-b-xl.p-\\(--card-spacing\\).min-h-9 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].in-data-\\[slot\\=button-group\\]\\:rounded-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screen": "consulta-pauta",
+      "viewport": "desktop",
+      "passed": 30,
+      "toReview": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "nav > .active[href$=\"pautas\"][data-status=\"active\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                "#base-ui-_r_6_"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screen": "consulta-pauta",
+      "viewport": "mobile",
+      "passed": 30,
+      "toReview": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".mb-5 > .active[href$=\"pautas\"][data-status=\"active\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screen": "voto",
+      "viewport": "desktop",
+      "passed": 30,
+      "toReview": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "nav > .active[href$=\"pautas\"][data-status=\"active\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "button[type=\"submit\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                "#base-ui-_r_6_"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screen": "voto",
+      "viewport": "mobile",
+      "passed": 30,
+      "toReview": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".mb-5 > .active[href$=\"pautas\"][data-status=\"active\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "button[type=\"submit\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screen": "comentario",
+      "viewport": "desktop",
+      "passed": 30,
+      "toReview": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                "nav > .active[href$=\"pautas\"][data-status=\"active\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".hover\\:bg-primary\\/80.h-8.text-primary-foreground"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "help": "Elements must have their visible text as part of their accessible name",
+          "nodes": [
+            {
+              "target": [
+                "#base-ui-_r_6_"
+              ],
+              "failureSummary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screen": "comentario",
+      "viewport": "mobile",
+      "passed": 30,
+      "toReview": [
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".mb-5 > .active[href$=\"pautas\"][data-status=\"active\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".hover\\:bg-primary\\/80.h-8.text-primary-foreground"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screen": "voto-dialogo",
+      "viewport": "desktop",
+      "passed": 21,
+      "toReview": [
+        {
+          "id": "aria-hidden-focus",
+          "nodes": 3
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 1
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".top-17 > .active[href$=\"pautas\"][data-status=\"active\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".h-9\\.5.px-4[data-pressed=\"\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".h-9\\.5.px-4[data-pressed=\"\"] > .opacity-75.font-mono.text-xs"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.64 (foreground color: #fcd1c2, background color: #f2470c, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(1) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(2) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(3) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(4) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(5) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(6) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(7) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(8) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(9) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "screen": "voto-dialogo",
+      "viewport": "mobile",
+      "passed": 21,
+      "toReview": [
+        {
+          "id": "aria-hidden-focus",
+          "nodes": 3
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 2
+        }
+      ],
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "nodes": [
+            {
+              "target": [
+                ".text-lg"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.63 (foreground color: #f2470c, background color: #fdfdfd, font size: 13.5pt (18px), font weight: bold). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".mb-5 > .active[href$=\"pautas\"][data-status=\"active\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".h-9\\.5.px-4[data-pressed=\"\"]"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".h-9\\.5.px-4[data-pressed=\"\"] > .opacity-75.font-mono.text-xs"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.64 (foreground color: #fcd1c2, background color: #f2470c, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(1) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(2) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(3) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(4) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(5) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(6) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(7) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(8) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            },
+            {
+              "target": [
+                ".group\\/card.text-card-foreground.\\[--card-spacing\\:--spacing\\(4\\)\\]:nth-child(9) > .p-\\(--card-spacing\\).min-h-9.pt-3\\.5 > .z-10.relative.shrink-0 > .hover\\:bg-primary\\/80.text-\\[0\\.8rem\\].\\[\\&_svg\\:not\\(\\[class\\*\\=\\'size-\\'\\]\\)\\]\\:size-3\\.5"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 3.69 (foreground color: #ffffff, background color: #f2470c, font size: 9.6pt (12.8px), font weight: normal). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "lighthouse": [
+    {
+      "screen": "cadastro",
+      "score": 96,
+      "failed": [
+        "color-contrast"
+      ]
+    },
+    {
+      "screen": "consulta",
+      "score": 96,
+      "failed": [
+        "color-contrast"
+      ]
+    },
+    {
+      "screen": "voto-e-comentario",
+      "score": 97,
+      "failed": [
+        "color-contrast"
+      ]
+    }
+  ]
+}

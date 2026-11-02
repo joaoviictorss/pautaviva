@@ -1,0 +1,506 @@
+[
+  {
+    "screen": "cadastro",
+    "key": "Tab",
+    "tag": "a",
+    "name": "PautaViva",
+    "type": null,
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "cadastro",
+    "key": "Tab",
+    "tag": "input",
+    "name": "Marina Souza",
+    "type": null,
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "cadastro",
+    "key": "Tab",
+    "tag": "input",
+    "name": "Insira o seu CPF",
+    "type": null,
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "cadastro",
+    "key": "Tab",
+    "tag": "input",
+    "name": "voce@email.com",
+    "type": "email",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "cadastro",
+    "key": "Tab",
+    "tag": "input",
+    "name": "Mínimo de 8 caracteres",
+    "type": "password",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "cadastro",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Mostrar senha",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "cadastro",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Criar conta",
+    "type": "submit",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "Tab",
+    "tag": "a",
+    "name": "PautaViva",
+    "type": null,
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "Tab",
+    "tag": "input",
+    "name": "Buscar",
+    "type": "search",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Abrir menu do usuário",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Início",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Pautas",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Agenda",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Minhas participações",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Configurações",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Voltar para pautas",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "Tab",
+    "tag": "textarea",
+    "name": "Escreva um comentário",
+    "type": null,
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "Tab",
+    "tag": "span",
+    "name": "",
+    "type": "radio",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "Space",
+    "tag": "span",
+    "name": "",
+    "type": "radio",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "ArrowDown",
+    "tag": "span",
+    "name": "",
+    "type": "radio",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "voto",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Confirmar voto",
+    "type": "submit",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Compartilhar pauta",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Open TanStack Router Devtools",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "body",
+    "name": "PautaViva\nCidadão Carga 3998\nCidadão\nMINHA ÁREA\nIn",
+    "type": null,
+    "visibleIndicator": false,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "a",
+    "name": "PautaViva",
+    "type": null,
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "input",
+    "name": "Buscar",
+    "type": "search",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Abrir menu do usuário",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Início",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Pautas",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Agenda",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Minhas participações",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Configurações",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Voltar para pautas",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "textarea",
+    "name": "Escreva um comentário",
+    "type": null,
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "comentario",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Enviar",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "a",
+    "name": "PautaViva",
+    "type": null,
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "input",
+    "name": "Buscar",
+    "type": "search",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Abrir menu do usuário",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Início",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Pautas",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Agenda",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Minhas participações",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Configurações",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Abertas\n13",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "span",
+    "name": "",
+    "type": "switch",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Todas",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "a",
+    "name": "Mais áreas verdes no centro",
+    "type": null,
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Votar",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  },
+  {
+    "screen": "dialogo",
+    "key": "Enter",
+    "tag": "span",
+    "name": "",
+    "type": "radio",
+    "visibleIndicator": true,
+    "inDialog": true
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Voltar",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": true
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Close",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": true
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "span",
+    "name": "",
+    "type": "radio",
+    "visibleIndicator": true,
+    "inDialog": true
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Voltar",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": true
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "button",
+    "name": "Close",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": true
+  },
+  {
+    "screen": "dialogo",
+    "key": "Tab",
+    "tag": "span",
+    "name": "",
+    "type": "radio",
+    "visibleIndicator": true,
+    "inDialog": true
+  },
+  {
+    "screen": "dialogo",
+    "key": "Escape",
+    "tag": "button",
+    "name": "Votar",
+    "type": "button",
+    "visibleIndicator": true,
+    "inDialog": false
+  }
+]

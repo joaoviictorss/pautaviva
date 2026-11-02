@@ -36,7 +36,7 @@ Verificar o requisito abaixo, além da consistência dos votos sob carga (RNF02)
 
 ## 4. Critérios e resultados
 
-Os critérios foram configurados no script antes da execução. Os limites de tempo de resposta foram definidos pela equipe, porque a especificação não traz metas para eles.
+Os critérios foram configurados no script antes da execução. A especificação (Seção 3.3) exige taxa de erros inferior a 1% e voto com p95 inferior a 1 s; o script usou 500 ms, um limite mais rigoroso. O limite de tempo do login foi definido pela equipe, porque a especificação não traz meta para ele.
 
 | Critério | Origem | Previsto | Obtido | Resultado |
 |---|---|---|---|---|
@@ -46,7 +46,7 @@ Os critérios foram configurados no script antes da execução. Os limites de te
 | Votos iguais às participações | RNF02 | Iguais | 3.492 = 3.492 | Aprovado |
 | Execução sem aborto | Validade do teste | Exit code 0 | Exit code 0 | Aprovado |
 | Login, p95 | Meta da equipe | Até 1.500 ms | 156,2 ms | Aprovado |
-| Voto, p95 | Meta da equipe | Até 500 ms | 17,16 ms | Aprovado |
+| Voto, p95 | RNF09 | Abaixo de 1 s (script: até 500 ms) | 17,16 ms | Aprovado |
 
 ## 5. Números da execução
 
