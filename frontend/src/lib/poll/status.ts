@@ -22,7 +22,7 @@ export const POLL_STATUS: Record<PollStatus, { label: string; className: string 
 
 export const COMMENT_STATUS: Record<CommentStatus, { label: string; className: string }> = {
   PENDING: { label: 'Em análise', className: 'bg-amber-50 text-amber-800 dark:bg-amber-950 dark:text-amber-300' },
-  APPROVED: { label: 'Publicado', className: 'bg-accent text-accent-foreground' },
+  APPROVED: { label: 'Publicado', className: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300' },
   REJECTED: { label: 'Não aprovado', className: 'bg-destructive/10 text-destructive' },
   REMOVED: { label: 'Removido', className: 'bg-muted text-muted-foreground' },
 }
