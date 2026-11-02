@@ -21,23 +21,28 @@ const reportBody = z.object({
 
 /**
  * Triagem em segundo plano, depois de o comentário já estar salvo como pendente: o adequado é publicado direto;
- * suspeito, impróprio ou sem classificação fica para a moderação humana, com o motivo.
+ * termos proibidos reprovam automaticamente; os demais casos ficam para a moderação humana.
  */
 async function screenInBackground(log: FastifyBaseLogger, commentId: string, pollId: string, text: string) {
   try {
-    const { classification, reason } = await screenComment(text, log)
+    const { classification, reason, autoRejected } = await screenComment(text, log)
     const approved = classification === 'ADEQUATE'
 
     const screened = await prisma.$transaction(async (transaction) => {
       // reenvio ou decisão humana no meio do caminho vencem a triagem
       const result = await transaction.comments.updateMany({
         where: { id: commentId, status: 'PENDING', moderatedById: null, text },
-        data: { classification, moderationReason: reason, ...(approved && { status: 'APPROVED' }) },
+        data: {
+          classification,
+          moderationReason: reason,
+          ...(approved && { status: 'APPROVED' }),
+          ...(autoRejected && { status: 'REJECTED' }),
+        },
       })
       if (result.count !== 1) return false
       await transaction.auditLogs.create({
         data: {
-          action: approved ? 'COMMENT_AUTO_APPROVED' : 'COMMENT_FLAGGED',
+          action: approved ? 'COMMENT_AUTO_APPROVED' : autoRejected ? 'COMMENT_AUTO_REJECTED' : 'COMMENT_FLAGGED',
           targetId: commentId,
           details: { pollId, classification: classification ?? 'UNAVAILABLE', reason },
         },
@@ -133,10 +138,10 @@ export async function commentRoutes(app: FastifyInstance) {
         poll: { select: { id: true, title: true, status: true, endsAt: true } },
       },
     })
-    // o motivo da triagem automática é interno até haver decisão da moderação
+    // o motivo automático só é exibido ao autor quando o comentário já foi reprovado
     return comments.map(({ moderatedById, moderationReason, ...comment }) => ({
       ...comment,
-      moderationReason: moderatedById ? moderationReason : null,
+      moderationReason: moderatedById || comment.status === 'REJECTED' ? moderationReason : null,
     }))
   })
 
