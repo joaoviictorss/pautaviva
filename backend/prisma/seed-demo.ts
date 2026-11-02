@@ -161,6 +161,70 @@ const POLLS: DemoPoll[] = [
     startDay: 12, endDay: 33, lean: [0, 0, 0], turnout: 0, createdBy: 'gestora',
     comments: [],
   },
+  // Novas pautas ficam no fim para não mudar o sorteio de votos das anteriores
+  {
+    title: 'Wi-Fi gratuito nas praças',
+    description: 'Instalar pontos de internet gratuita nas dez praças mais movimentadas, com limite de uso diário por pessoa.',
+    category: 'Infraestrutura',
+    startDay: -80, endDay: -60, lean: [76, 16, 8], turnout: 0.6, createdBy: 'gestor',
+    comments: ['Muita gente aqui no bairro depende do celular para estudar e não tem pacote de dados.', 'Precisa de manutenção constante, senão em pouco tempo para de funcionar.', 'Seria bom incluir também os pontos de ônibus mais usados.'],
+  },
+  {
+    title: 'Castração gratuita de animais',
+    description: 'Ampliar o programa de castração com mutirões mensais nos bairros e prioridade para famílias de baixa renda.',
+    category: 'Saúde',
+    startDay: -66, endDay: -46, lean: [88, 7, 5], turnout: 0.52, createdBy: 'gestora',
+    comments: ['A quantidade de animais abandonados na minha rua só aumenta.', 'Os mutirões precisam ser divulgados com antecedência, senão a fila fica enorme.', 'Protetores independentes poderiam ajudar na organização.'],
+  },
+  {
+    title: 'Reajuste do estacionamento rotativo',
+    description: 'Aumentar a tarifa do estacionamento rotativo no centro e destinar a arrecadação à manutenção das calçadas.',
+    category: 'Mobilidade',
+    startDay: -38, endDay: -18, lean: [31, 58, 11], turnout: 0.5, createdBy: 'gestor',
+    comments: ['Quem trabalha no comércio do centro já gasta demais para estacionar.', 'Se o dinheiro for mesmo para as calçadas, eu apoio.', 'Faltou apresentar quanto foi arrecadado nos últimos anos.'],
+  },
+  {
+    title: 'Academias ao ar livre nos bairros',
+    description: 'Instalar equipamentos de ginástica em praças de doze bairros, com orientação de educadores físicos duas vezes por semana.',
+    category: 'Saúde',
+    startDay: -15, endDay: 6, lean: [70, 20, 10], turnout: 0.5, createdBy: 'gestora',
+    comments: ['Minha mãe tem 68 anos e caminharia até a praça se tivesse orientação.', 'A do meu bairro está quebrada há meses. Antes de instalar novas, precisamos consertar as antigas.', 'Os educadores físicos fazem toda a diferença para quem está começando.', 'Tem que haver equipamentos adaptados para pessoas com deficiência.'],
+  },
+  {
+    title: 'Reforço escolar no contraturno',
+    description: 'Oferecer aulas de reforço em português e matemática no contraturno das escolas municipais, com transporte para quem mora longe.',
+    category: 'Educação',
+    startDay: -11, endDay: 10, lean: [85, 8, 7], turnout: 0.42, createdBy: 'gestor',
+    comments: ['Meu filho ficou com dificuldade em matemática depois da troca de escola.', 'Sem o transporte, as crianças da zona rural ficariam de fora.', 'Os professores precisam ser remunerados por essas horas a mais.'],
+  },
+  {
+    title: 'Revitalização do Parque das Águas',
+    description: 'Recuperar as trilhas, limpar os lagos e instalar sanitários e bebedouros no Parque das Águas.',
+    category: 'Meio Ambiente',
+    startDay: -7, endDay: 12, lean: [81, 11, 8], turnout: 0.3, createdBy: 'gestora',
+    comments: ['Levo meus filhos ao parque e não há um banheiro funcionando.', 'A limpeza dos lagos é urgente, o mau cheiro chega às casas vizinhas.', 'Sugiro uma parceria com as escolas para atividades de educação ambiental.'],
+  },
+  {
+    title: 'Guarda municipal no Terminal Central',
+    description: 'Manter equipes da guarda municipal no Terminal Central das 5h à meia-noite, com novas câmeras nas plataformas.',
+    category: 'Segurança',
+    startDay: -3, endDay: 18, lean: [74, 16, 10], turnout: 0.22, createdBy: 'gestor',
+    comments: ['Saio do trabalho às 23h e tenho medo de esperar o ônibus sozinha.', 'Apoio, mas a iluminação das plataformas também precisa melhorar.', 'Um ponto de atendimento à mulher no terminal ajudaria muito.'],
+  },
+  {
+    title: 'Mutirão de regularização de imóveis',
+    description: 'Oferecer atendimento jurídico e técnico gratuito para regularizar imóveis em áreas ocupadas há mais de dez anos.',
+    category: 'Urbanismo',
+    startDay: 5, endDay: 26, lean: [0, 0, 0], turnout: 0, createdBy: 'gestora',
+    comments: [],
+  },
+  {
+    title: 'Festival de música nas escolas',
+    description: 'Promover um festival anual com apresentações de alunos da rede municipal e oficinas com músicos da cidade.',
+    category: 'Cultura',
+    startDay: 9, endDay: 30, lean: [0, 0, 0], turnout: 0, createdBy: 'gestor',
+    comments: [],
+  },
 ]
 
 const PENDING_COMMENTS: { poll: string; text: string; hours: number; classification: CommentClassification; reason?: string }[] = [
