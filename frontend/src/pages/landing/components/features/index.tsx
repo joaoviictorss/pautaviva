@@ -117,8 +117,8 @@ export function Features({ poll }: FeaturesProps) {
       } else {
         status = 'Publicado'
         statusIcon = CheckIcon
-        statusBg = 'var(--accent)'
-        statusFg = 'var(--accent-foreground)'
+        statusBg = 'oklch(0.95 0.04 150)'
+        statusFg = 'oklch(0.42 0.12 150)'
       }
 
       return {
