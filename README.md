@@ -70,6 +70,14 @@ Durante o teste, o painel ao vivo fica em http://localhost:5665. Ao final,
 `backend/load/reports/` guarda `relatorio.html` (gráficos) e `resumo.json`
 (números).
 
+`backend/load/duplicate-vote.js` dispara 100 votos simultâneos da mesma conta
+na mesma pauta (RNF02) e só passa com 1 voto aceito e 99 recusados. Com o
+backend e o seed de carga prontos, use um `ACCOUNT` diferente a cada execução:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.load.yml run --rm --no-deps -e K6_WEB_DASHBOARD=false -e ACCOUNT=1 k6 run /load/duplicate-vote.js
+```
+
 ## Estado atual do setup
 
 Este é o esqueleto técnico inicial do projeto — infraestrutura e stack
