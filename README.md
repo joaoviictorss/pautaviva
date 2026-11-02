@@ -50,6 +50,26 @@ npm install
 npm run dev
 ```
 
+## Teste de carga (RNF09)
+
+`backend/load/vote.js` simula 500 usuários simultâneos (rampa de 2 min e
+patamar de 5 min) autenticando e votando na mesma pauta, só no ambiente
+local. O override liga `TRUST_PROXY` e `NODE_ENV=production` no backend.
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.load.yml up -d backend
+docker compose -f docker-compose.yml -f docker-compose.load.yml exec backend npm run db:seed:load
+docker compose -f docker-compose.yml -f docker-compose.load.yml run --rm --service-ports k6
+docker compose up -d backend
+```
+
+Rode o seed antes de cada execução: ele zera a pauta, porque cada conta só
+vota uma vez. A última linha volta o backend ao modo de desenvolvimento.
+
+Durante o teste, o painel ao vivo fica em http://localhost:5665. Ao final,
+`backend/load/reports/` guarda `relatorio.html` (gráficos) e `resumo.json`
+(números).
+
 ## Estado atual do setup
 
 Este é o esqueleto técnico inicial do projeto — infraestrutura e stack

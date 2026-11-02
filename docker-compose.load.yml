@@ -1,0 +1,24 @@
+# Teste de carga: docker compose -f docker-compose.yml -f docker-compose.load.yml ...
+services:
+  backend:
+    # sem nodemon e sem o log de cada query, que distorceria o resultado
+    command: npx tsx src/http/server.ts
+    environment:
+      NODE_ENV: production
+      TRUST_PROXY: "true"
+
+  k6:
+    image: grafana/k6:1.3.0
+    profiles: [load]
+    ports:
+      - "5665:5665"
+    environment:
+      K6_WEB_DASHBOARD: "true"
+      K6_WEB_DASHBOARD_EXPORT: /reports/relatorio.html
+    volumes:
+      - ./backend/load:/load:ro
+      - ./backend/load/reports:/reports
+    depends_on:
+      backend:
+        condition: service_healthy
+    command: run --summary-export=/reports/resumo.json /load/vote.js
