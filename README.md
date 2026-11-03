@@ -50,6 +50,25 @@ npm install
 npm run dev
 ```
 
+## Contas de demonstração
+
+Depois de rodar as migrations, popule o banco local com os dados de
+demonstração:
+
+```bash
+docker compose exec backend npm run db:seed:demo
+```
+
+Todas as contas usam a senha `demo1234`:
+
+| Cargo | E-mail |
+|---|---|
+| Administrador | `admin@demo.pautaviva.test` |
+| Gestor | `gestor@demo.pautaviva.test` |
+| Moderador | `moderador@demo.pautaviva.test` |
+| Cidadão | `cidadao1@demo.pautaviva.test` |
+
+
 ## Teste de carga (RNF09)
 
 `backend/load/vote.js` simula 500 usuários simultâneos (rampa de 2 min e
