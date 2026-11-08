@@ -17,7 +17,7 @@ export function Discussoes({ polls, loading, error }: DiscussoesLayoutProps) {
     <section className="flex animate-[word-in_.35s_cubic-bezier(.16,1,.3,1)] flex-col gap-6">
       <PageHeader
         title="Discussões"
-        description="Participe da conversa nas pautas abertas. Comentários passam por moderação antes de serem publicados."
+        description="Participe da conversa nas pautas abertas. Comentários passam por triagem antes de serem publicados."
       />
 
       {error ? (

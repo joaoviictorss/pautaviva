@@ -84,7 +84,8 @@ export function Comments({
               />
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <span className="text-xs text-muted-foreground">
-                  Comentários passam por moderação antes de aparecer. {text.length}/1000
+                  Seu comentário será processado por um serviço de inteligência artificial externo para triagem. Não
+                  inclua dados pessoais. {text.length}/1000
                 </span>
                 <Button disabled={submitting || text.trim().length < 5} onClick={onSubmit} className="rounded-full font-semibold">
                   <SendIcon />

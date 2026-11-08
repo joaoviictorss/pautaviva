@@ -25,7 +25,7 @@ const FAQS: Omit<FaqItem, 'id'>[] = [
   {
     question: 'Por que meu comentário não apareceu na hora?',
     answer:
-      'Todo comentário passa por uma triagem automática e depois por um moderador. Conteúdo ofensivo ou spam é bloqueado; o resto é publicado após a aprovação.',
+      'Todo comentário passa por uma triagem automática. Os adequados são publicados em seguida; os que têm termos proibidos são reprovados; e os suspeitos aguardam a análise de um moderador.',
   },
   {
     question: 'Onde vejo o resultado final?',
