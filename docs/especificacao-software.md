@@ -1,9 +1,9 @@
-# PautaViva — Documento de Especificação de Software
+# Documento de Especificação de Software: PautaViva - Plataforma Digital de Participação Comunitária
 
 **Universidade São Judas Tadeu**  
 Curso de Bacharelado em Engenharia de Computação
 
-Documento de especificação de software apresentado ao curso de Bacharelado em Engenharia de Computação da Universidade São Judas Tadeu, reunindo o levantamento de requisitos, a modelagem, o planejamento ágil e a arquitetura de software do PautaViva, plataforma digital de participação comunitária.
+Documento Técnico de Especificação de Software apresentado ao curso de Bacharelado em Engenharia de Computação da Universidade São Judas Tadeu. Este documento consolida o levantamento de requisitos, a modelagem orientada a objetos (UML) e as definições arquiteturais do sistema PautaViva, desenvolvido sob o framework ágil Scrum.
 
 **Orientador:** Prof. Nelson Aguiar  
 São Paulo, 2026
@@ -21,7 +21,7 @@ São Paulo, 2026
 
 ## Resumo
 
-A participação da comunidade em decisões sobre questões locais costuma ocorrer por meio de canais dispersos, como redes sociais, grupos de mensagens e reuniões presenciais, o que dificulta a organização das propostas, o registro das discussões e a apuração confiável dos resultados. Para enfrentar esse problema, este documento especifica o PautaViva, uma plataforma digital de participação comunitária, em desenvolvimento, voltada à proposição, discussão, moderação e votação de pautas locais, com resultados de caráter consultivo. A plataforma permite que cidadãos com conta verificada por e-mail e CPF válido consultem e discutam pautas e votem uma única vez em cada uma, com o registro de quem votou mantido separado do conteúdo do voto, de forma a preservar o sigilo. Os comentários passam por uma triagem automática, realizada por um modelo de linguagem, que publica automaticamente os comentários adequados e encaminha os suspeitos ou impróprios à moderação humana, com o motivo da sinalização. Os resultados das votações são atualizados em tempo real por meio de WebSocket e, ao término de cada votação, ficam disponíveis em gráficos e para exportação. O desenvolvimento é conduzido sob a metodologia ágil Scrum, e o documento reúne o levantamento de requisitos funcionais e não funcionais, a modelagem do sistema por meio de diagramas UML, a arquitetura de software e o plano de avaliação, que contempla testes de carga, de concorrência e da eficácia da moderação automática. Espera-se que o PautaViva amplie a participação cidadã em processos de decisão local, reduzindo as barreiras de tempo e mobilidade dos modelos tradicionais de participação.
+A participação da comunidade em decisões sobre questões locais costuma ocorrer por meio de canais dispersos, como redes sociais, grupos de mensagens e reuniões presenciais, o que dificulta a organização das propostas, o registro das discussões e a apuração confiável dos resultados. Para enfrentar esse problema, este documento especifica o PautaViva, uma plataforma digital de participação comunitária, em desenvolvimento, voltada à proposição, discussão, moderação e votação de pautas locais, com resultados de caráter consultivo. A plataforma permite que cidadãos com conta verificada por e-mail e CPF válido consultem e discutam pautas e votem uma única vez em cada uma, com o registro de quem votou mantido separado do conteúdo do voto, de forma a preservar o sigilo. Os comentários passam por uma triagem automática, realizada por um modelo de linguagem, que bloqueia conteúdos claramente impróprios antes de seguirem para a moderação humana. Os resultados das votações são atualizados em tempo real por meio de WebSocket e, ao término de cada votação, ficam disponíveis em gráficos e para exportação. O desenvolvimento é conduzido sob a metodologia ágil Scrum, e o documento reúne o levantamento de requisitos funcionais e não funcionais, a modelagem do sistema por meio de diagramas UML, a arquitetura de software e o plano de avaliação, que contempla testes de carga, de concorrência e da eficácia da moderação automática. Espera-se que o PautaViva amplie a participação cidadã em processos de decisão local, reduzindo as barreiras de tempo e mobilidade dos modelos tradicionais de participação.
 
 **Palavras-chave:** Participação Cidadã. Consulta Pública Digital. Votação em Tempo Real. WebSocket. Moderação de Conteúdo.
 
@@ -49,7 +49,8 @@ Community participation in local decision-making often occurs through dispersed 
 - Quadro 7 – Cronograma de sprints
 - Quadro 8 – Planejado x realizado
 - Quadro 9 – Plano de avaliação do sistema
-- Quadro 10 – Tecnologias por camada
+- Quadro 10 – Estado final do produto
+- Quadro 11 – Tecnologias por camada
 
 ## Lista de abreviaturas e siglas
 
@@ -81,10 +82,28 @@ Community participation in local decision-making often occurs through dispersed 
 ## Sumário
 
 1. [Introdução](#1-introdução)
+   - 1.1 Contextualização
+   - 1.2 Justificativa
+   - 1.3 Trabalhos relacionados
+   - 1.4 Objetivos
 2. [Requisitos do sistema](#2-requisitos-do-sistema)
+   - 2.1 Diagrama de casos de uso
+   - 2.2 Requisitos funcionais
+   - 2.3 Detalhamento dos fluxos dos casos de uso
+   - 2.4 Requisitos não funcionais
+   - 2.5 Modelo de ameaça, sigilo do voto e limitações
 3. [Metodologia ágil e gestão do projeto](#3-metodologia-ágil-e-gestão-do-projeto)
+   - 3.1 Product backlog e histórias de usuário
+   - 3.2 Divisão em sprints e cronograma de entregas
+   - 3.3 Plano de avaliação
+   - 3.4 Estado final do produto
 4. [Modelagem do sistema](#4-modelagem-do-sistema)
+   - 4.1 Diagrama de classes
+   - 4.2 Diagrama de sequência
 5. [Arquitetura do sistema](#5-arquitetura-do-sistema)
+   - 5.1 Visão geral da arquitetura
+   - 5.2 Tecnologias adotadas
+   - 5.3 Padrões e boas práticas
 6. [Considerações finais](#6-considerações-finais)
 7. [Referências](#referências)
 
@@ -98,7 +117,7 @@ A participação da comunidade em decisões sobre questões locais é importante
 
 No Brasil, a Lei do Governo Digital (BRASIL, 2021) incluiu o estímulo à participação social entre os princípios da prestação digital de serviços públicos, e iniciativas como a plataforma Brasil Participativo mostram o potencial desse canal: lançada em 2023 pelo governo federal, a plataforma reuniu mais de 1,4 milhão de participantes na etapa digital de elaboração do Plano Plurianual 2024–2027 (BRASIL, 2023). Experiências internacionais, como as plataformas Decidim, em Barcelona, e Consul, em Madri, também indicam que ambientes digitais estruturados favorecem a deliberação e o registro das contribuições dos cidadãos (ARAGÓN et al., 2017).
 
-Pensando nisso, este documento descreve a especificação do PautaViva, uma plataforma digital que centraliza a criação, a discussão e a votação de pautas relacionadas à comunidade. O sistema permite que os usuários consultem pautas, participem das discussões e registrem seus votos, conta com uma triagem automática dos comentários antes da moderação humana e utiliza WebSocket para atualizar os resultados das votações em tempo real, que são apresentados em gráficos e podem ser exportados.
+Pensando nisso, este documento descreve a especificação do PautaViva, uma plataforma digital que centraliza a criação, a discussão e a votação de pautas relacionadas à comunidade. O sistema permite que os usuários consultem pautas, participem das discussões e registrem seus votos, conta com uma triagem automática dos comentários antes da moderação humana e utiliza WebSocket para atualizar os resultados das votações em tempo real, que são apresentados em gráficos e podem ser exportados. A apresentação deste documento segue as normas da Associação Brasileira de Normas Técnicas para trabalhos acadêmicos, referências, numeração progressiva das seções e citações (ASSOCIAÇÃO BRASILEIRA DE NORMAS TÉCNICAS, 2012, 2018, 2023, 2024).
 
 As votações realizadas no PautaViva têm caráter consultivo: os resultados expressam a opinião dos participantes sobre cada pauta e servem de subsídio à gestão pública, mas não possuem valor oficial nem vinculam a decisão dos gestores.
 
@@ -127,7 +146,7 @@ Desenvolver o PautaViva, uma plataforma digital de participação comunitária, 
 - Definir os requisitos funcionais e não funcionais necessários para o funcionamento do sistema;
 - Representar, por meio de diagrama de casos de uso, as interações entre os atores e o sistema;
 - Desenvolver o cadastro e a autenticação dos usuários, com validação e unicidade do CPF e confirmação de e-mail;
-- Permitir a criação, visualização e discussão de pautas, com moderação automática dos comentários publicados;
+- Permitir a criação, visualização e discussão de pautas, com triagem automática dos comentários e moderação humana dos casos suspeitos ou impróprios;
 - Desenvolver e implementar o sistema de votação das pautas, com atualização dos resultados em tempo real por meio de WebSocket;
 - Organizar o desenvolvimento em um product backlog de histórias de usuário, priorizado e distribuído em sprints com datas de entrega definidas;
 - Modelar a estrutura estática do sistema por meio de diagrama de classes;
@@ -144,13 +163,13 @@ Este capítulo apresenta o levantamento de requisitos do PautaViva, iniciando pe
 
 ### 2.1 Diagrama de casos de uso
 
-A Figura 1 apresenta o diagrama de casos de uso do sistema, elaborado segundo a notação UML (Unified Modeling Language). Foram identificados cinco atores primários — Cidadão, Gestor Público, Moderador, Administrador e Temporizador do Sistema, este responsável por disparar o encerramento automático das votações na data/hora definida — e um ator secundário: o Sistema de Moderação Automática, serviço externo de inteligência artificial (API Google Gemini) que classifica o conteúdo dos comentários.
+A Figura 1 apresenta o diagrama de casos de uso do sistema, elaborado segundo a notação UML (Unified Modeling Language) (OMG, 2017). Foram identificados cinco atores primários — Cidadão, Gestor Público, Moderador, Administrador e Temporizador do Sistema, este responsável por disparar o encerramento automático das votações na data/hora definida — e um ator secundário: o Sistema de Moderação Automática, serviço externo de inteligência artificial (API Google Gemini) que classifica o conteúdo dos comentários.
 
 > **Figura 1 – Diagrama de casos de uso do PautaViva**
 > ![Diagrama de casos de uso do PautaViva](diagramas/casos-de-uso.png)
 > Fonte: elaborado pelos autores (2026)
 
-O caso de uso UC02 (Realizar login) é incluído (`<<include>>`) pelos casos de uso que exigem autenticação prévia, como votar, comentar, cadastrar pauta e moderar comentários. O caso de uso UC06 (Comentar pauta) é associado ao ator secundário Sistema de Moderação Automática, que realiza a triagem de todos os comentários enviados antes de chegarem à fila de moderação humana; por se tratar de um serviço externo acionado em todo envio, a relação é modelada como associação com o ator, e não como `<<extend>>`. O caso de uso UC12 (Gerenciar perfis de acesso) permite ao Administrador cadastrar gestores públicos e moderadores, já que o UC01 trata apenas do autocadastro do cidadão. Já o encerramento automático da votação (RF10) é representado pelo caso de uso UC11, iniciado pelo ator Temporizador do Sistema, sem intervenção humana.
+O caso de uso UC02 (Realizar login) é incluído (`<<include>>`) pelos casos de uso que exigem autenticação prévia, como votar, comentar, cadastrar pauta e moderar comentários. O caso de uso UC06 (Comentar pauta) é associado ao ator secundário Sistema de Moderação Automática, que realiza a triagem de todos os comentários enviados antes de chegarem à fila de moderação humana; por se tratar de um serviço externo acionado em todo envio, a relação é modelada como associação com o ator, e não como `<<extend>>`. O caso de uso UC12 (Gerenciar perfis de acesso) permite ao Administrador cadastrar gestores públicos e moderadores, já que o UC01 trata apenas do autocadastro do cidadão. Já o encerramento automático da votação (RF10) é representado pelo caso de uso UC11, iniciado pelo ator Temporizador do Sistema, sem intervenção humana. Os atores são descritos resumidamente no Quadro 1.
 
 #### 2.1.1 Descrição resumida dos atores
 
@@ -169,7 +188,7 @@ Fonte: elaborado pelos autores (2026)
 
 ### 2.2 Requisitos funcionais
 
-Os requisitos funcionais (RF) descrevem as funcionalidades que o sistema deve disponibilizar aos usuários. A coluna "Prioridade" segue a classificação MoSCoW (Essencial, Importante, Desejável), utilizada para orientar o planejamento das sprints.
+Os requisitos funcionais (RF) descrevem as funcionalidades que o sistema deve disponibilizar aos usuários (SOMMERVILLE, 2019). O Quadro 2 apresenta esses requisitos; a coluna "Prioridade" segue uma classificação inspirada no método MoSCoW (Essencial, Importante e Desejável), utilizada para orientar o planejamento das sprints.
 
 **Quadro 2 – Requisitos funcionais**
 
@@ -178,9 +197,9 @@ Os requisitos funcionais (RF) descrevem as funcionalidades que o sistema deve di
 | RF01 | O sistema deve permitir que o cidadão se autocadastre, informando e-mail e CPF, com confirmação por e-mail antes da liberação do acesso. | Essencial |
 | RF02 | O sistema deve permitir que cidadãos, gestores públicos, moderadores e administradores realizem login mediante credenciais, desde que a conta esteja ativa (e-mail confirmado). | Essencial |
 | RF03 | O sistema deve permitir que o gestor público cadastre pauta com título, descrição, categoria, data de início e data de término da votação. | Essencial |
-| RF04 | O sistema deve permitir que o cidadão consulte e visualize as pautas disponíveis, filtrando por categoria e status (aberta/encerrada). | Essencial |
+| RF04 | O sistema deve permitir que o cidadão consulte e visualize as pautas disponíveis, filtrando por categoria e status (agendada/aberta/encerrada). | Essencial |
 | RF05 | O sistema deve permitir que o cidadão vote (a favor, contra ou abstenção) em uma pauta uma única vez por conta verificada. | Essencial |
-| RF06 | O sistema deve permitir que o cidadão comente uma pauta, enviando o comentário à triagem automática de conteúdo, que publica os adequados e encaminha os demais à fila de moderação. | Importante |
+| RF06 | O sistema deve permitir que o cidadão comente uma pauta, enviando o comentário à triagem automática de conteúdo e, em seguida, à fila de moderação antes da publicação. | Importante |
 | RF07 | O sistema deve permitir que o moderador aprove, rejeite ou remova comentários da fila de moderação, avaliando também aqueles denunciados pelos cidadãos. | Importante |
 | RF08 | O sistema deve permitir que o cidadão denuncie um comentário publicado, enviando-o para reavaliação do moderador. | Desejável |
 | RF09 | O sistema deve exibir painel de resultados com o percentual de votos por opção e o total de participantes, atualizado em tempo real por meio de WebSocket. | Essencial |
@@ -208,7 +227,7 @@ Esta seção detalha, para cada caso de uso apresentado na Figura 1, o fluxo pri
 2. O sistema solicita nome completo, CPF, e-mail e senha.
 3. O cidadão preenche os dados e confirma.
 4. O sistema valida o formato do e-mail e o formato e os dígitos verificadores do CPF.
-5. O sistema verifica se já existe cadastro ativo com o mesmo CPF ou e-mail.
+5. O sistema verifica se já existe cadastro com o mesmo CPF ou e-mail.
 6. O sistema registra a conta com situação "Pendente de confirmação" e envia e-mail de confirmação com link de verificação.
 7. O sistema exibe mensagem informando que o cadastro será concluído após a confirmação do e-mail.
 
@@ -273,7 +292,7 @@ FA01 – Recuperação de senha (a partir do passo 3; RF14)
 1. O gestor público acessa "Cadastrar pauta".
 2. O sistema exibe o formulário (título, descrição, categoria, data de início e data de término da votação).
 3. O gestor público preenche os dados e confirma.
-4. O sistema valida a obrigatoriedade dos campos e a consistência entre as datas (término posterior ao início).
+4. O sistema valida a obrigatoriedade dos campos e a consistência entre as datas (início igual ou posterior à data atual e término posterior ao início).
 5. O sistema registra a pauta com situação "Agendada" (data de início futura) ou "Aberta" (data de início igual à atual).
 6. O sistema exibe mensagem de confirmação do cadastro.
 
@@ -282,13 +301,14 @@ FA01 – Recuperação de senha (a partir do passo 3; RF14)
 FA01 – Edição de pauta ainda não iniciada (fluxo complementar; RF13)
 
 1. O gestor público seleciona uma pauta com situação "Agendada".
-2. O sistema permite a edição dos campos, exceto o título após a primeira publicação.
+2. O sistema exibe o formulário preenchido e permite a edição de todos os campos.
 3. O fluxo retoma no passo 4 do fluxo principal.
 
 **Exceções**
 
 - **E01 – Datas inconsistentes** (passo 4): o sistema exibe "A data de término deve ser posterior à data de início" e retorna ao passo 3.
 - **E02 – Campos obrigatórios não preenchidos** (passo 4): o sistema destaca os campos pendentes e retorna ao passo 3.
+- **E03 – Data de início anterior à data atual** (passo 4): o sistema exibe "A data de início não pode ser anterior à data atual" e retorna ao passo 3.
 
 #### 2.3.4 UC04 – Consultar pautas
 
@@ -356,20 +376,24 @@ FA01 – Consulta sem filtros (a partir do passo 3)
 **Casos de uso incluídos:** UC02 (SF01 – Autenticação)
 **Ator(es) secundário(s):** Sistema de Moderação Automática
 **Pré-condições:** Cidadão autenticado; pauta com situação "Aberta".
-**Pós-condições:** Comentário publicado, quando a triagem automática o classifica como "adequado", ou registrado com situação "Em análise" na fila de moderação humana, com o motivo da sinalização. Nenhum comentário é descartado pela triagem automática: só um moderador rejeita ou remove.
+**Pós-condições:** Comentário publicado (classificação "adequado"), encaminhado à moderação humana (classificação "suspeito" ou "impróprio", ou triagem indisponível) ou reprovado automaticamente por conter termo da lista de palavras proibidas (E01).
 
 **Fluxo principal**
 
 1. O cidadão acessa uma pauta e seleciona a opção de comentar.
 2. O sistema exibe o campo de texto do comentário.
 3. O cidadão redige o comentário e confirma o envio.
-4. O sistema registra o comentário com situação "Em análise" e exibe mensagem informando que ele aparecerá na pauta após a análise.
-5. Em segundo plano, o sistema verifica o texto contra uma lista de termos ofensivos (normalizando acentos, leetspeak e letras repetidas) e o envia ao ator secundário Sistema de Moderação Automática (modelo de linguagem Google Gemini), informando os termos encontrados. O modelo o classifica em "adequado", "suspeito" ou "impróprio" (ofensa, ataque pessoal, discurso de ódio, ameaça ou spam), com as categorias, o trecho que motivou a classificação e a justificativa.
-6. Classificado como "adequado", o comentário é publicado automaticamente e passa a aparecer na pauta em tempo real.
+4. O sistema registra o comentário com situação "Em análise" e o exibe ao autor com essa situação.
+5. O sistema compara o texto com a lista de palavras proibidas mantida pela equipe; se nenhum termo for encontrado, envia o texto ao ator secundário Sistema de Moderação Automática (modelo de linguagem Google Gemini), que o classifica em "adequado", "suspeito" ou "impróprio" (ofensas, ataques pessoais, discurso de ódio, ameaças ou spam), com a justificativa.
+6. Quando a classificação é "adequado", o sistema publica o comentário e o exibe aos participantes da pauta em tempo real.
+
+**Dados enviados ao serviço de IA:** somente o texto do comentário é enviado à API do Google Gemini; nome, e-mail, CPF, identificador do autor e da pauta não são transmitidos. Na versão avaliada, a chave da API é do nível gratuito, cujos termos permitem que o Google utilize o conteúdo enviado para melhorar seus produtos (GOOGLE, 2026b). Na versão avaliada o cidadão não é avisado desse envio na tela de comentário; o aviso explícito e a migração para o nível pago, cujos termos não permitem esse uso, estão previstos como trabalhos futuros (Seção 3.4).
 
 **Fluxos alternativos**
 
-- **FA01 – Comentário sinalizado** (passo 6): classificado como "suspeito" ou "impróprio", o comentário permanece "Em análise" e segue para a fila de moderação humana (UC07), destacado com a classificação e o motivo (categorias, trecho e justificativa, e os termos da lista, quando houver). A sinalização é registrada na trilha de auditoria (RNF13).
+FA01 – Comentário suspeito ou impróprio segundo a IA (a partir do passo 6)
+
+- 6.1 Quando a classificação é "suspeito" ou "impróprio", o comentário permanece com situação "Em análise" e é encaminhado à fila de moderação humana (UC07), com a classificação e a justificativa destacadas para o moderador.
 
 **Sub-fluxos**
 
@@ -377,9 +401,9 @@ FA01 – Consulta sem filtros (a partir do passo 3)
 
 **Exceções**
 
-- **E01 – Termos ofensivos sem modelo disponível** (passo 5): se o modelo não responder mas a lista encontrar termos ofensivos, o comentário é classificado como "suspeito", com os termos encontrados como motivo, e segue o FA01.
+- **E01 – Conteúdo reprovado automaticamente** (passo 5): quando o texto contém termo da lista de palavras proibidas, o sistema reprova o comentário sem consultar a IA, registra a reprovação e o termo encontrado na trilha de auditoria (RNF13) e o comentário não é publicado.
 - **E02 – Pauta não está aberta para comentários** (passo 1): o sistema exibe "Esta pauta não está disponível para comentários no momento" e impede o acesso à ação.
-- **E03 – Serviço de triagem automática indisponível** (passo 5): caso o serviço de IA não responda e a lista não encontre termos, o comentário não é publicado automaticamente; permanece "Em análise", sem classificação, e segue para a moderação humana (UC07).
+- **E03 – Serviço de triagem automática indisponível** (passo 5): caso o serviço de IA não responda, o comentário não é bloqueado nem publicado; ele permanece com situação "Em análise" e segue para a moderação humana (UC07).
 
 #### 2.3.7 UC07 – Moderar comentários
 
@@ -391,7 +415,7 @@ FA01 – Consulta sem filtros (a partir do passo 3)
 **Fluxo principal**
 
 1. O moderador acessa a fila de moderação.
-2. O sistema exibe os comentários com situação "Em análise", em ordem cronológica, destacando a classificação ("suspeito" ou "impróprio") e o motivo apontado pela triagem automática.
+2. O sistema exibe os comentários com situação "Em análise", em ordem cronológica, destacando os classificados como "suspeitos" pela triagem automática.
 3. O moderador seleciona um comentário e analisa o conteúdo.
 4. O moderador aprova ou rejeita o comentário.
 5. O sistema altera a situação do comentário para "Publicado" (aprovado) ou "Rejeitado" (rejeitado, não exibido publicamente).
@@ -539,32 +563,40 @@ FA01 – Alteração de perfil de usuário existente (a partir do passo 2)
 
 ### 2.4 Requisitos não funcionais
 
-Os requisitos não funcionais (RNF) descrevem restrições e atributos de qualidade do sistema, organizados de acordo com as características de qualidade previstas na norma ISO/IEC 25010.
+Os requisitos não funcionais (RNF) descrevem restrições e atributos de qualidade do sistema, organizados de acordo com as características de qualidade previstas na norma ISO/IEC 25010 (INTERNATIONAL ORGANIZATION FOR STANDARDIZATION, 2011), e são apresentados no Quadro 3. Os requisitos RNF06, RNF09 e RNF10 são metas para um ambiente de produção: a hospedagem atual, nos planos gratuitos da Vercel e do Render, não as garante, como detalhado após o quadro.
 
 **Quadro 3 – Requisitos não funcionais**
 
 | ID | Categoria | Descrição |
 | --- | --- | --- |
-| RNF01 | Desempenho | A atualização do painel de resultados em tempo real não deve apresentar atraso superior a 5 segundos após o registro de um novo voto, propagado via WebSocket. |
+| RNF01 | Eficiência de desempenho | A atualização do painel de resultados em tempo real não deve apresentar atraso superior a 5 segundos após o registro de um novo voto, propagado via WebSocket. |
 | RNF02 | Segurança | O sistema deve impedir voto duplicado por conta verificada, mesmo em múltiplas sessões, dispositivos ou requisições simultâneas. |
 | RNF03 | Segurança | As senhas dos usuários devem ser armazenadas utilizando algoritmo de hash com salt (ex.: bcrypt). |
 | RNF04 | Segurança | O fluxo de cadastro deve dificultar a criação de contas falsas em massa, por meio de CPF válido e único, confirmação de e-mail único e limitação de requisições por IP (rate limiting). |
 | RNF05 | Segurança | O registro de participação (quem votou em cada pauta) deve ser armazenado separadamente do conteúdo do voto (pauta e opção), sem chave ou dado que permita associá-los, sendo disponibilizados apenas resultados agregados. |
-| RNF06 | Confiabilidade | O sistema deve estar disponível 99% do tempo, apurado mensalmente, inclusive durante picos de votação em pautas de grande interesse. |
+| RNF06 | Confiabilidade | Meta de produção: o sistema deve estar disponível 99% do tempo, apurado mensalmente, inclusive durante picos de votação em pautas de grande interesse. |
 | RNF07 | Usabilidade | A interface deve seguir as diretrizes de acessibilidade WCAG 2.1, nível AA. |
 | RNF08 | Portabilidade | O sistema deve ser acessível pelos navegadores Chrome, Firefox e Edge, nas duas últimas versões estáveis de cada um. |
-| RNF09 | Escalabilidade | O sistema deve suportar, no mínimo, 500 usuários simultâneos votando em uma pauta de grande interesse, sem indisponibilidade. |
-| RNF10 | Confiabilidade | O sistema deve realizar backup diário automático da base de dados, com retenção mínima de 30 dias. |
-| RNF11 | Compatibilidade | A interface deve ser responsiva, adaptando-se a resoluções de desktop, tablet e smartphone. |
+| RNF09 | Eficiência de desempenho (capacidade) | Meta de produção: o sistema deve suportar, no mínimo, 500 usuários simultâneos votando em uma pauta de grande interesse, sem indisponibilidade. |
+| RNF10 | Confiabilidade | Meta de produção: o sistema deve realizar backup diário automático da base de dados, com retenção mínima de 30 dias. |
+| RNF11 | Portabilidade (adaptabilidade) | A interface deve ser responsiva, adaptando-se a resoluções de desktop, tablet e smartphone. |
 | RNF12 | Segurança (privacidade) | O tratamento de dados pessoais deve seguir a LGPD (BRASIL, 2018): coleta limitada ao necessário (nome, e-mail e CPF), CPF armazenado de forma protegida (hash com chave secreta, suficiente para verificar a unicidade sem guardar o número em texto claro), nunca exibido a outros usuários e com acesso restrito aos dados pessoais. |
 | RNF13 | Segurança (responsabilização) | O sistema deve manter trilha de auditoria somente de inclusão (sem alteração ou exclusão) das ações sensíveis — cadastro, edição e encerramento de pautas, decisões de moderação, bloqueios automáticos e alterações de perfil —, registrando autor, data/hora, ação e objeto, sem registrar o conteúdo dos votos. |
-| RNF14 | Adequação funcional | A triagem automática de comentários deve atingir revocação (recall) de, no mínimo, 90% na detecção de conteúdo impróprio, com taxa de falsos positivos de, no máximo, 10%, medidas sobre um conjunto rotulado de comentários em português (Seção 3.3). |
+| RNF14 | Adequação funcional | A triagem automática de comentários deve atingir revocação (recall) de, no mínimo, 90% na detecção de conteúdo impróprio, com taxa de falsos positivos de, no máximo, 10%, medidas sobre um conjunto rotulado de comentários em português (Seção 3.3) e reportadas com intervalo de confiança de 95%. |
 
 Fonte: elaborado pelos autores (2026)
 
+A hospedagem utilizada na fase acadêmica — front-end no plano gratuito da Vercel e API e banco de dados no plano gratuito do Render — impõe as seguintes restrições, que fazem dos RNF06, RNF09 e RNF10 metas para produção, e não propriedades da versão publicada (RENDER, 2026):
+
+- **RNF06 (disponibilidade):** o serviço web gratuito do Render é suspenso após 15 minutos sem requisições HTTP ou mensagens WebSocket e pode levar cerca de um minuto para voltar a responder; além disso, o Render pode reiniciar o banco gratuito a qualquer momento para manutenção. A disponibilidade de 99% não é garantida nesse plano.
+- **RNF09 (capacidade):** o serviço gratuito tem recursos limitados de CPU e memória. Por isso, o teste de carga foi executado em ambiente local com a mesma configuração de contêineres (Seção 3.4), e o resultado não deve ser lido como capacidade da versão publicada.
+- **RNF10 (backup):** o banco gratuito do Render não oferece nenhuma forma de backup, tem 1 GB de armazenamento e expira 30 dias após a criação. Na versão avaliada, as cópias são feitas manualmente com `pg_dump` antes das entregas (a última em 02/11/2026, com restauração testada), e não há retenção automática.
+
+Para atender a esses requisitos em produção, a API e o banco devem migrar para planos pagos, que não suspendem o serviço e oferecem recuperação a um ponto no tempo; a retenção de 30 dias exigiria, ainda, uma exportação diária agendada para um armazenamento externo.
+
 ### 2.5 Modelo de ameaça, sigilo do voto e limitações
 
-O Quadro 4 define quem pode acessar cada informação relacionada ao voto. Para atender ao RNF05, o modelo de dados separa duas informações: a participação, que registra que um cidadão votou em uma pauta e é usada apenas para impedir o voto duplicado (RNF02), e o voto, que registra somente a pauta e a opção escolhida. As duas são gravadas na mesma transação, mas não compartilham identificador nem horário, de modo que nem quem administra o banco de dados consegue associar um voto a quem votou.
+O Quadro 4 define quem pode acessar cada informação relacionada ao voto. Para atender ao RNF05, o modelo de dados separa duas informações: a participação, que registra que um cidadão votou em uma pauta e é usada apenas para impedir o voto duplicado (RNF02), e o voto, que registra somente a pauta e a opção escolhida. As duas são gravadas na mesma transação, mas não compartilham chave: o voto tem identificador aleatório (UUID) e não guarda o autor nem a data/hora. Assim, quem administra o banco de dados não consegue associar um voto a quem votou a partir dos dados do modelo. Essa garantia, porém, não se estende a todos os ataques possíveis, como detalhado a seguir.
 
 **Quadro 4 – Modelo de ameaça: acesso às informações de voto**
 
@@ -573,15 +605,24 @@ O Quadro 4 define quem pode acessar cada informação relacionada ao voto. Para 
 | Cidadão | Se ele próprio já votou na pauta e os resultados agregados | O voto de outros cidadãos e a lista de participantes |
 | Gestor Público e Moderador | Os resultados agregados (percentuais e total de participantes) | Votos individuais e quem votou em cada opção |
 | Administrador da plataforma | Os perfis de acesso e a trilha de auditoria | Votos individuais |
-| Administrador do banco de dados | Os registros de participação e os registros de voto, separadamente | A associação entre um voto e o cidadão que o registrou |
+| Administrador do banco de dados | Os registros de participação e os registros de voto, separadamente | A associação entre um voto e o cidadão a partir dos dados do modelo (sujeita aos ataques não cobertos descritos abaixo) |
 
 Fonte: elaborado pelos autores (2026)
+
+Os seguintes ataques **não são cobertos** pela versão atual:
+
+- **Ordem de inserção:** embora o voto não tenha data/hora, a participação registra a data/hora de criação, e o PostgreSQL grava as linhas fisicamente na ordem em que chegam. Quem tem acesso ao banco pode ler as duas tabelas na ordem física e emparelhar as linhas, sobretudo em pautas com pouco movimento.
+- **Logs de transação e de consultas:** o log de escrita antecipada (WAL), os backups e eventuais logs de consultas do banco registram as duas gravações juntas, na mesma transação, o que permite a associação por quem tem acesso a esses arquivos.
+- **Correlação temporal externa:** quem observa o tráfego ou os logs da aplicação (por exemplo, o provedor de hospedagem) pode relacionar o horário de uma requisição de voto de um usuário ao incremento de uma opção.
+- **Revelação pelos resultados em tempo real:** o painel atualiza os totais a cada voto. Em pautas com poucos votos, quem acompanha o painel e sabe quem acabou de votar pode deduzir a escolha; no caso extremo, o primeiro voto de uma pauta fica revelado para quem sabe quem votou.
+
+Mitigações previstas como trabalhos futuros: gravar a participação e o voto em transações separadas e com atraso aleatório, propagar os resultados em lotes (por exemplo, a cada minuto ou a cada N votos) em vez de a cada voto, ocultar os resultados parciais até que a pauta atinja um número mínimo de votos e não registrar a data/hora da participação, mantendo apenas a restrição de unicidade.
 
 O sistema adota, ainda, as seguintes limitações conhecidas, tratadas explicitamente:
 
 - **Verificação de identidade:** a conta é verificada pela confirmação do e-mail e pela validação do formato e dos dígitos verificadores do CPF, que deve ser único no sistema. Essa verificação não comprova que o CPF pertence a quem o informou; assim, uma pessoa pode criar contas com CPFs válidos de terceiros. Os mecanismos de e-mail único, CPF único e limitação de requisições (RNF04) dificultam o cadastro em massa, mas não o impedem. A integração com um provedor oficial de identidade, como o Login Único gov.br, é a evolução prevista para eliminar essa limitação.
 - **Caráter consultivo:** em razão da limitação anterior, os resultados das votações têm caráter consultivo e não possuem valor oficial nem vinculante.
-- **Registro de participação:** a separação entre participação e voto impede a associação de um voto ao cidadão, mas a participação em si (o fato de que o cidadão votou em uma pauta) permanece registrada, pois é necessária para garantir o voto único.
+- **Registro de participação:** a separação entre participação e voto impede a associação de um voto ao cidadão a partir dos dados do modelo, mas a participação em si (o fato de que o cidadão votou em uma pauta) permanece registrada, pois é necessária para garantir o voto único.
 
 
 
@@ -589,18 +630,18 @@ O sistema adota, ainda, as seguintes limitações conhecidas, tratadas explicita
 
 ## 3 Metodologia ágil e gestão do projeto
 
-O desenvolvimento do PautaViva adota a metodologia ágil Scrum, com papéis de Product Owner, Scrum Master e Equipe de Desenvolvimento, e cerimônias de planejamento, revisão e retrospectiva ao final de cada sprint. Este capítulo apresenta o backlog do produto, organizado em histórias de usuário, a sua distribuição ao longo das sprints, o acompanhamento do planejado em relação ao realizado e o plano de avaliação do sistema.
+O desenvolvimento do PautaViva adota a metodologia ágil Scrum (SCHWABER; SUTHERLAND, 2020), com papéis de Product Owner, Scrum Master e Equipe de Desenvolvimento, e cerimônias de planejamento, revisão e retrospectiva ao final de cada sprint. Este capítulo apresenta o backlog do produto, organizado em histórias de usuário, a sua distribuição ao longo das sprints, o acompanhamento do planejado em relação ao realizado e o plano de avaliação do sistema.
 
 ### 3.1 Product backlog e histórias de usuário
 
-As histórias de usuário (HU) seguem o formato "Como \<papel\>, quero \<ação\>, para \<benefício\>" e foram estimadas em pontos de história, segundo a sequência de Fibonacci (1, 2, 3, 5, 8, 13), com base na complexidade relativa percebida pela equipe.
+As histórias de usuário (HU) seguem o formato "Como \<papel\>, quero \<ação\>, para \<benefício\>" e foram estimadas em pontos de história, segundo a sequência de Fibonacci (1, 2, 3, 5, 8, 13), com base na complexidade relativa percebida pela equipe. O Quadro 5 apresenta o product backlog.
 
 **Quadro 5 – Product backlog**
 
 | ID | História de usuário | Requisito relacionado | Pontos |
 | --- | --- | --- | --- |
 | HU01 | Como cidadão, quero me cadastrar informando e-mail e CPF, para acessar a plataforma e participar das votações. | RF01 | 3 |
-| HU02 | Como cidadão, gestor público ou moderador, quero realizar login na plataforma, para acessar as funcionalidades do meu perfil. | RF02 | 3 |
+| HU02 | Como cidadão, gestor público, moderador ou administrador, quero realizar login na plataforma, para acessar as funcionalidades do meu perfil. | RF02 | 3 |
 | HU03 | Como gestor público, quero cadastrar uma pauta com título, descrição, categoria e período de votação, para disponibilizá-la à comunidade. | RF03 | 5 |
 | HU04 | Como cidadão, quero consultar e visualizar as pautas disponíveis, para acompanhar os temas em discussão na minha comunidade. | RF04 | 3 |
 | HU05 | Como cidadão, quero votar em uma pauta (a favor, contra ou abstenção), para expressar minha opinião sobre o tema. | RF05 | 8 |
@@ -613,11 +654,13 @@ As histórias de usuário (HU) seguem o formato "Como \<papel\>, quero \<ação\
 | HU12 | Como administrador, quero cadastrar gestores públicos e moderadores e alterar perfis de acesso, para controlar quem administra a plataforma. | RF12 | 3 |
 | HU13 | Como gestor público, quero editar uma pauta agendada, para corrigir informações antes do início da votação. | RF13 | 2 |
 | HU14 | Como usuário, quero redefinir minha senha pelo e-mail, para recuperar o acesso à minha conta. | RF14 | 2 |
-| HU15 | Como product owner, quero medir a carga suportada e o atraso de propagação dos resultados, para comprovar o RNF09 e o RNF01. | RNF01, RNF09 | 5 |
-| HU16 | Como product owner, quero testar votos simultâneos e o limite de requisições, para comprovar o RNF02 e o RNF04. | RNF02, RNF04 | 3 |
-| HU17 | Como product owner, quero avaliar a triagem automática sobre comentários rotulados, para comprovar o RNF14. | RNF14 | 3 |
+| HT01 | História técnica: executar o teste de carga com 500 usuários simultâneos e medir o atraso de propagação dos resultados. | RNF01, RNF09 | 5 |
+| HT02 | História técnica: testar votos simultâneos da mesma conta e o limite de requisições por IP. | RNF02, RNF04 | 3 |
+| HT03 | História técnica: avaliar a triagem automática sobre um conjunto de comentários rotulados. | RNF14 | 3 |
 
 Fonte: elaborado pelos autores (2026)
+
+As entradas HT01 a HT03 não são histórias de usuário, pois não entregam funcionalidade a um usuário final: são histórias técnicas, que verificam requisitos não funcionais e fazem parte da Definition of Done do release. Foram mantidas no backlog, com pontos, porque consomem capacidade das sprints.
 
 Cada história de usuário do backlog possui critérios de aceite associados, utilizados na cerimônia de Sprint Review para validar se o incremento entregue atende ao comportamento esperado. A título de exemplo, o Quadro 6 detalha os critérios de aceite da história HU05 (Votar em pauta).
 
@@ -645,15 +688,13 @@ O backlog foi distribuído em cinco sprints: a primeira, com três semanas, incl
 | Sprint 2 | 07/09/2026 a 20/09/2026 | Viabilizar o ciclo de votação com atualização de resultados em tempo real. | HU05, HU09 | 16 | 20/09/2026 |
 | Sprint 3 | 21/09/2026 a 04/10/2026 | Implementar comentários, moderação e denúncia de conteúdo. | HU06, HU07, HU08 | 13 | 04/10/2026 |
 | Sprint 4 | 05/10/2026 a 18/10/2026 | Implementar o encerramento automático, a exportação de resultados, a gestão de perfis, a edição de pauta e a recuperação de senha. | HU10, HU11, HU12, HU13, HU14 | 15 | 18/10/2026 |
-| Sprint 5 | 19/10/2026 a 01/11/2026 | Executar o plano de avaliação (até 24/10, para o artigo de 25/10), a homologação e os ajustes finais. | HU15, HU16, HU17 | 11 | 02/11/2026 |
+| Sprint 5 | 19/10/2026 a 01/11/2026 | Executar o plano de avaliação, a homologação e os ajustes finais. | HT01, HT02, HT03 | 11 | 02/11/2026 |
 
 Fonte: elaborado pelos autores (2026)
 
 O encerramento automático (RF10, Essencial) foi planejado para depois de funcionalidades classificadas como Importantes porque o prazo de votação é garantido no próprio registro do voto (HU05): o método `estaAberta()` da classe Pauta considera a data/hora de término, e o voto é recusado fora do período definido. O UC11 complementa esse controle, alterando a situação da pauta para "Encerrada", consolidando os resultados finais e notificando os clientes conectados; assim, a ordem das histórias não permite que uma votação aceite votos fora do prazo.
 
-A entrega da Sprint 5, em 02/11/2026, correspondia ao release do Produto Mínimo Viável (MVP) do PautaViva, contemplando todas as histórias essenciais e importantes do backlog. O acompanhamento das sprints concluídas, apresentado a seguir, levou ao replanejamento dessa entrega.
-
-O Quadro 8 compara, para as sprints concluídas, o planejado com o realizado.
+A entrega da Sprint 5, em 02/11/2026, corresponde ao release final do PautaViva na disciplina. O Quadro 8 compara, para cada sprint, o planejado com o realizado; a data de cada entrega pode ser conferida no histórico de commits do repositório.
 
 **Quadro 8 – Planejado x realizado**
 
@@ -663,21 +704,18 @@ O Quadro 8 compara, para as sprints concluídas, o planejado com o realizado.
 | Sprint 2 | 16 | 0 | — | Configuração do ambiente de desenvolvimento (13/09): Docker Compose, API Fastify com Prisma e Socket.io e aplicação React com Vite. Trabalho de infraestrutura, sem história concluída. |
 | Sprint 3 | 13 | 8 | HU01, HU02, HU14 | Cadastro com validação de CPF e confirmação de e-mail, login com bloqueio após cinco tentativas, recuperação de senha e área autenticada (28/09), além da página inicial e da publicação em produção (Vercel e Render). A HU14, prevista para a Sprint 4, foi antecipada por compartilhar o mesmo módulo de autenticação. |
 | Sprint 4 | 15 | 0 | — | Sprint dedicada às revisões da documentação solicitadas nas avaliações de 28/09 e 03/10 (modelagem, arquitetura e requisitos de segurança e privacidade). |
-| **Total** | **58** | **8** | | |
+| Sprint 5 | 11 | 58 | HU03 a HU13, HT01, HT03 | Implementação concentrada entre 27/10 e 02/11: pautas, votação com participação separada do voto, resultados em tempo real, encerramento automático, comentários com triagem automática, moderação, denúncia, exportação em CSV e PDF, gestão de perfis e edição de pauta. HT01 e HT03 executadas em 02/11. A HT02 ficou parcial: a concorrência do voto foi testada, mas o teste dedicado do limite de requisições não foi executado. |
+| **Total** | **69** | **66** | | |
 
 Fonte: elaborado pelos autores (2026)
 
-Até a Sprint 4, foram entregues 8 dos 58 pontos planejados (14%). O atraso decorreu, principalmente, da subestimação do esforço de especificação e de configuração do ambiente nas Sprints 1 e 2 e da prioridade dada às revisões do documento na Sprint 4. Como resposta, o backlog restante foi replanejado por prioridade MoSCoW, concentrando a Sprint 5 no ciclo essencial de votação e adiando as histórias Importantes e Desejáveis:
+Até a Sprint 4, foram entregues 8 dos 58 pontos planejados (14%). O atraso decorreu, principalmente, da subestimação do esforço de especificação e de configuração do ambiente nas Sprints 1 e 2 e da prioridade dada às revisões do documento na Sprint 4. O replanejamento feito nessa época previa uma Sprint 6 (02/11 a 15/11), posterior ao prazo da disciplina. Essa sprint foi eliminada: a equipe concentrou na Sprint 5 o restante do backlog e os testes, e o que não coube nela foi tratado como redução de escopo e registrado como trabalho futuro na Seção 3.4.
 
-- **Sprint 5 (19/10 a 01/11):** HU03, HU04 e HU05 (cadastro e consulta de pautas e votação, 16 pontos) e HU16 (testes de concorrência e de limite de requisições, 3 pontos);
-- **Sprint 6 (02/11 a 15/11):** HU09 e HU10 (resultados em tempo real e encerramento automático, 13 pontos) e HU15 (testes de carga e de atraso de propagação, 5 pontos), que completam o MVP;
-- **Após o MVP:** HU06, HU07, HU08, HU11, HU12, HU13 e HU17 (comentários, moderação, denúncia, exportação, gestão de perfis, edição de pauta e avaliação da triagem automática).
-
-A velocidade observada na Sprint 3, de 8 pontos, indica que o replanejamento ainda é otimista; por isso, a equipe passou a revisar o escopo de cada sprint na cerimônia de planejamento, a partir da velocidade efetivamente medida.
+Como a implementação e os testes foram concluídos entre 27/10 e 02/11, os resultados de avaliação apresentados neste documento e no artigo correspondem à versão do código de 02/11/2026, e não à data do artigo de 25/10/2026.
 
 ### 3.3 Plano de avaliação
 
-O plano de avaliação verifica, de forma mensurável, os requisitos não funcionais de maior risco para o domínio. Cada teste é executado assim que a funcionalidade avaliada é concluída, em ambiente com a mesma configuração de contêineres de produção: a avaliação do limite de requisições (RNF04) e do bloqueio de conta por tentativas inválidas (UC02, E02) já pode ser realizada sobre o módulo de autenticação implantado, e as demais dependem das histórias replanejadas para as Sprints 5 e 6. O Quadro 9 resume cada avaliação, o procedimento e o critério de aceitação.
+O plano de avaliação verifica, de forma mensurável, os requisitos não funcionais de maior risco para o domínio. Os testes são executados em ambiente local com a mesma configuração de contêineres de produção, e não na hospedagem gratuita (Seção 2.4). O Quadro 9 resume cada avaliação, o procedimento e o critério de aceitação; os resultados obtidos estão na Seção 3.4.
 
 **Quadro 9 – Plano de avaliação do sistema**
 
@@ -687,10 +725,40 @@ O plano de avaliação verifica, de forma mensurável, os requisitos não funcio
 | RNF01 | Atraso de propagação | Clientes Socket.io conectados à pauta registram o instante de recebimento de cada atualização, comparado ao instante de registro do voto | Média e percentil 95 do atraso inferiores a 5 s |
 | RNF02 | Concorrência do voto | 100 requisições de voto disparadas simultaneamente pela mesma conta, na mesma pauta | Exatamente um voto e uma participação registrados; demais requisições recusadas |
 | RNF04 | Limite de requisições | Sequência de tentativas de cadastro e login a partir do mesmo IP, acima do limite configurado | Requisições excedentes recusadas com o código HTTP 429 |
-| RNF14 | Eficácia da triagem | Conjunto de 200 comentários em português rotulados pela equipe (100 adequados e 100 impróprios), submetidos à triagem automática | Revocação de, no mínimo, 90% e taxa de falsos positivos de, no máximo, 10%; precisão reportada |
+| RNF14 | Eficácia da triagem | Conjunto de 200 comentários em português rotulados pela equipe (100 adequados e 100 impróprios), submetidos à triagem automática | Revocação de, no mínimo, 90% e taxa de falsos positivos de, no máximo, 10%; precisão reportada; todas as métricas com intervalo de confiança de 95% pelo método de Wilson (WILSON, 1927) |
 | RNF07 | Usabilidade | Questionário System Usability Scale (SUS) aplicado a, no mínimo, cinco participantes após tarefas de cadastro, voto e comentário (BROOKE, 1996) | Pontuação média igual ou superior a 68 |
+| RNF07 | Acessibilidade | Verificação automatizada com Lighthouse e axe-core nas telas de cadastro, consulta, voto e comentário, complementada por inspeção manual da navegação por teclado e do contraste | Nenhuma violação dos critérios WCAG 2.1 de nível A e AA; pontuação de acessibilidade do Lighthouse igual ou superior a 90 |
 
 Fonte: elaborado pelos autores (2026)
+
+Com 100 comentários impróprios no conjunto, uma revocação medida de 90% tem intervalo de confiança de 95% de aproximadamente 83% a 94%, ou seja, uma margem de cerca de 6 pontos percentuais. Por isso, o critério do RNF14 é verificado sobre o resultado pontual, mas os intervalos são sempre reportados; um conjunto maior é necessário para conclusões mais precisas.
+
+### 3.4 Estado final do produto
+
+O Quadro 10 separa o que foi implementado e testado na versão entregue em 02/11/2026 do que permaneceu apenas como especificação. As evidências estão no repositório, no commit `d9c702a` (02/11/2026): os scripts `backend/load/vote.js` (RNF09 e RNF01) e `backend/load/duplicate-vote.js` (RNF02), o script `backend/scripts/evaluate-screening.ts` com o conjunto rotulado `backend/prisma/demo-comments.ts` (RNF14), as saídas em `backend/load/reports/` e o relatório `docs/resultados-avaliacao.md`. Para reproduzir o ambiente com dados fictícios, o script `backend/prisma/seed-demo.ts` cria contas de demonstração para cada perfil, sem credenciais reais em documentos ou no repositório; as variáveis de ambiente necessárias estão descritas, sem valores, em `backend/.env.example`.
+
+**Quadro 10 – Estado final do produto**
+
+| Item | Situação | Evidência ou observação |
+| --- | --- | --- |
+| HU01 a HU14 (RF01 a RF14) | Implementado | Todas as histórias de usuário do backlog estão disponíveis na aplicação. |
+| RNF09 – 500 usuários simultâneos | Testado e atendido (ambiente local) | 7.019 requisições sem erro; tempo de resposta do voto com p95 de 41 ms; 500 conexões WebSocket sem queda. Não testado na hospedagem gratuita. |
+| RNF01 – Atraso de propagação | Testado e atendido (ambiente local) | Atraso médio de 15,7 ms e p95 de 33 ms. |
+| RNF02 – Voto duplicado | Testado e atendido | Cinco rodadas de 100 requisições simultâneas: em todas, 1 voto aceito e 99 recusados. |
+| RNF14 – Eficácia da triagem | Testado e atendido | Revocação de 99% (IC 95%: 94,6% a 99,8%), taxa de falsos positivos de 0% (IC 95%: 0,0% a 3,7%) e precisão de 100% (IC 95%: 96,3% a 100,0%), sobre 200 comentários. |
+| RNF07 – Acessibilidade | Testado e não atendido | Lighthouse acima de 90 nas telas avaliadas, mas o axe-core apontou contraste insuficiente na cor de destaque e na cor de erro; a correção é trabalho futuro. |
+| RNF04 – Limite de requisições | Implementado, não testado | Limites configurados (5 cadastros a cada 10 minutos e 10 logins por minuto por IP); o teste dedicado do Quadro 9 não foi executado. |
+| RNF07 – Questionário SUS | Não executado | Permanece como trabalho futuro. |
+| RNF06 e RNF10 – Disponibilidade e backup | Não atendido na hospedagem atual | Metas de produção (Seção 2.4); backup manual com `pg_dump`. |
+| Escalonamento horizontal do WebSocket (adaptador Redis) | Apenas especificado | A API executa em uma única instância, com os eventos emitidos em memória. |
+| Mitigações dos ataques ao sigilo do voto não cobertos | Apenas especificado | Seção 2.5. |
+| Aviso ao cidadão sobre o envio do comentário à IA e uso do nível pago da API | Apenas especificado | Seção 2.3.6 (UC06). |
+| Integração com o Login Único gov.br | Apenas especificado | Seção 2.5. |
+| Pipeline de integração contínua | Apenas especificado | Os testes automatizados existem, mas são executados manualmente. |
+
+Fonte: elaborado pelos autores (2026)
+
+Os itens marcados como "apenas especificado", "não executado" ou "não atendido" constituem a redução de escopo do projeto em relação à especificação e são os trabalhos futuros indicados no Capítulo 6.
 
 ---
 
@@ -708,7 +776,7 @@ A Figura 2 apresenta o diagrama de classes do domínio do PautaViva. A classe ab
 
 A classe Pauta representa o tema submetido à participação da comunidade e mantém título, descrição, período de votação e situação. Um GestorPublico cadastra zero ou mais pautas (1 para 0..*); cada Pauta pertence a uma Categoria (0..* para 1); uma Pauta recebe zero ou mais Comentarios (1 para 0..*); e cada Comentario pode receber zero ou mais Denuncias (1 para 0..*), feitas por cidadãos. Uma Pauta encerrada pode originar zero ou mais ArquivoResultado, correspondentes às exportações em CSV e PDF (RF11).
 
-Para preservar o sigilo do voto (RNF05), o voto é representado por duas classes sem associação entre si. A classe Participacao registra que um Cidadao votou em uma Pauta (cada Cidadao possui no máximo uma Participacao por Pauta, restrição que materializa o RF05 e o RNF02), e a classe Voto registra apenas a Pauta e a opção escolhida (uma Pauta possui zero ou mais Votos), sem referência ao cidadão e sem data/hora, o que impede associar um voto a quem votou pela coincidência de horários.
+Para preservar o sigilo do voto (RNF05), o voto é representado por duas classes sem associação entre si. A classe Participacao registra que um Cidadao votou em uma Pauta (cada Cidadao possui no máximo uma Participacao por Pauta, restrição que materializa o RF05 e o RNF02), e a classe Voto registra apenas a Pauta e a opção escolhida (uma Pauta possui zero ou mais Votos), sem referência ao cidadão e sem data/hora, o que impede associar um voto a quem votou a partir dos dados do modelo; os ataques que essa separação não cobre estão descritos na Seção 2.5.
 
 Os estados do sistema são representados por enumerações: StatusPauta (AGENDADA, ABERTA, ENCERRADA), alterado pelos métodos `abrirVotacao()` e `encerrarVotacao()` da Pauta; StatusComentario (EM_ANALISE, PUBLICADO, REJEITADO, REMOVIDO), alterado pelos métodos `publicar()`, `rejeitar()` e `remover()` do Comentario; StatusUsuario (PENDENTE, ATIVA, BLOQUEADA), que reflete a confirmação de cadastro e o bloqueio temporário por tentativas inválidas de login; e OpcaoVoto (FAVOR, CONTRA, ABSTENCAO).
 
@@ -716,7 +784,7 @@ O Sistema de Moderação Automática é um serviço externo (API Google Gemini) 
 
 ### 4.2 Diagrama de sequência
 
-A Figura 3 apresenta o diagrama de sequência referente ao fluxo principal do caso de uso UC05 (Votar em pauta), iniciado pelo cidadão já autenticado e contemplando o fluxo alternativo de voto não permitido.
+A Figura 3 apresenta o diagrama de sequência referente ao fluxo principal do caso de uso UC05 (Votar em pauta), iniciado pelo cidadão já autenticado e contemplando as exceções de voto não permitido (pauta encerrada ou voto duplicado).
 
 > **Figura 3 – Diagrama de sequência do fluxo de votação em pauta**
 > ![Diagrama de sequência do UC05 – Votar em pauta](diagramas/sequencia-uc05-votar.png)
@@ -743,26 +811,26 @@ A Figura 4 apresenta a organização do sistema em quatro camadas — Apresenta�
 - **Camada de persistência:** banco de dados relacional PostgreSQL, acessado pelos repositórios (padrão Repository) para o armazenamento transacional de usuários, pautas, participações, votos, comentários, denúncias e da trilha de auditoria; participações e votos ficam em tabelas separadas, sem chave comum (RNF05);
 - **Serviços externos:** provedor de e-mail, acessado por SMTP, para o envio das notificações automáticas (confirmação de cadastro, redefinição de senha e convite de gestores e moderadores), e o serviço de inteligência artificial Google Gemini, acessado por API, utilizado pelo Serviço de Moderação na triagem automática dos comentários.
 
-Todos os componentes da aplicação são executados em contêineres Docker, orquestrados pelo Docker Compose, o que padroniza os ambientes de desenvolvimento, teste e produção. Para executar mais de uma instância da API, o servidor WebSocket utiliza o adaptador Redis do Socket.io, que replica os eventos entre as instâncias por meio de publicação e assinatura (pub/sub), de modo que todo cliente receba as atualizações, independentemente da instância a que está conectado.
+Todos os componentes da aplicação são executados em contêineres Docker, orquestrados pelo Docker Compose, o que padroniza os ambientes de desenvolvimento, teste e produção. Na versão entregue, a API executa em uma única instância e o servidor WebSocket emite os eventos em memória. Para executar mais de uma instância, está prevista a adoção do adaptador Redis do Socket.io, que replica os eventos entre as instâncias por meio de publicação e assinatura (pub/sub), de modo que todo cliente receba as atualizações, independentemente da instância a que está conectado.
 
 ### 5.2 Tecnologias adotadas
 
-O Quadro 10 resume as tecnologias adotadas em cada camada da arquitetura e a justificativa de cada escolha.
+O Quadro 11 resume as tecnologias adotadas em cada camada da arquitetura e a justificativa de cada escolha.
 
-**Quadro 10 – Tecnologias por camada**
+**Quadro 11 – Tecnologias por camada**
 
 | Camada | Tecnologia adotada | Justificativa |
 | --- | --- | --- |
 | Apresentação (web) | React.js | Componentização da interface, ampla comunidade e curva de aprendizado adequada ao contexto acadêmico. |
 | Aplicação/Negócio | API REST (Node.js/Fastify) | Padrão amplamente adotado no mercado, com farta documentação e fácil integração via JSON. |
-| Persistência | PostgreSQL, acessado via Prisma ORM | Banco relacional de código aberto que garante, por restrições de unicidade e transações com isolamento, o voto único mesmo sob requisições simultâneas (RNF02) e a gravação atômica da participação e do voto (RNF05), além de oferecer backup consistente (RNF10) sem custo de licença. |
-| Comunicação em tempo real | Socket.io (WebSocket) e adaptador Redis | Propagação dos resultados de votação em tempo real, com reconexão automática; o adaptador Redis permite escalar para várias instâncias da API. |
+| Persistência | PostgreSQL, acessado via Prisma ORM | Banco relacional de código aberto que garante, por restrições de unicidade e transações com isolamento, o voto único mesmo sob requisições simultâneas (RNF02) e a gravação atômica da participação e do voto (RNF05), além de permitir backup consistente com `pg_dump` (RNF10) sem custo de licença. |
+| Comunicação em tempo real | Socket.io (WebSocket) | Propagação dos resultados de votação em tempo real, com reconexão automática; o adaptador Redis, previsto como trabalho futuro, permitirá escalar para várias instâncias da API. |
 | Notificações | SMTP (Gmail na fase de testes; serviço transacional com domínio próprio, como o Resend, em produção) | Envio de e-mails de confirmação de cadastro, redefinição de senha e convites; o uso de SMTP permite trocar de provedor apenas por configuração. |
 | Moderação automática | Google Gemini (LLM, via API) | Classificação de comentários em português com compreensão de contexto (ofensas, discurso de ódio e spam), sem a necessidade de treinar um modelo próprio. |
 | Autenticação | Better Auth | Biblioteca de autenticação para Node.js com cadastro e login por e-mail e senha, confirmação de e-mail, recuperação de senha, sessões e limitação de requisições prontas, reduzindo o código de segurança escrito pela equipe. |
 | Infraestrutura | Docker / Docker Compose | Padronização de ambientes de desenvolvimento, teste e produção. |
-| Hospedagem | Vercel (front-end) e Render (API e banco de dados) | Publicação contínua a partir do repositório, com camada gratuita suficiente para a fase acadêmica e certificado HTTPS incluso. |
-| Controle de versão e CI | Git/GitHub + pipeline de integração contínua | Rastreabilidade de mudanças e execução automatizada de testes a cada entrega. |
+| Hospedagem | Vercel (front-end) e Render (API e banco de dados), nos planos gratuitos | Publicação contínua a partir do repositório e certificado HTTPS incluso, suficientes para a demonstração acadêmica; os planos gratuitos não atendem aos RNF06, RNF09 e RNF10 (Seção 2.4). |
+| Controle de versão e testes | Git/GitHub e testes automatizados executados localmente | Rastreabilidade de mudanças; a execução automática dos testes por um pipeline de integração contínua é trabalho futuro. |
 
 Fonte: elaborado pelos autores (2026)
 
@@ -781,9 +849,9 @@ Fonte: elaborado pelos autores (2026)
 
 Este documento apresentou a especificação de software do PautaViva, plataforma digital de participação comunitária voltada à proposição, discussão, moderação e votação de pautas locais. A partir do problema identificado — a dispersão das discussões comunitárias em canais informais e a dificuldade de apurar resultados de forma confiável —, foram levantados os requisitos funcionais e não funcionais, detalhados os fluxos dos casos de uso, modelados a estrutura e o comportamento do sistema por meio de diagramas UML e definida a arquitetura em camadas que sustenta a solução.
 
-Entre as decisões de projeto, destacam-se a garantia de um único voto por conta verificada (RF05, RNF02); a separação entre o registro de participação e o conteúdo do voto, que preserva o sigilo do voto inclusive em relação a quem administra o banco de dados (RNF05); a proteção dos dados pessoais segundo a LGPD e a trilha de auditoria das ações sensíveis (RNF12, RNF13); a atualização dos resultados em tempo real por meio de WebSocket (RF09, RNF01); e a triagem automática de comentários por um modelo de linguagem, combinada à moderação humana. O documento também explicita a principal limitação do sistema — a verificação de identidade não comprova a titularidade do CPF —, razão pela qual as votações têm caráter consultivo.
+Entre as decisões de projeto, destacam-se a garantia de um único voto por conta verificada (RF05, RNF02); a separação entre o registro de participação e o conteúdo do voto, que impede associar um voto a quem votou a partir dos dados do modelo (RNF05), com os ataques não cobertos explicitados na Seção 2.5; a proteção dos dados pessoais segundo a LGPD e a trilha de auditoria das ações sensíveis (RNF12, RNF13); a atualização dos resultados em tempo real por meio de WebSocket (RF09, RNF01); e a triagem automática de comentários por um modelo de linguagem, combinada à moderação humana. O documento também explicita a principal limitação do sistema — a verificação de identidade não comprova a titularidade do CPF —, razão pela qual as votações têm caráter consultivo.
 
-Na continuidade do projeto, as Sprints 5 e 6 concluem o ciclo essencial de votação e executam o plano de avaliação (Seção 3.3), cujos resultados subsidiam o artigo do projeto e a homologação do MVP; o acompanhamento do planejado em relação ao realizado (Quadro 8) mostrou a necessidade de replanejar o escopo a partir da velocidade efetivamente medida. Como evoluções posteriores, destacam-se a integração com um provedor oficial de identidade, como o Login Único gov.br, que permitiria conferir valor mais forte aos resultados, e o aprimoramento da triagem automática a partir dos falsos positivos e negativos observados na avaliação.
+Na versão entregue em 02/11/2026, todas as histórias de usuário foram implementadas e os RNF01, RNF02, RNF09 e RNF14 foram testados e atendidos em ambiente local (Seção 3.4). Como trabalhos futuros, que correspondem à redução de escopo em relação à especificação, ficam: a correção do contraste de cores apontada na avaliação de acessibilidade e a aplicação do questionário SUS (RNF07); o teste dedicado do limite de requisições (RNF04); a migração para planos de hospedagem que atendam aos RNF06, RNF09 e RNF10; o adaptador Redis para executar várias instâncias da API; as mitigações dos ataques ao sigilo do voto não cobertos (Seção 2.5); o aviso ao cidadão sobre o envio dos comentários à IA e o uso do nível pago da API; um pipeline de integração contínua; e a integração com um provedor oficial de identidade, como o Login Único gov.br, que permitiria conferir valor mais forte aos resultados.
 
 ## Referências
 
@@ -809,12 +877,28 @@ COCKBURN, Alistair. **Writing effective use cases**. Boston: Addison-Wesley, 200
 
 CONSUL DEMOCRACY FOUNDATION. **Consul Democracy**: open-source citizen participation software. [S. l.], 2026. Disponível em: https://consuldemocracy.org. Acesso em: 21 out. 2026.
 
+GOOGLE. **Gemini API Documentation**. Mountain View: Google, 2026a. Disponível em: https://ai.google.dev. Acesso em: 10 out. 2026.
+
+GOOGLE. **Gemini API Additional Terms of Service**. Mountain View: Google, 2026b. Disponível em: https://ai.google.dev/gemini-api/terms. Acesso em: 8 nov. 2026.
+
 INTERNATIONAL ORGANIZATION FOR STANDARDIZATION. **ISO/IEC 25010**: systems and software engineering — systems and software quality requirements and evaluation (SQuaRE) — system and software quality models. Geneva: ISO, 2011.
+
+META PLATFORMS. **React**: a JavaScript library for building user interfaces. Menlo Park: Meta, 2026. Disponível em: https://react.dev. Acesso em: 25 out. 2026.
 
 OBJECT MANAGEMENT GROUP. **OMG Unified Modeling Language (UML)**, version 2.5.1. [S. l.]: OMG, 2017. Disponível em: https://www.omg.org/spec/UML. Acesso em: 28 ago. 2026.
 
+OPENJS FOUNDATION. **Node.js Documentation**. San Francisco: OpenJS Foundation, 2026. Disponível em: https://nodejs.org. Acesso em: 25 out. 2026.
+
+POSTGRESQL GLOBAL DEVELOPMENT GROUP. **PostgreSQL**: The World's Most Advanced Open Source Relational Database. 2026. Disponível em: https://www.postgresql.org. Acesso em: 25 out. 2026.
+
 PRESSMAN, Roger S.; MAXIM, Bruce R. **Engenharia de software**: uma abordagem profissional. 8. ed. Porto Alegre: AMGH, 2016.
+
+RENDER. **Deploy for free**. San Francisco: Render, 2026. Disponível em: https://render.com/docs/free. Acesso em: 8 nov. 2026.
 
 SCHWABER, Ken; SUTHERLAND, Jeff. **The Scrum Guide**: o guia definitivo do Scrum: as regras do jogo. [S. l.]: Scrum.org, 2020. Disponível em: https://scrumguides.org. Acesso em: 28 ago. 2026.
 
+SOCKET.IO. **Socket.IO Documentation**. 2026. Disponível em: https://socket.io. Acesso em: 25 out. 2026.
+
 SOMMERVILLE, Ian. **Engenharia de software**. 10. ed. São Paulo: Pearson Education do Brasil, 2019.
+
+WILSON, Edwin B. Probable inference, the law of succession, and statistical inference. **Journal of the American Statistical Association**, v. 22, n. 158, p. 209-212, 1927.
