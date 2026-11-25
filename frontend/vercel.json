@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/api/app/:path*",
-      "destination": "https://pautaviva.onrender.com/:path*"
+      "destination": "https://pautaviva.innovats.com.br/:path*"
     },
     {
       "source": "/api/:path*",
-      "destination": "https://pautaviva.onrender.com/api/:path*"
+      "destination": "https://pautaviva.innovats.com.br/api/:path*"
     },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
